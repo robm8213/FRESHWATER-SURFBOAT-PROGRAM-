@@ -75,6 +75,11 @@ module.exports=async(req,res)=>{
   }
 
 
+  if(action==="coach-verify"&&req.method==="GET"){
+   if(!coach(req))return send(res,401,{error:"Coach key invalid"});
+   return send(res,200,{ok:true});
+  }
+
   if(action==="coach-sync"&&req.method==="POST"){
    if(!coach(req))return send(res,401,{error:"Coach key invalid"});
    const b=await body(req),div=slug(b.division||division);
@@ -85,8 +90,6 @@ module.exports=async(req,res)=>{
   if(action==="coach-state"&&req.method==="GET"){
    if(!coach(req))return send(res,401,{error:"Coach key invalid"});
    let q=await pool.query(`select data,updated_at from app_state where id=$1`,[stateId(division)]);
-   // Safe one-time migration path: Open Men can read the old Rob's Training master if Freshwater Open Men is not seeded yet.
-   if(!q.rowCount&&division==="open-men")q=await pool.query(`select data,updated_at from app_state where id='master'`);
    if(!q.rowCount)return send(res,404,{error:"No program found for this division"});
    return send(res,200,{data:q.rows[0].data,updatedAt:q.rows[0].updated_at,division});
   }
