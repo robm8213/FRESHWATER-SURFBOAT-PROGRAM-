@@ -495,6 +495,25 @@ input,textarea,select,button{font-size:16px!important}
   .scoreHead{font-size:8px!important}
 }
 
+
+/* ===== CLUB-WIDE ANNOUNCEMENTS + MEDIA ===== */
+.sharedTile{border:0;border-radius:15px;background:#faf9f7;color:#2b0a0c;display:grid;grid-template-columns:76px 1fr 28px;align-items:center;text-align:left;min-height:92px;padding:14px 18px;cursor:pointer;box-shadow:0 5px 18px #0005;width:100%;margin-top:10px}
+.sharedTile b{display:block;font-size:24px;line-height:1;font-weight:1000}.sharedTile span{display:block;font-size:14px;margin-top:7px;color:#3d3030}.sharedTile i{font-style:normal;font-size:40px;color:#70151a;text-align:right}
+.sharedRound{width:62px;height:62px;border-radius:50%;background:#681014;display:grid;place-items:center;color:#fff;font-size:27px}
+.clubSharedScreen{position:fixed;inset:0;background:#070707;z-index:95;overflow:auto;padding:18px}
+.clubSharedCard{max-width:860px;margin:0 auto;padding-bottom:40px}
+.announcementItem{background:linear-gradient(180deg,#171717,#111);border:1px solid #2f2f2f;border-radius:14px;padding:14px;margin:10px 0}
+.announcementItem .annMeta{font-size:11px;color:#b7b7b7;margin-bottom:7px}.announcementItem .annText{font-size:15px;line-height:1.5;color:#fff}
+.clubMediaFilters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.clubMediaGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mediaItem{background:#111;border:1px solid #2f2f2f;border-radius:14px;overflow:hidden}.mediaItem img,.mediaItem video{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;background:#000}.mediaItem iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+.mediaBody{padding:12px}.mediaCaption{font-weight:900}.mediaMeta{font-size:11px;color:#b7b7b7;margin-top:5px}
+@media(max-width:760px){
+ .sharedTile{min-height:78px;padding:10px;grid-template-columns:49px 1fr 18px;border-radius:11px}
+ .sharedTile b{font-size:18px}.sharedTile span{font-size:11px;margin-top:5px}.sharedTile i{font-size:30px}.sharedRound{width:43px;height:43px;font-size:20px}
+ .clubSharedScreen{padding:12px 10px}.clubMediaGrid{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -511,7 +530,44 @@ input,textarea,select,button{font-size:16px!important}
       <button class="freshTile" onclick="openDivisionAthlete('U19 Men')"><div class="crewRound">🚣</div><div><b>U19 MEN</b><span>U19 Men's Program</span></div><i>›</i></button>
       <button class="freshTile" onclick="openDivisionAthlete('U19 Women')"><div class="crewRound">🚣</div><div><b>U19 WOMEN</b><span>U19 Women's Program</span></div><i>›</i></button>
     </div>
+    <button class="sharedTile" onclick="openClubAnnouncements()"><div class="sharedRound">📣</div><div><b>TEAM ANNOUNCEMENTS</b><span>Club-wide updates for all athletes</span></div><i>›</i></button>
+    <button class="sharedTile" onclick="openClubMedia()"><div class="sharedRound">🎥</div><div><b>PHOTOS & VIDEOS</b><span>Share and watch club media</span></div><i>›</i></button>
     <button class="coachTile" onclick="showCoachDivisionPicker()"><div class="coachRound">📣</div><div><b>COACH</b><span>Coach Access</span></div><i>›</i></button>
+  </div>
+</div>
+
+
+<div id="clubAnnouncementsScreen" class="clubSharedScreen" style="display:none">
+  <div class="clubSharedCard">
+    <div class="row"><div><div class="sub">FRESHWATER SURF BOATS</div><h1>Team Announcements</h1></div><button class="btn secondary" onclick="closeClubShared()">Back</button></div>
+    <div class="notice">Club-wide announcements are shared across every division.</div>
+    <div id="announcementComposer" class="card">
+      <h2>Add Announcement</h2>
+      <div class="label">Your name</div><input id="announcementAuthor" placeholder="Name">
+      <div class="label">Announcement</div><textarea id="announcementText" placeholder="What does the whole club need to know?"></textarea>
+      <button class="btn full" onclick="postClubAnnouncement()">Post Announcement</button>
+      <div class="mini" style="margin-top:8px">Posting requires either a valid athlete link or Coach Cloud access.</div>
+    </div>
+    <div id="clubAnnouncementsList"></div>
+  </div>
+</div>
+
+<div id="clubMediaScreen" class="clubSharedScreen" style="display:none">
+  <div class="clubSharedCard">
+    <div class="row"><div><div class="sub">FRESHWATER SURF BOATS</div><h1>Photos & Videos</h1></div><button class="btn secondary" onclick="closeClubShared()">Back</button></div>
+    <div class="notice">Shared club media for all divisions. Add a photo or video link, caption it, and everyone can view it.</div>
+    <div class="card">
+      <h2>Add Photo / Video</h2>
+      <div class="label">Your name</div><input id="mediaAuthor" placeholder="Name">
+      <div class="label">Media type</div>
+      <select id="mediaType"><option value="photo">Photo</option><option value="video">Video</option></select>
+      <div class="label">Photo / video URL</div><input id="mediaUrl" type="url" placeholder="Paste a direct image link, YouTube/Vimeo link, or video URL">
+      <div class="label">Caption</div><input id="mediaCaption" placeholder="Training, carnival, crew, etc.">
+      <button class="btn full" onclick="postClubMedia()">Add to Club Media</button>
+      <div class="mini" style="margin-top:8px">Direct phone-file uploads need dedicated media storage. This version securely shares links across all athletes/devices.</div>
+    </div>
+    <div class="clubMediaFilters"><button class="btn secondary" onclick="clubMediaFilter='all';renderClubMedia()">All</button><button class="btn secondary" onclick="clubMediaFilter='photo';renderClubMedia()">Photos</button><button class="btn secondary" onclick="clubMediaFilter='video';renderClubMedia()">Videos</button></div>
+    <div id="clubMediaList"></div>
   </div>
 </div>
 
@@ -751,6 +807,80 @@ function setFreshwaterDivision(name){
 }
 function showFreshwaterHome(){persist();document.getElementById("freshwaterApp").style.display="none";document.getElementById("freshwaterHome").style.display="";hideCoachDivisionPicker();window.scrollTo(0,0)}
 function enterFreshwaterApp(){document.getElementById("freshwaterHome").style.display="none";document.getElementById("freshwaterApp").style.display="";hideCoachDivisionPicker();window.scrollTo(0,0)}
+
+let clubAnnouncements=[],clubMedia=[],clubMediaFilter="all";
+
+function clubAuthPayload(){
+ const token=new URLSearchParams(location.search).get("athlete")||"";
+ const coachKey=localStorage.getItem("freshwaterCoachKey")||"";
+ return {token,coachKey};
+}
+function showClubShared(id){
+ document.getElementById("freshwaterHome").style.display="none";
+ document.getElementById("freshwaterApp").style.display="none";
+ document.getElementById("clubAnnouncementsScreen").style.display=id==="clubAnnouncementsScreen"?"block":"none";
+ document.getElementById("clubMediaScreen").style.display=id==="clubMediaScreen"?"block":"none";
+ window.scrollTo(0,0);
+}
+function closeClubShared(){
+ document.getElementById("clubAnnouncementsScreen").style.display="none";
+ document.getElementById("clubMediaScreen").style.display="none";
+ document.getElementById("freshwaterHome").style.display="";
+ window.scrollTo(0,0);
+}
+async function openClubAnnouncements(){showClubShared("clubAnnouncementsScreen");await loadClubAnnouncements()}
+async function openClubMedia(){showClubShared("clubMediaScreen");await loadClubMedia()}
+async function loadClubAnnouncements(){
+ try{
+  const r=await fetch(API+"?action=club-announcements&_="+Date.now(),{cache:"no-store"}),j=await r.json();
+  clubAnnouncements=j.items||[];renderClubAnnouncements();
+ }catch(e){console.error(e);document.getElementById("clubAnnouncementsList").innerHTML='<div class="card empty">Could not load announcements.</div>'}
+}
+function renderClubAnnouncements(){
+ const el=document.getElementById("clubAnnouncementsList");if(!el)return;
+ el.innerHTML=clubAnnouncements.length?clubAnnouncements.map(a=>`<div class="announcementItem"><div class="annMeta">${esc(a.author||"Freshwater")} • ${new Date(a.created_at||a.createdAt||Date.now()).toLocaleString("en-AU")}</div><div class="annText">${esc(a.text||"")}</div></div>`).join(""):'<div class="card empty">No team announcements yet.</div>';
+}
+async function postClubAnnouncement(){
+ const text=document.getElementById("announcementText")?.value.trim(),author=document.getElementById("announcementAuthor")?.value.trim()||"Freshwater Athlete";
+ if(!text)return alert("Enter an announcement.");
+ const auth=clubAuthPayload();
+ try{
+  const r=await fetch(API+"?action=club-announcement",{method:"POST",headers:{"Content-Type":"application/json",...(auth.coachKey?{"x-coach-key":auth.coachKey}:{})},body:JSON.stringify({token:auth.token,author,text})});
+  if(!r.ok)throw new Error(await r.text());
+  document.getElementById("announcementText").value="";await loadClubAnnouncements();
+ }catch(e){console.error(e);alert("Could not post. Use your athlete link or connect Coach Cloud first.")}
+}
+function mediaEmbedHtml(m){
+ const u=String(m.url||"").trim(),type=m.type||"photo";
+ if(type==="photo")return `<img src="${esc(u)}" alt="${esc(m.caption||"Club photo")}" loading="lazy">`;
+ const yt=u.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([A-Za-z0-9_-]{6,})/);
+ if(yt)return `<iframe src="https://www.youtube.com/embed/${yt[1]}" allowfullscreen loading="lazy"></iframe>`;
+ const vm=u.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+ if(vm)return `<iframe src="https://player.vimeo.com/video/${vm[1]}" allowfullscreen loading="lazy"></iframe>`;
+ return `<video controls preload="metadata" src="${esc(u)}"></video>`;
+}
+async function loadClubMedia(){
+ try{
+  const r=await fetch(API+"?action=club-media&_="+Date.now(),{cache:"no-store"}),j=await r.json();
+  clubMedia=j.items||[];renderClubMedia();
+ }catch(e){console.error(e);document.getElementById("clubMediaList").innerHTML='<div class="card empty">Could not load club media.</div>'}
+}
+function renderClubMedia(){
+ const el=document.getElementById("clubMediaList");if(!el)return;
+ const items=clubMediaFilter==="all"?clubMedia:clubMedia.filter(x=>x.type===clubMediaFilter);
+ el.innerHTML=items.length?`<div class="clubMediaGrid">${items.map(m=>`<div class="mediaItem">${mediaEmbedHtml(m)}<div class="mediaBody"><div class="mediaCaption">${esc(m.caption||"Freshwater Surf Boats")}</div><div class="mediaMeta">${esc(m.author||"Freshwater")} • ${new Date(m.created_at||m.createdAt||Date.now()).toLocaleString("en-AU")}</div></div></div>`).join("")}</div>`:'<div class="card empty">No media added yet.</div>';
+}
+async function postClubMedia(){
+ const url=document.getElementById("mediaUrl")?.value.trim(),caption=document.getElementById("mediaCaption")?.value.trim(),author=document.getElementById("mediaAuthor")?.value.trim()||"Freshwater Athlete",type=document.getElementById("mediaType")?.value||"photo";
+ if(!url)return alert("Add the photo or video URL.");
+ const auth=clubAuthPayload();
+ try{
+  const r=await fetch(API+"?action=club-media-add",{method:"POST",headers:{"Content-Type":"application/json",...(auth.coachKey?{"x-coach-key":auth.coachKey}:{})},body:JSON.stringify({token:auth.token,author,type,url,caption})});
+  if(!r.ok)throw new Error(await r.text());
+  document.getElementById("mediaUrl").value="";document.getElementById("mediaCaption").value="";await loadClubMedia();
+ }catch(e){console.error(e);alert("Could not add media. Use your athlete link or connect Coach Cloud first.")}
+}
+
 function showCoachDivisionPicker(){document.getElementById("coachDivisionPicker").style.display="grid"}
 function hideCoachDivisionPicker(){document.getElementById("coachDivisionPicker").style.display="none"}
 function openDivisionAthlete(name){
