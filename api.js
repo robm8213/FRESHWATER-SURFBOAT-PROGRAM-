@@ -28,9 +28,52 @@ function parseInviteSquad(v){
  const p=s.indexOf("|");return{division:slug(p>=0?s.slice(3,p):s.slice(3)),squad:p>=0?s.slice(p+1):""};
 }
 
+
+async function athleteFromToken(token){
+ if(!token)return null;
+ const q=await pool.query(`select athlete_id,athlete_name from athlete_invites where token=$1 and active=true`,[token]);
+ return q.rowCount?q.rows[0]:null;
+}
+async function ensureClubTables(){
+ await pool.query(`create table if not exists club_announcements(
+  id bigserial primary key, author text not null, text text not null, created_at timestamptz default now()
+ )`);
+ await pool.query(`create table if not exists club_media(
+  id bigserial primary key, author text not null, type text not null, url text not null, caption text, created_at timestamptz default now()
+ )`);
+}
+
 module.exports=async(req,res)=>{
  try{
   const u=new URL(req.url,"https://freshwater.local"),action=u.searchParams.get("action"),division=slug(u.searchParams.get("division"));
+
+  if(action==="club-announcements"&&req.method==="GET"){
+   await ensureClubTables();
+   const q=await pool.query(`select id,author,text,created_at from club_announcements order by created_at desc limit 100`);
+   return send(res,200,{items:q.rows});
+  }
+  if(action==="club-announcement"&&req.method==="POST"){
+   await ensureClubTables();const b=await body(req);
+   const athlete=await athleteFromToken(b.token);if(!coach(req)&&!athlete)return send(res,401,{error:"Athlete or coach access required"});
+   const author=String(b.author||athlete?.athlete_name||"Freshwater Athlete").slice(0,100),text=String(b.text||"").trim().slice(0,3000);
+   if(!text)return send(res,400,{error:"Announcement required"});
+   await pool.query(`insert into club_announcements(author,text) values($1,$2)`,[author,text]);
+   return send(res,200,{ok:true});
+  }
+  if(action==="club-media"&&req.method==="GET"){
+   await ensureClubTables();
+   const q=await pool.query(`select id,author,type,url,caption,created_at from club_media order by created_at desc limit 200`);
+   return send(res,200,{items:q.rows});
+  }
+  if(action==="club-media-add"&&req.method==="POST"){
+   await ensureClubTables();const b=await body(req);
+   const athlete=await athleteFromToken(b.token);if(!coach(req)&&!athlete)return send(res,401,{error:"Athlete or coach access required"});
+   const author=String(b.author||athlete?.athlete_name||"Freshwater Athlete").slice(0,100),type=b.type==="video"?"video":"photo",url=String(b.url||"").trim().slice(0,2000),caption=String(b.caption||"").slice(0,500);
+   if(!/^https?:\/\//i.test(url))return send(res,400,{error:"Valid media URL required"});
+   await pool.query(`insert into club_media(author,type,url,caption) values($1,$2,$3,$4)`,[author,type,url,caption]);
+   return send(res,200,{ok:true});
+  }
+
 
   if(action==="coach-sync"&&req.method==="POST"){
    if(!coach(req))return send(res,401,{error:"Coach key invalid"});
