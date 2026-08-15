@@ -27,20 +27,24 @@ function parseInviteSquad(v){
  const s=String(v||"");if(!s.startsWith("fw:"))return{division:"open-men",squad:s};
  const p=s.indexOf("|");return{division:slug(p>=0?s.slice(3,p):s.slice(3)),squad:p>=0?s.slice(p+1):""};
 }
-
+function commsScope(v){return String(v||"all")==="division"?"division":"all"}
 
 async function athleteFromToken(token){
  if(!token)return null;
- const q=await pool.query(`select athlete_id,athlete_name from athlete_invites where token=$1 and active=true`,[token]);
+ const q=await pool.query(`select athlete_id,athlete_name,squad from athlete_invites where token=$1 and active=true`,[token]);
  return q.rowCount?q.rows[0]:null;
 }
 async function ensureClubTables(){
  await pool.query(`create table if not exists club_announcements(
   id bigserial primary key, author text not null, text text not null, created_at timestamptz default now()
  )`);
+ await pool.query(`alter table club_announcements add column if not exists scope text default 'all'`);
+ await pool.query(`alter table club_announcements add column if not exists division text default ''`);
  await pool.query(`create table if not exists club_media(
   id bigserial primary key, author text not null, type text not null, url text not null, caption text, created_at timestamptz default now()
  )`);
+ await pool.query(`alter table club_media add column if not exists scope text default 'all'`);
+ await pool.query(`alter table club_media add column if not exists division text default ''`);
 }
 
 module.exports=async(req,res)=>{
@@ -48,32 +52,33 @@ module.exports=async(req,res)=>{
   const u=new URL(req.url,"https://freshwater.local"),action=u.searchParams.get("action"),division=slug(u.searchParams.get("division"));
 
   if(action==="club-announcements"&&req.method==="GET"){
-   await ensureClubTables();
-   const q=await pool.query(`select id,author,text,created_at from club_announcements order by created_at desc limit 100`);
+   await ensureClubTables();const scope=commsScope(u.searchParams.get("scope")),div=scope==="division"?division:"";
+   const q=scope==="division"
+    ?await pool.query(`select id,author,text,scope,division,created_at from club_announcements where scope='division' and division=$1 order by created_at desc limit 100`,[div])
+    :await pool.query(`select id,author,text,scope,division,created_at from club_announcements where coalesce(scope,'all')='all' order by created_at desc limit 100`);
    return send(res,200,{items:q.rows});
   }
   if(action==="club-announcement"&&req.method==="POST"){
-   await ensureClubTables();const b=await body(req);
-   const athlete=await athleteFromToken(b.token);if(!coach(req)&&!athlete)return send(res,401,{error:"Athlete or coach access required"});
-   const author=String(b.author||athlete?.athlete_name||"Freshwater Athlete").slice(0,100),text=String(b.text||"").trim().slice(0,3000);
+   await ensureClubTables();if(!coach(req))return send(res,401,{error:"Coach access required"});const b=await body(req);
+   const author=String(b.author||"Freshwater Coach").slice(0,100),text=String(b.text||"").trim().slice(0,3000),scope=commsScope(b.scope),div=scope==="division"?slug(b.division):"";
    if(!text)return send(res,400,{error:"Announcement required"});
-   await pool.query(`insert into club_announcements(author,text) values($1,$2)`,[author,text]);
-   return send(res,200,{ok:true});
+   await pool.query(`insert into club_announcements(author,text,scope,division) values($1,$2,$3,$4)`,[author,text,scope,div]);
+   return send(res,200,{ok:true,scope,division:div});
   }
   if(action==="club-media"&&req.method==="GET"){
-   await ensureClubTables();
-   const q=await pool.query(`select id,author,type,url,caption,created_at from club_media order by created_at desc limit 200`);
+   await ensureClubTables();const scope=commsScope(u.searchParams.get("scope")),div=scope==="division"?division:"";
+   const q=scope==="division"
+    ?await pool.query(`select id,author,type,url,caption,scope,division,created_at from club_media where scope='division' and division=$1 order by created_at desc limit 200`,[div])
+    :await pool.query(`select id,author,type,url,caption,scope,division,created_at from club_media where coalesce(scope,'all')='all' order by created_at desc limit 200`);
    return send(res,200,{items:q.rows});
   }
   if(action==="club-media-add"&&req.method==="POST"){
-   await ensureClubTables();const b=await body(req);
-   const athlete=await athleteFromToken(b.token);if(!coach(req)&&!athlete)return send(res,401,{error:"Athlete or coach access required"});
-   const author=String(b.author||athlete?.athlete_name||"Freshwater Athlete").slice(0,100),type=b.type==="video"?"video":"photo",url=String(b.url||"").trim().slice(0,2000),caption=String(b.caption||"").slice(0,500);
+   await ensureClubTables();if(!coach(req))return send(res,401,{error:"Coach access required"});const b=await body(req);
+   const author=String(b.author||"Freshwater Coach").slice(0,100),type=b.type==="video"?"video":"photo",url=String(b.url||"").trim().slice(0,2000),caption=String(b.caption||"").slice(0,500),scope=commsScope(b.scope),div=scope==="division"?slug(b.division):"";
    if(!/^https?:\/\//i.test(url))return send(res,400,{error:"Valid media URL required"});
-   await pool.query(`insert into club_media(author,type,url,caption) values($1,$2,$3,$4)`,[author,type,url,caption]);
-   return send(res,200,{ok:true});
+   await pool.query(`insert into club_media(author,type,url,caption,scope,division) values($1,$2,$3,$4,$5,$6)`,[author,type,url,caption,scope,div]);
+   return send(res,200,{ok:true,scope,division:div});
   }
-
 
   if(action==="coach-verify"&&req.method==="GET"){
    if(!coach(req))return send(res,401,{error:"Coach key invalid"});
