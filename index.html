@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#071019">
 <title>FRESHWATER SURF BOAT PROGRAM</title>
 <style>
-:root{--bg:#071019;--panel:#0f1b26;--panel2:#132331;--line:#223444;--txt:#f7f9fb;--mut:#8fa2b2;--blue:#1680ff;--green:#29c46d;--red:#ef4d4d;--amber:#ffb020}
+:root{--bg:#0a0607;--panel:#171012;--panel2:#231517;--line:#3a2629;--txt:#f7f4f3;--mut:#b6a6a8;--blue:#7c1f26;--green:#29c46d;--red:#b83a40;--amber:#c58b3b}
 *{box-sizing:border-box}html,body{margin:0;background:#03080d;color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
 .app{max-width:1180px;margin:auto;min-height:100vh;background:linear-gradient(180deg,#061019,#09131c)}
 header{height:72px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #15232e;background:#071019f2;position:sticky;top:0;z-index:30}
@@ -352,6 +352,50 @@ input,select,textarea{font-size:16px} /* prevents iOS focus zoom */
  .divisionPickerGrid{grid-template-columns:1fr}
 }
 @media(max-width:380px){.freshTile b{font-size:16px}.freshTile span{font-size:10px}.freshTile{grid-template-columns:45px 1fr 16px}.crewRound{width:39px;height:39px}}
+
+
+/* ===== FRESHWATER COVER-MATCHED THEME ===== */
+html,body{background:#070506!important;color:#f7f4f3}
+.app{background:linear-gradient(180deg,#090607,#13090b)!important}
+header{background:#0b0708f3!important;border-bottom:1px solid #2a181b!important}
+.sidebar{border-right:1px solid #2a181b!important;background:#0b0708}
+.navbtn{color:#b7aaac!important}
+.navbtn.active,.navbtn:hover{background:#241317!important;color:#f3d9dc!important}
+.brandtxt span{color:#a12b32!important}
+.modepill{background:#2a1519!important;color:#e9bdc1!important}
+.card,.athleteDayCard,.folderCard{background:linear-gradient(180deg,#261619,#171012)!important;border-color:#3d292c!important}
+.stat,.weekCell,.scoreSet{background:#120b0d!important;border-color:#382629!important}
+.btn{background:#7c1f26!important}
+.btn.secondary{background:#2a1a1d!important}
+.btn.red{background:#b83a40!important}
+.notice,.weekIdentityBanner,.exercisePrev,.bodyWeightCard,.specialCoachNote{background:#26171a!important;border-color:#6f2830!important}
+input,textarea,select{background:#0d090a!important;border-color:#493034!important;color:#fff!important}
+.sessionCard,.athleteSessionBox,.carnivalBox,.resultSet,.weekFolder,.specialSessionCoachBox,.specialFixedType{background:#140d0f!important;border-color:#3d292c!important}
+.folderChev,.athleteDayToggle .chev,.exercisePrevTitle,.weekIdentityTop,.specialDate{color:#c14a52!important}
+.badge{background:#4a1d23!important;color:#efc8cc!important}
+.badge.green{background:#123a25!important;color:#8ff0ae!important}
+.badge.amber{background:#4a3417!important;color:#ffd47d!important}
+.doneBtn{background:#1d1215!important;border-color:#56363b!important;color:#cdbfc1!important}
+.doneBtn.done{background:var(--green)!important;border-color:var(--green)!important;color:#fff!important}
+.scoreRow.completed{background:#0d2b1d!important;border-color:#238b50!important}
+.substituteBox{background:#120b0d!important;border-color:#694049!important}
+.mobilebar{background:#0c0809!important;border-top:1px solid #39262a!important}
+.mobilebar button{color:#a99599!important}
+.mobilebar button.active{color:#c43b45!important}
+.freshwaterTiles{background:linear-gradient(180deg,#150607,#110405)!important}
+.divisionPickerCard{background:#1c1113!important;border-color:#4a2c31!important}
+.divisionPickerGrid button{background:#120b0d!important;border-color:#503239!important}
+.specialAthleteSession{background:linear-gradient(180deg,#29171b,#150d0f)!important;border-color:#742a33!important}
+.sundayPreviewNotice{background:linear-gradient(180deg,#2a171b,#160e10)!important;border-color:#7b2b34!important}
+.sundayPreviewNotice b{color:#d9545d!important}
+
+/* Keep all five athlete navigation items in one clean row on phones */
+@media(max-width:760px){
+  .mobilebar.carnivalAthleteBar{grid-template-columns:repeat(5,1fr)!important}
+  .mobilebar{grid-template-columns:repeat(5,1fr)!important}
+  .mobilebar button{font-size:10px!important;padding:7px 1px!important}
+  .mobilebar span{font-size:19px!important}
+}
 
 </style>
 </head>
