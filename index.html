@@ -13,7 +13,7 @@ header{height:72px;padding:0 18px;display:flex;align-items:center;justify-conten
 .brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;font-weight:1000;font-style:italic}.brandtxt{font-weight:1000;font-style:italic;font-size:21px;line-height:1}.brandtxt span{display:block;color:var(--blue)}.tag{font-size:9px;letter-spacing:2px;color:#c8d2db;margin-top:4px}
 .modepill{font-size:11px;padding:8px 10px;border-radius:999px;background:#10263b;color:#91c2ff;font-weight:800}
 .layout{display:grid;grid-template-columns:220px 1fr}.sidebar{border-right:1px solid #15232e;padding:18px 12px;position:sticky;top:72px;height:calc(100vh - 72px)}
-.navbtn{display:flex;gap:10px;width:100%;border:0;background:none;color:#a0b0bd;padding:12px;border-radius:10px;text-align:left;font-weight:700;cursor:pointer}.navbtn.active,.navbtn:hover{background:#122232;color:#7db5ff}
+.navbtn{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;color:#a0b0bd;padding:12px;border-radius:10px;text-align:left;font-weight:700;cursor:pointer}.navbtn.active,.navbtn:hover{background:#122232;color:#7db5ff}
 .content{padding:22px;max-width:980px;width:100%;margin:auto}.screen{display:none;width:100%}.screen.active{display:block}
 h1{font-size:30px;margin:4px 0}h2{font-size:18px;margin:0 0 10px}h3{font-size:15px;margin:0}.sub{font-size:12px;color:var(--mut)}
 .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;width:100%}
@@ -600,6 +600,8 @@ input,textarea,select,button{font-size:16px!important}
 <button class="navbtn" data-screen="athletes" onclick="nav('athletes')">♟ Athletes</button>
 <button class="navbtn" data-screen="checkin" onclick="nav('checkin')">☑ Check-In</button>
 <button class="navbtn" data-screen="athletehistory" onclick="nav('athletehistory')">☷ Athlete History</button>
+<button class="navbtn" onclick="openClubAnnouncements('division',divisionSlug(currentDivision))">📣 Announcements <span id="sideDivAnnBadge" class="notifBadge"></span></button>
+<button class="navbtn" onclick="openClubMedia('division',divisionSlug(currentDivision))">🎥 Photos &amp; Videos <span id="sideDivMediaBadge" class="notifBadge"></span></button>
 <button class="navbtn" data-screen="programs" onclick="nav('programs')">▣ Training Blocks</button>
 <button class="navbtn" data-screen="testing" onclick="nav('testing')">⏱ Testing</button>
 <button class="navbtn" data-screen="weeksahead" onclick="nav('weeksahead')">▦ Weeks Ahead</button>
@@ -725,6 +727,8 @@ input,textarea,select,button{font-size:16px!important}
 <button data-screen="athletes" onclick="nav('athletes')"><span>♟</span>Athletes</button>
 <button data-screen="checkin" onclick="nav('checkin')"><span>☑</span>Check-In</button>
 <button data-screen="athletehistory" onclick="nav('athletehistory')"><span>☷</span>Athlete History</button>
+<button onclick="openClubAnnouncements('division',divisionSlug(currentDivision))"><span>📣</span>Announcements <span id="mobileDivAnnBadge" class="notifBadge"></span></button>
+<button onclick="openClubMedia('division',divisionSlug(currentDivision))"><span>🎥</span>Photos &amp; Videos <span id="mobileDivMediaBadge" class="notifBadge"></span></button>
 <button data-screen="programs" onclick="nav('programs')"><span>▣</span>Training Blocks</button>
 <button data-screen="testing" onclick="nav('testing')"><span>⏱</span>Testing</button>
 <button data-screen="weeksahead" onclick="nav('weeksahead')"><span>▦</span>Weeks Ahead</button>
@@ -832,7 +836,7 @@ async function refreshNotificationBadges(){
   const div=divisionSlug(currentDivision);
   const divAnn=await fetchCommsItems("announcement","division",div),divMedia=await fetchCommsItems("media","division",div);
   const ac=unreadCount(divAnn,"announcement","division",div),mc=unreadCount(divMedia,"media","division",div);
-  ["dashDivAnnBadge","athDivAnnBadge"].forEach(id=>setBadge(id,ac));["dashDivMediaBadge","athDivMediaBadge"].forEach(id=>setBadge(id,mc));
+  ["dashDivAnnBadge","athDivAnnBadge","sideDivAnnBadge","mobileDivAnnBadge"].forEach(id=>setBadge(id,ac));["dashDivMediaBadge","athDivMediaBadge","sideDivMediaBadge","mobileDivMediaBadge"].forEach(id=>setBadge(id,mc));
  }catch(e){console.error(e)}
 }
 function showClubShared(id){
