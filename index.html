@@ -397,6 +397,104 @@ input,textarea,select{background:#0d090a!important;border-color:#493034!importan
   .mobilebar span{font-size:19px!important}
 }
 
+
+/* ===== FRESHWATER HIGH-CONTRAST FINAL THEME ===== */
+:root{
+  --bg:#070707!important;
+  --panel:#121212!important;
+  --panel2:#191919!important;
+  --line:#2d2d2d!important;
+  --txt:#f8f8f8!important;
+  --mut:#b7b7b7!important;
+  --blue:#8f2028!important;
+  --green:#39b85b!important;
+  --red:#b53a42!important;
+  --amber:#b68a3c!important;
+}
+html,body{background:#050505!important;color:var(--txt)!important}
+.app{background:linear-gradient(180deg,#070707,#0b0b0b)!important}
+header{background:#090909f5!important;border-bottom:1px solid #242424!important}
+.sidebar{background:#090909!important;border-right:1px solid #242424!important}
+.navbtn{color:#bdbdbd!important}
+.navbtn.active,.navbtn:hover{background:#1a1113!important;color:#ff6974!important}
+.brandtxt{color:#fff!important}
+.brandtxt span{color:#9b2831!important}
+.tag{color:#bcbcbc!important}
+.modepill{background:#2b171a!important;color:#f0c9cc!important}
+.card,.athleteDayCard,.folderCard{
+  background:linear-gradient(180deg,#171717,#111111)!important;
+  border-color:#2f2f2f!important;
+}
+.stat,.weekCell,.scoreSet{
+  background:#101010!important;
+  border-color:#2d2d2d!important;
+}
+input,textarea,select{
+  background:#090909!important;
+  border-color:#3a3a3a!important;
+  color:#fff!important;
+  caret-color:#fff!important;
+}
+input::placeholder,textarea::placeholder{color:#8f8f8f!important}
+.sessionCard,.athleteSessionBox,.carnivalBox,.resultSet,.weekFolder,.specialSessionCoachBox,.specialFixedType{
+  background:#101010!important;
+  border-color:#2f2f2f!important;
+}
+.notice,.weekIdentityBanner,.exercisePrev,.bodyWeightCard,.specialCoachNote,.sundayPreviewNotice{
+  background:linear-gradient(180deg,#2c1418,#1a0e10)!important;
+  border-color:#772932!important;
+  color:#f6eeee!important;
+}
+.weekIdentityTop,.exercisePrevTitle,.specialDate,.sundayPreviewNotice b,.athleteDayToggle .chev,.folderChev{
+  color:#e05762!important;
+}
+.btn{background:#8f2028!important}
+.btn.secondary{background:#1f1f1f!important;border:1px solid #343434!important}
+.btn.red{background:#b43b43!important}
+.badge{background:#3a191e!important;color:#f2c6ca!important}
+.sub,.mini,.label,.dayMeta,.prescription{color:#b7b7b7!important}
+.doneBtn{background:#171717!important;border-color:#383838!important;color:#d7d7d7!important}
+.doneBtn.done{background:var(--green)!important;border-color:var(--green)!important;color:#fff!important}
+.scoreRow.completed{background:#122b19!important;border-color:#2d8a47!important}
+.substituteBox{background:#0d0d0d!important;border-color:#4d3438!important}
+.mobilebar{background:#080808!important;border-top:1px solid #262626!important}
+.mobilebar button{color:#b6b6b6!important}
+.mobilebar button.active{color:#ee5360!important}
+.specialAthleteSession{background:linear-gradient(180deg,#191919,#101010)!important;border-color:#4b2328!important}
+
+/* Keep summaries consistent with the high-contrast theme */
+.cardioSessionSummary{
+  background:linear-gradient(180deg,#2a1418,#160d0f)!important;
+  border-color:#712b33!important;
+}
+.cardioSessionSummary .stat{background:#0d0d0d!important}
+
+/* iPhone/mobile fit: prevent focus zoom and keep data-entry rows inside the viewport */
+input,textarea,select,button{font-size:16px!important}
+@media(max-width:760px){
+  html,body{width:100%!important;max-width:100%!important;overflow-x:hidden!important}
+  .app,.layout,.content,.screen,.card,.sessionCard,.athleteDayCard,.athleteSessionBox{max-width:100%!important;min-width:0!important}
+  .content{padding:14px 10px 92px!important}
+  .scoreRow{
+    grid-template-columns:36px minmax(0,1.12fr) minmax(0,.78fr) minmax(0,.86fr) 48px!important;
+    gap:4px!important;
+  }
+  .scoreCell input{font-size:16px!important;padding:9px 6px!important;min-width:0!important}
+  .scoreSet{font-size:13px!important;min-height:42px!important}
+  .doneBtn{font-size:18px!important;min-width:0!important}
+  .athleteSessionBox,.sessionCard{overflow-x:hidden!important}
+  .mobilebar{grid-template-columns:repeat(5,1fr)!important}
+  .mobilebar button{font-size:10px!important;padding:7px 1px!important}
+  .mobilebar span{font-size:19px!important}
+}
+/* extra-small phones */
+@media(max-width:390px){
+  .scoreRow{
+    grid-template-columns:34px minmax(0,1.05fr) minmax(0,.72fr) minmax(0,.78fr) 44px!important;
+  }
+  .scoreHead{font-size:8px!important}
+}
+
 </style>
 </head>
 <body>
