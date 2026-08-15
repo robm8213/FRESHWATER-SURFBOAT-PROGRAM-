@@ -13,7 +13,7 @@ function send(res,status,obj){
   res.setHeader("Pragma","no-cache");res.setHeader("Expires","0");
   res.end(JSON.stringify(obj));
 }
-function coach(req){return !!process.env.COACH_KEY && req.headers["x-coach-key"]===process.env.COACH_KEY}
+function coach(req){const saved=String(process.env.COACH_KEY||"").trim();const entered=String(req.headers["x-coach-key"]||"").trim();return !!saved&&entered===saved;}
 async function body(req){
   if(req.body && typeof req.body==="object") return req.body;
   if(typeof req.body==="string"){try{return JSON.parse(req.body)}catch{}}
