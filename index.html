@@ -560,6 +560,33 @@ h3{font-size:15px!important}
 }
 </style>
 
+
+<style id="final-minimal-athlete-fixes">
+.cardioSessionSummary{
+  background:linear-gradient(180deg,#241316,#120c0e)!important;
+  border:1px solid #6b2931!important;
+}
+.cardioSessionSummaryTitle{color:#e45a65!important}
+.cardioSessionSummaryStat{
+  background:#101010!important;
+  border:1px solid #3c3032!important;
+}
+.cardioSessionSummaryStat span,
+.cardioSessionSummaryFoot{color:#aaa1a3!important}
+.cardioSessionSummaryStat b{color:#f4f1f1!important}
+.athleteAccessShortcuts{
+  display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0 14px;
+}
+.athleteAccessShortcuts button{
+  border:1px solid #493036;border-radius:13px;background:#171012;color:#fff;
+  padding:12px;text-align:left;font-weight:850;
+}
+.athleteAccessShortcuts b{display:block;font-size:13px}
+.athleteAccessShortcuts small{
+  display:block;color:#aaa1a3;font-size:10px;margin-top:4px;font-weight:500;
+}
+</style>
+
 </head>
 <body>
 <div class="mergedTestBanner">MERGED MAIN APP TEST • LIVE COACH CLOUD & ATHLETE DATA PROTECTED</div>
@@ -792,7 +819,11 @@ h3{font-size:15px!important}
 <div class="card" id="athleteList"></div>
 </section>
 
-<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1><div class="commsStrip"><button class="commsBtn" onclick="openClubAnnouncements('division',divisionSlug(currentDivision))"><span>📣 Division Announcements</span><span id="athDivAnnBadge" class="notifBadge"></span></button><button class="commsBtn" onclick="openClubMedia('division',divisionSlug(currentDivision))"><span>🎥 Division Media</span><span id="athDivMediaBadge" class="notifBadge"></span></button></div><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="athletePreviewNotice"></div><div id="trainingSessions"></div></section>
+<section id="training" class="screen"><div class="sub">ATHLETE TRAINING</div><h1>My Training</h1>
+<div class="athleteAccessShortcuts">
+  <button type="button" onclick="openMessages()"><b>💬 Team Messages</b><small>Open your crew conversation</small></button>
+  <button type="button" onclick="openNotificationPrefs()"><b>🔔 Notifications</b><small>Choose the alerts you receive</small></button>
+</div><div class="commsStrip"><button class="commsBtn" onclick="openClubAnnouncements('division',divisionSlug(currentDivision))"><span>📣 Division Announcements</span><span id="athDivAnnBadge" class="notifBadge"></span></button><button class="commsBtn" onclick="openClubMedia('division',divisionSlug(currentDivision))"><span>🎥 Division Media</span><span id="athDivMediaBadge" class="notifBadge"></span></button></div><div id="athleteWeekIdentity"></div><div class="notice">Complete your programmed sessions and enter your actual results below.</div><div id="athletePreviewNotice"></div><div id="trainingSessions"></div></section>
 <section id="weeksahead" class="screen"><div class="sub">UPCOMING TRAINING</div><h1>Weeks Ahead</h1><div class="notice">View only — open a training block, then choose a week to see the programmed sessions.</div><div id="weeksAheadBlocks"></div></section>
 
 <section id="checkin" class="screen">
