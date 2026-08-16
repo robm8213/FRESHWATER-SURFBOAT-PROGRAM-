@@ -532,6 +532,34 @@ input,textarea,select,button{font-size:16px!important}
 .testReadonlyBadge{display:inline-flex;align-items:center;border:1px solid #a07331;background:#2a1d0e;color:#f7dfad;border-radius:999px;padding:5px 8px;font-size:9px;font-weight:1000;margin-left:6px}
 @media(max-width:760px){.mergedTestBanner{font-size:9px;padding:6px 8px}.teamChoiceGrid,.roleChoiceGrid,.masterGrid{grid-template-columns:1fr}.accessPanel{padding:14px;border-radius:16px}.accessPanelHead h2{font-size:21px}}
 </style>
+
+<style id="final-polish-v2">
+/* Final mobile polish: calmer hierarchy */
+h1{font-size:27px!important;line-height:1.12}
+h2{font-size:17px!important}
+h3{font-size:15px!important}
+.freshTile b,.coachTile b{font-size:23px!important;line-height:1.08!important}
+.freshTile span,.coachTile span{font-size:13px!important;margin-top:6px!important}
+.crewRound,.coachRound{width:56px!important;height:56px!important;font-size:23px!important}
+.btn,.masterOpenBtn,.previewBtn,.copyBtn{font-size:13px!important}
+.commsStrip{display:none!important}
+.mobilebar{grid-template-columns:repeat(5,1fr)!important;padding:7px 4px calc(7px + env(safe-area-inset-bottom))!important}
+.mobilebar button{font-size:9px!important;padding:6px 1px!important}
+.mobilebar span{font-size:18px!important}
+.moreGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
+.moreChoice{border:1px solid #3b4650;border-radius:13px;background:#111;color:#fff;padding:15px 10px;text-align:left;font-weight:850}
+.moreChoice span{display:block;font-size:21px;margin-bottom:5px}
+.moreChoice small{display:block;color:#9aa6af;font-size:10px;margin-top:4px;font-weight:500}
+.coachLinkBox{margin-top:10px;padding:11px;border:1px solid #33434e;border-radius:11px;background:#080d10;color:#d9e3e9;font-size:11px;word-break:break-all}
+.adminNote{font-size:11px;color:#b9aeb0;line-height:1.5;margin-top:6px}
+@media(max-width:760px){
+  h1{font-size:24px!important}
+  .freshTile b,.coachTile b{font-size:21px!important}
+  .freshTile span,.coachTile span{font-size:12px!important}
+  .content{padding-bottom:calc(84px + env(safe-area-inset-bottom))!important}
+}
+</style>
+
 </head>
 <body>
 <div class="mergedTestBanner">MERGED MAIN APP TEST • LIVE COACH CLOUD & ATHLETE DATA PROTECTED</div>
@@ -550,7 +578,7 @@ input,textarea,select,button{font-size:16px!important}
     </div>
     <button class="sharedTile" onclick="openClubAnnouncements('all','')"><div class="sharedRound">📣</div><div><b>TEAM ANNOUNCEMENTS <span id="clubAnnBadge" class="notifBadge"></span></b><span>Club-wide updates for all athletes</span></div><i>›</i></button>
     <button class="sharedTile" onclick="openClubMedia('all','')"><div class="sharedRound">🎥</div><div><b>PHOTOS & VIDEOS <span id="clubMediaBadge" class="notifBadge"></span></b><span>Share and watch club media</span></div><i>›</i></button>
-    <button class="coachTile" onclick="openMasterControl()"><div class="coachRound">🔐</div><div><b>MASTER / OWNER</b><span>All divisions, teams & program copy</span></div><i>›</i></button>
+    <button class="coachTile" onclick="openMasterControl()"><div class="coachRound">🔐</div><div><b>ADMIN</b><span>All divisions, teams & program copy</span></div><i>›</i></button>
   </div>
 </div>
 
@@ -574,12 +602,24 @@ input,textarea,select,button{font-size:16px!important}
 
 <div id="masterControlPanel" class="accessLayer" style="display:none">
   <div class="accessPanel">
-    <div class="accessPanelHead"><div><div class="accessEyebrow">MASTER / OWNER</div><h2>Club Control</h2><div class="scopeChip">ALL DIVISIONS • ALL TEAMS</div></div><button class="accessClose" onclick="closeAccessLayers()">Close</button></div>
+    <div class="accessPanelHead"><div><div class="accessEyebrow">ADMIN</div><h2>Club Control</h2><div class="scopeChip">ALL DIVISIONS • ALL TEAMS</div></div><button class="accessClose" onclick="closeAccessLayers()">Close</button></div>
     <div class="testProtect"><b>Safe test.</b> You can inspect every flow and test program copying locally. This file is blocked from writing to Coach Cloud, athlete submissions, athlete invites, announcements or media.</div>
     <div class="masterCard">
-      <h3>Open Any Team</h3><div class="sub">Master/Owner can enter Coach view for any division and team.</div>
+      <h3>Open Any Team</h3><div class="sub">Admin can enter Coach view for any division and team.</div>
       <div class="masterGrid" style="margin-top:9px"><div><div class="label">Division</div><select id="masterDivisionSelect"></select></div><div><div class="label">Team</div><select id="masterTeamSelect"></select></div></div>
-      <button class="masterOpenBtn" onclick="openMasterSelectedTeam()">Open Team as Master / Owner</button>
+      <button class="masterOpenBtn" onclick="openMasterSelectedTeam()">Open Team as Admin</button>
+    </div>
+    <div class="masterCard">
+      <h3>Coach Access</h3>
+      <div class="sub">Create a private crew-specific link for another coach. The link opens their assigned division/team; they still need the Freshwater Coach Key.</div>
+      <div class="masterGrid" style="margin-top:9px">
+        <div><div class="label">Coach division</div><select id="coachLinkDivision"></select></div>
+        <div><div class="label">Coach team</div><select id="coachLinkTeam"></select></div>
+      </div>
+      <button class="masterOpenBtn" onclick="generateCoachAccessLink()">Create Coach Access Link</button>
+      <div id="coachAccessLinkBox" class="coachLinkBox" style="display:none"></div>
+      <button id="copyCoachAccessBtn" class="previewBtn" style="display:none" onclick="copyCoachAccessLink()">Copy Coach Link</button>
+      <div class="adminNote">This gives the coach a direct route to their crew. It does not give access to other divisions or teams.</div>
     </div>
     <div class="masterCard">
       <h3>Copy Program Between Divisions / Teams</h3><div class="sub">Programming only. Athletes, scores, testing, check-ins and personal history are never copied.</div>
@@ -591,11 +631,28 @@ input,textarea,select,button{font-size:16px!important}
       </div>
       <button class="previewBtn" onclick="previewCrossScopeCopy()">Preview Copy</button><button class="copyBtn" onclick="performCrossScopeCopyTest()">COPY PROGRAM — TEST LOCALLY</button><div id="crossCopyResult" class="copySuccess"></div>
     </div>
-    <div class="masterCard"><h3>Access Structure</h3><div class="sub"><b>Master/Owner</b> — all divisions and teams.<br><b>Coach</b> — selected division/team.<br><b>Athlete</b> — personal athlete link and assigned division/team. Existing personal links remain Team 1 unless later assigned to another team.</div></div>
+    <div class="masterCard"><h3>Access Structure</h3><div class="sub"><b>Admin</b> — all divisions and teams, coach links and program copying.<br><b>Coach</b> — assigned division/team.<br><b>Athlete</b> — personal athlete link and assigned division/team. Existing personal links remain Team 1 unless later assigned to another team.</div></div>
   </div>
 </div>
 
 
+
+
+<div id="moreMenuPanel" class="accessLayer" style="display:none">
+  <div class="accessPanel">
+    <div class="accessPanelHead"><div><div class="accessEyebrow">MORE</div><h2>Team Tools</h2><div class="scopeChip" id="moreScopeChip">CURRENT CREW</div></div><button class="accessClose" onclick="hideLayer('moreMenuPanel')">Close</button></div>
+    <div class="moreGrid">
+      <button class="moreChoice" onclick="moreNav('checkin')"><span>☑</span>Check-In<small>Weekly athlete check-in</small></button>
+      <button class="moreChoice" onclick="moreNav('athletehistory')"><span>☷</span>Athlete History<small>Training and results history</small></button>
+      <button class="moreChoice" onclick="moreNav('programs')"><span>▣</span>Training Blocks<small>Program history and blocks</small></button>
+      <button class="moreChoice" onclick="moreNav('weeksahead')"><span>▦</span>Weeks Ahead<small>Upcoming program weeks</small></button>
+      <button class="moreChoice" onclick="moreNav('carnivals')"><span>🏁</span>Carnivals<small>Dates and competition details</small></button>
+      <button class="moreChoice" onclick="moreAnnouncements()"><span>📣</span>Announcements<small>Division updates</small></button>
+      <button class="moreChoice" onclick="moreMedia()"><span>🎥</span>Photos & Videos<small>Division media</small></button>
+      <button class="moreChoice" onclick="moreNav('settings')"><span>⚙️</span>Settings<small>Coach Cloud and app setup</small></button>
+    </div>
+  </div>
+</div>
 
 <div id="clubAnnouncementsScreen" class="clubSharedScreen" style="display:none">
   <div class="clubSharedCard">
@@ -782,15 +839,8 @@ input,textarea,select,button{font-size:16px!important}
 <button class="active" data-screen="dashboard" onclick="nav('dashboard')"><span>⌂</span>Home</button>
 <button data-screen="planner" onclick="nav('planner')"><span>▦</span>Week</button>
 <button data-screen="athletes" onclick="nav('athletes')"><span>♟</span>Athletes</button>
-<button data-screen="checkin" onclick="nav('checkin')"><span>☑</span>Check-In</button>
-<button data-screen="athletehistory" onclick="nav('athletehistory')"><span>☷</span>Athlete History</button>
-<button onclick="openClubAnnouncements('division',divisionSlug(currentDivision))"><span>📣</span>Announcements <span id="mobileDivAnnBadge" class="notifBadge"></span></button>
-<button onclick="openClubMedia('division',divisionSlug(currentDivision))"><span>🎥</span>Photos &amp; Videos <span id="mobileDivMediaBadge" class="notifBadge"></span></button>
-<button data-screen="programs" onclick="nav('programs')"><span>▣</span>Training Blocks</button>
 <button data-screen="testing" onclick="nav('testing')"><span>⏱</span>Testing</button>
-<button data-screen="weeksahead" onclick="nav('weeksahead')"><span>▦</span>Weeks Ahead</button>
-<button data-screen="carnivals" onclick="nav('carnivals')"><span>🏁</span>Carnivals</button>
-<button data-screen="settings" onclick="nav('settings')"><span>⚙️</span>Settings</button>
+<button onclick="openMoreMenu()"><span>☰</span>More</button>
 </div>
 </div>
 <script>
@@ -957,12 +1007,14 @@ async function ensureCoachAccess(){
 
 let pendingAccessDivision=currentDivision,pendingAccessTeam=currentTeam,masterAccessActive=false;
 function hideLayer(id){const el=document.getElementById(id);if(el)el.style.display="none"}
-function showLayer(id){["teamAccessPicker","roleAccessPicker","masterControlPanel","coachDivisionPicker"].forEach(x=>hideLayer(x));const el=document.getElementById(id);if(el)el.style.display="grid";window.scrollTo(0,0)}
+function showLayer(id){["teamAccessPicker","roleAccessPicker","masterControlPanel","coachDivisionPicker","moreMenuPanel"].forEach(x=>hideLayer(x));const el=document.getElementById(id);if(el)el.style.display="grid";window.scrollTo(0,0)}
 function closeAccessLayers(){["teamAccessPicker","roleAccessPicker","masterControlPanel"].forEach(hideLayer)}
 function fillScopeSelect(id,items,selected){const el=document.getElementById(id);if(!el)return;el.innerHTML=items.map(x=>`<option ${x===selected?"selected":""}>${x}</option>`).join("")}
 function initMasterSelectors(){
  ["masterDivisionSelect","copyFromDivision","copyToDivision"].forEach((id,i)=>fillScopeSelect(id,FRESHWATER_DIVISIONS,i===2?(currentDivision==="Open Men"?"Open Women":"Open Men"):currentDivision));
  ["masterTeamSelect","copyFromTeam","copyToTeam"].forEach((id,i)=>fillScopeSelect(id,FRESHWATER_TEAMS,i===2?(currentTeam==="Team 1"?"Team 2":"Team 1"):currentTeam));
+ fillScopeSelect("coachLinkDivision",FRESHWATER_DIVISIONS,currentDivision);
+ fillScopeSelect("coachLinkTeam",FRESHWATER_TEAMS,currentTeam);
 }
 function openTeamPicker(name){
  const token=new URLSearchParams(location.search).get("athlete");
@@ -983,7 +1035,7 @@ function backToTeamPicker(){showLayer("teamAccessPicker")}
 function enterSelectedAthlete(){closeAccessLayers();setFreshwaterScope(pendingAccessDivision,pendingAccessTeam);enterFreshwaterApp();coachMode=false;masterAccessActive=false;modePill.textContent="ATHLETE VIEW";modeBtn.textContent="Coach Mode";configureAthleteNavigation();nav("training");refreshNotificationBadges()}
 async function enterSelectedCoach(){const key=await ensureCoachAccess();if(!key)return;closeAccessLayers();setFreshwaterScope(pendingAccessDivision,pendingAccessTeam);enterFreshwaterApp();coachMode=true;masterAccessActive=false;modePill.innerHTML='COACH MODE <span class="testReadonlyBadge">TEST READ ONLY CLOUD</span>';modeBtn.textContent="Athlete View";restoreCoachNavigation();await loadCoachCloud(false);nav("dashboard")}
 async function openMasterControl(){const key=await ensureCoachAccess();if(!key)return;masterAccessActive=true;initMasterSelectors();showLayer("masterControlPanel")}
-async function openMasterSelectedTeam(){const d=document.getElementById("masterDivisionSelect").value,t=document.getElementById("masterTeamSelect").value;closeAccessLayers();setFreshwaterScope(d,t);enterFreshwaterApp();coachMode=true;masterAccessActive=true;modePill.innerHTML='MASTER / OWNER <span class="testReadonlyBadge">TEST</span>';modeBtn.textContent="Athlete View";restoreCoachNavigation();await loadCoachCloud(false);nav("dashboard")}
+async function openMasterSelectedTeam(){const d=document.getElementById("masterDivisionSelect").value,t=document.getElementById("masterTeamSelect").value;closeAccessLayers();setFreshwaterScope(d,t);enterFreshwaterApp();coachMode=true;masterAccessActive=true;modePill.innerHTML='ADMIN <span class="testReadonlyBadge">TEST</span>';modeBtn.textContent="Athlete View";restoreCoachNavigation();await loadCoachCloud(false);nav("dashboard")}
 function localScopeData(div,team){try{const raw=localStorage.getItem(divisionStoreKey(div,team));return raw?JSON.parse(raw):freshDivisionData()}catch{return freshDivisionData()}}
 function saveLocalScopeData(div,team,obj){localStorage.setItem(divisionStoreKey(div,team),JSON.stringify(obj))}
 function deepCopy(v){return JSON.parse(JSON.stringify(v))}
@@ -1007,6 +1059,32 @@ function performCrossScopeCopyTest(){
  const fd=copyFromDivision.value,ft=copyFromTeam.value,td=copyToDivision.value,tt=copyToTeam.value;if(fd===td&&ft===tt)return alert("Choose a different destination team/division.");
  const src=localScopeData(fd,ft),dst=localScopeData(td,tt),out=programOnlyCopy(src,dst,copyProgramScope.value,copyProgramMode.value);saveLocalScopeData(td,tt,out);const box=document.getElementById("crossCopyResult");box.style.display="block";box.textContent="TEST COPY SUCCESS — "+copyPreviewText()+". Saved locally on this device only. Live Coach Cloud and athlete data were not changed.";
 }
+
+let generatedCoachAccessLink="";
+function generateCoachAccessLink(){
+ const d=document.getElementById("coachLinkDivision").value;
+ const t=document.getElementById("coachLinkTeam").value;
+ const u=new URL(location.href);
+ u.search="";
+ u.hash="";
+ u.searchParams.set("coachDivision",d);
+ u.searchParams.set("coachTeam",t);
+ generatedCoachAccessLink=u.toString();
+ const box=document.getElementById("coachAccessLinkBox");
+ box.style.display="block";
+ box.textContent=generatedCoachAccessLink;
+ document.getElementById("copyCoachAccessBtn").style.display="block";
+}
+async function copyCoachAccessLink(){
+ if(!generatedCoachAccessLink)return;
+ try{await navigator.clipboard.writeText(generatedCoachAccessLink);alert("Coach access link copied.");}
+ catch(e){prompt("Copy this coach access link:",generatedCoachAccessLink);}
+}
+function openMoreMenu(){showLayer("moreMenuPanel")}
+function moreNav(id){hideLayer("moreMenuPanel");nav(id)}
+function moreAnnouncements(){hideLayer("moreMenuPanel");openClubAnnouncements('division',divisionSlug(currentDivision))}
+function moreMedia(){hideLayer("moreMenuPanel");openClubMedia('division',divisionSlug(currentDivision))}
+
 async function showCoachDivisionPicker(){
  const key=await ensureCoachAccess();if(!key)return;
  document.getElementById("coachDivisionPicker").style.display="grid";
@@ -1967,6 +2045,19 @@ document.addEventListener("input",function(e){
     }
   });
 });
+
+
+setTimeout(()=>{
+ try{
+   const qp=new URLSearchParams(location.search);
+   const cd=qp.get("coachDivision"),ct=qp.get("coachTeam");
+   if(cd&&ct&&FRESHWATER_DIVISIONS.includes(cd)&&FRESHWATER_TEAMS.includes(ct)){
+     pendingAccessDivision=cd; pendingAccessTeam=ct;
+     openTeamPicker(cd);
+     setTimeout(()=>chooseAccessTeam(ct),50);
+   }
+ }catch(e){console.error(e)}
+},250);
 
 </script>
 </body>
