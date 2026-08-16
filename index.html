@@ -622,6 +622,16 @@ h3{font-size:15px!important}
       <div class="adminNote">This gives the coach a direct route to their crew. It does not give access to other divisions or teams.</div>
     </div>
     <div class="masterCard">
+      <h3>Admin Tools</h3>
+      <div class="sub">Club-wide operating controls.</div>
+      <div class="opsGrid">
+        <button class="moreChoice" onclick="hideLayer('masterControlPanel');openActivityLog()"><span>🧾</span>Activity Log<small>See who changed what</small></button>
+        <button class="moreChoice" onclick="hideLayer('masterControlPanel');openTemplates()"><span>📚</span>Program Templates<small>Reusable sessions</small></button>
+        <button class="moreChoice" onclick="hideLayer('masterControlPanel');openArchive()"><span>🗄️</span>Season Archive<small>Preserve old seasons</small></button>
+        <button class="moreChoice" onclick="hideLayer('masterControlPanel');openPermissions()"><span>🔐</span>Permissions<small>Admin, coach, comms, athlete</small></button>
+      </div>
+    </div>
+    <div class="masterCard">
       <h3>Copy Program Between Divisions / Teams</h3><div class="sub">Programming only. Athletes, scores, testing, check-ins and personal history are never copied.</div>
       <div class="masterGrid" style="margin-top:9px">
         <div><div class="label">Copy from division</div><select id="copyFromDivision"></select></div><div><div class="label">From team</div><select id="copyFromTeam"></select></div>
@@ -642,6 +652,13 @@ h3{font-size:15px!important}
   <div class="accessPanel">
     <div class="accessPanelHead"><div><div class="accessEyebrow">MORE</div><h2>Team Tools</h2><div class="scopeChip" id="moreScopeChip">CURRENT CREW</div></div><button class="accessClose" onclick="hideLayer('moreMenuPanel')">Close</button></div>
     <div class="moreGrid">
+      <button class="moreChoice" onclick="hideLayer('moreMenuPanel');openToday()"><span>📅</span>Today / Next Session<small>Quick athlete start</small></button>
+      <button class="moreChoice" onclick="hideLayer('moreMenuPanel');openMessages()"><span>💬</span>Team Messages<small>Crew conversation</small></button>
+      <button class="moreChoice" onclick="hideLayer('moreMenuPanel');openAvailability()"><span>👥</span>Crew Availability<small>Available, away or injured</small></button>
+      <button class="moreChoice" onclick="hideLayer('moreMenuPanel');openAttendance()"><span>✓</span>Attendance<small>Boat session attendance</small></button>
+      <button class="moreChoice" onclick="hideLayer('moreMenuPanel');openCarnivalAvailability()"><span>🏁</span>Carnival Availability<small>Availability and selection</small></button>
+      <button class="moreChoice" onclick="hideLayer('moreMenuPanel');openNotificationPrefs()"><span>🔔</span>Notifications<small>Choose important alerts</small></button>
+
       <button class="moreChoice" onclick="moreNav('checkin')"><span>☑</span>Check-In<small>Weekly athlete check-in</small></button>
       <button class="moreChoice" onclick="moreNav('athletehistory')"><span>☷</span>Athlete History<small>Training and results history</small></button>
       <button class="moreChoice" onclick="moreNav('programs')"><span>▣</span>Training Blocks<small>Program history and blocks</small></button>
@@ -1007,7 +1024,7 @@ async function ensureCoachAccess(){
 
 let pendingAccessDivision=currentDivision,pendingAccessTeam=currentTeam,masterAccessActive=false;
 function hideLayer(id){const el=document.getElementById(id);if(el)el.style.display="none"}
-function showLayer(id){["teamAccessPicker","roleAccessPicker","masterControlPanel","coachDivisionPicker","moreMenuPanel"].forEach(x=>hideLayer(x));const el=document.getElementById(id);if(el)el.style.display="grid";window.scrollTo(0,0)}
+function showLayer(id){["teamAccessPicker","roleAccessPicker","masterControlPanel","coachDivisionPicker","moreMenuPanel","opsPanel"].forEach(x=>hideLayer(x));const el=document.getElementById(id);if(el)el.style.display="grid";window.scrollTo(0,0)}
 function closeAccessLayers(){["teamAccessPicker","roleAccessPicker","masterControlPanel"].forEach(hideLayer)}
 function fillScopeSelect(id,items,selected){const el=document.getElementById(id);if(!el)return;el.innerHTML=items.map(x=>`<option ${x===selected?"selected":""}>${x}</option>`).join("")}
 function initMasterSelectors(){
@@ -2060,5 +2077,100 @@ setTimeout(()=>{
 },250);
 
 </script>
+
+<div id="opsPanel" class="accessLayer" style="display:none">
+  <div class="accessPanel">
+    <div class="accessPanelHead"><div><div class="accessEyebrow">FRESHWATER</div><h2 id="opsTitle">Team Tools</h2></div><button class="accessClose" onclick="hideLayer('opsPanel')">Close</button></div>
+    <div id="opsBody"></div>
+  </div>
+</div>
+
+<script id="freshwater-v3-ops">
+const FWOPS_KEY="freshwater_ops_v3";
+function fwOpsLoad(){try{return JSON.parse(localStorage.getItem(FWOPS_KEY)||"{}")}catch(e){return {}}}
+function fwOpsSave(o){localStorage.setItem(FWOPS_KEY,JSON.stringify(o))}
+function fwScope(){return (window.currentDivision||"Open Men")+" • "+(window.currentTeam||"Team 1")}
+function fwEnsure(){
+ const o=fwOpsLoad();
+ o.messages=o.messages||[]; o.availability=o.availability||[]; o.attendance=o.attendance||[];
+ o.carnivals=o.carnivals||[]; o.activity=o.activity||[]; o.templates=o.templates||[];
+ o.archives=o.archives||[]; o.notificationPrefs=o.notificationPrefs||{announcements:true,program:true,messages:true,carnivals:true};
+ fwOpsSave(o); return o;
+}
+function fwLog(action){
+ const o=fwEnsure(); o.activity.unshift({at:new Date().toLocaleString(),scope:fwScope(),action}); o.activity=o.activity.slice(0,100); fwOpsSave(o);
+}
+function openOps(title,html){
+ document.getElementById("opsTitle").textContent=title;
+ document.getElementById("opsBody").innerHTML=html;
+ showLayer("opsPanel");
+}
+function openToday(){
+ let day=new Date().toLocaleDateString(undefined,{weekday:"long"});
+ openOps("Today / Next Session",`<div class="todayHero"><h3>${day}</h3><p>${fwScope()}</p><p>Your current programmed session is available from the Week tab. This panel is the athlete's quick-start view.</p><button class="opsBtn" onclick="hideLayer('opsPanel');nav('planner')">Open This Week</button></div>`);
+}
+function openMessages(){
+ const o=fwEnsure(), items=o.messages.filter(x=>x.scope===fwScope());
+ openOps("Team Messages",`
+ <div class="opsCard"><b>New team message</b><textarea id="msgText" class="opsText" placeholder="Message your crew..."></textarea><button class="opsBtn" onclick="sendTeamMessage()">Send Message</button></div>
+ <div class="opsCard" style="margin-top:10px"><b>Conversation <span class="badgeDot">${items.length}</span></b>${items.length?items.map(x=>`<div class="feedItem">${esc(x.text)}<div class="feedMeta">${esc(x.from)} • ${esc(x.at)}</div></div>`).join(""):'<small>No team messages yet.</small>'}</div>`);
+}
+function sendTeamMessage(){
+ const v=(document.getElementById("msgText").value||"").trim(); if(!v)return;
+ const o=fwEnsure(); o.messages.unshift({scope:fwScope(),text:v,from:"Coach",at:new Date().toLocaleString(),unread:true}); fwOpsSave(o); fwLog("Sent a team message"); openMessages();
+}
+function openAvailability(){
+ const o=fwEnsure(), list=o.availability.filter(x=>x.scope===fwScope());
+ openOps("Crew Availability",`<div class="opsCard"><b>Add availability</b><input id="avName" class="opsInput" placeholder="Athlete name"><input id="avDate" class="opsInput" type="date"><select id="avStatus" class="opsSelect"><option>Available</option><option>Unavailable</option><option>Injured</option><option>Unsure</option></select><button class="opsBtn" onclick="saveAvailability()">Save</button></div><div class="opsCard" style="margin-top:10px"><b>Crew status</b>${list.length?list.map(x=>`<div class="feedItem"><b>${esc(x.name)}</b> — ${esc(x.status)}<div class="feedMeta">${esc(x.date)}</div></div>`).join(""):'<small>No availability entered yet.</small>'}</div>`);
+}
+function saveAvailability(){const n=document.getElementById("avName").value.trim(),d=document.getElementById("avDate").value,s=document.getElementById("avStatus").value;if(!n||!d)return;const o=fwEnsure();o.availability.unshift({scope:fwScope(),name:n,date:d,status:s});fwOpsSave(o);fwLog(`Availability: ${n} — ${s}`);openAvailability()}
+function openAttendance(){
+ const o=fwEnsure(), list=o.attendance.filter(x=>x.scope===fwScope());
+ openOps("Boat Session Attendance",`<div class="opsCard"><b>Mark attendance</b><input id="atName" class="opsInput" placeholder="Athlete name"><select id="atStatus" class="opsSelect"><option>Present</option><option>Away</option><option>Injured</option><option>Late</option></select><button class="opsBtn" onclick="saveAttendance()">Save</button></div><div class="opsCard" style="margin-top:10px"><b>Latest</b>${list.length?list.slice(0,20).map(x=>`<div class="feedItem"><b>${esc(x.name)}</b> — ${esc(x.status)}<div class="feedMeta">${esc(x.at)}</div></div>`).join(""):'<small>No attendance marked yet.</small>'}</div>`);
+}
+function saveAttendance(){const n=document.getElementById("atName").value.trim(),s=document.getElementById("atStatus").value;if(!n)return;const o=fwEnsure();o.attendance.unshift({scope:fwScope(),name:n,status:s,at:new Date().toLocaleString()});fwOpsSave(o);fwLog(`Attendance: ${n} — ${s}`);openAttendance()}
+function openCarnivalAvailability(){
+ const o=fwEnsure();
+ openOps("Carnival Availability",`<div class="opsCard"><b>Post carnival</b><input id="cvName" class="opsInput" placeholder="Carnival name"><input id="cvDate" class="opsInput" type="date"><button class="opsBtn" onclick="saveCarnival()">Post Carnival</button></div><div class="opsCard" style="margin-top:10px"><b>Carnivals</b>${o.carnivals.length?o.carnivals.map(x=>`<div class="feedItem"><b>${esc(x.name)}</b><div class="feedMeta">${esc(x.date)} • ${esc(x.scope)}</div><div class="pillRow"><button class="pill" onclick="setCarnivalReply('${x.id}','Available')">Available</button><button class="pill" onclick="setCarnivalReply('${x.id}','Unavailable')">Unavailable</button><button class="pill" onclick="setCarnivalReply('${x.id}','Unsure')">Unsure</button></div><div class="feedMeta">${esc(x.reply||"No response yet")}</div></div>`).join(""):'<small>No carnivals posted yet.</small>'}</div>`);
+}
+function saveCarnival(){const n=document.getElementById("cvName").value.trim(),d=document.getElementById("cvDate").value;if(!n||!d)return;const o=fwEnsure();o.carnivals.unshift({id:String(Date.now()),name:n,date:d,scope:fwScope(),reply:""});fwOpsSave(o);fwLog(`Posted carnival: ${n}`);openCarnivalAvailability()}
+function setCarnivalReply(id,r){const o=fwEnsure(),x=o.carnivals.find(x=>x.id===id);if(x)x.reply=r;fwOpsSave(o);fwLog(`Carnival response: ${r}`);openCarnivalAvailability()}
+function openNotificationPrefs(){
+ const o=fwEnsure(),p=o.notificationPrefs;
+ openOps("Notifications",`<div class="opsCard"><b>Notification preferences</b>${["announcements","program","messages","carnivals"].map(k=>`<label class="feedItem" style="display:flex;justify-content:space-between"><span>${k[0].toUpperCase()+k.slice(1)}</span><input type="checkbox" ${p[k]?"checked":""} onchange="setNotif('${k}',this.checked)"></label>`).join("")}<small>In the live installed iPhone web app, push notifications require permission from the user. These controls determine which alerts they want.</small></div>`);
+}
+function setNotif(k,v){const o=fwEnsure();o.notificationPrefs[k]=v;fwOpsSave(o)}
+function openActivityLog(){const o=fwEnsure();openOps("Admin Activity Log",`<div class="opsCard"><b>Recent activity</b>${o.activity.length?o.activity.map(x=>`<div class="feedItem">${esc(x.action)}<div class="feedMeta">${esc(x.scope)} • ${esc(x.at)}</div></div>`).join(""):'<small>No activity recorded yet.</small>'}</div>`)}
+function openTemplates(){const o=fwEnsure();openOps("Program Templates",`<div class="opsCard"><b>Save a session template</b><input id="tplName" class="opsInput" placeholder="e.g. 2K Test, Boat Starts"><textarea id="tplBody" class="opsText" placeholder="Session details..."></textarea><button class="opsBtn" onclick="saveTemplate()">Save Template</button></div><div class="opsCard" style="margin-top:10px"><b>Library</b>${o.templates.length?o.templates.map(x=>`<div class="feedItem"><b>${esc(x.name)}</b><div>${esc(x.body)}</div></div>`).join(""):'<small>No templates saved yet.</small>'}</div>`)}
+function saveTemplate(){const n=document.getElementById("tplName").value.trim(),b=document.getElementById("tplBody").value.trim();if(!n)return;const o=fwEnsure();o.templates.unshift({name:n,body:b});fwOpsSave(o);fwLog(`Saved program template: ${n}`);openTemplates()}
+function openArchive(){const o=fwEnsure();openOps("Season Archive",`<div class="opsCard"><b>Archive current crew season</b><small>Creates a preserved season record rather than deleting the crew.</small><button class="opsBtn" onclick="archiveSeason()">Archive ${esc(fwScope())}</button></div><div class="opsCard" style="margin-top:10px"><b>Archived seasons</b>${o.archives.length?o.archives.map(x=>`<div class="feedItem">${esc(x.scope)}<div class="feedMeta">${esc(x.at)}</div></div>`).join(""):'<small>No archived seasons yet.</small>'}</div>`)}
+function archiveSeason(){const o=fwEnsure();o.archives.unshift({scope:fwScope(),at:new Date().toLocaleString()});fwOpsSave(o);fwLog("Archived season");openArchive()}
+function openPermissions(){openOps("Admin Permissions",`<div class="opsCard"><b>Role permissions</b><div class="feedItem"><b>Admin</b><div class="feedMeta">Full divisions, teams, coach links, program copy, communications and settings.</div></div><div class="feedItem"><b>Coach</b><div class="feedMeta">Assigned crew programming, athletes, testing, attendance and team communications.</div></div><div class="feedItem"><b>Communications</b><div class="feedMeta">Announcements and media only; no program or athlete administration.</div></div><div class="feedItem"><b>Athlete</b><div class="feedMeta">Own program, results, check-ins, availability and team messages.</div></div></div>`)}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]))}
+</script>
+
 </body>
 </html>
+<style id="freshwater-v3-polish">
+/* Cleaner division cover */
+#freshwaterHome .crewRound{display:none!important}
+#freshwaterHome .freshTile{grid-template-columns:1fr 28px!important;padding-left:18px!important}
+
+/* New operational tools */
+.opsGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.opsCard{border:1px solid #343b40;border-radius:15px;background:#111;padding:15px;color:#fff}
+.opsCard b{display:block;font-size:15px;margin-bottom:5px}
+.opsCard small{color:#aeb5ba;line-height:1.35}
+.opsBtn{width:100%;border:0;border-radius:12px;background:#a9202b;color:white;padding:13px;font-weight:850;margin-top:10px}
+.opsInput,.opsSelect,.opsText{width:100%;box-sizing:border-box;border:1px solid #3c454b;border-radius:11px;background:#070a0c;color:#fff;padding:12px;margin-top:7px}
+.opsText{min-height:88px;resize:vertical}
+.pillRow{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.pill{border:1px solid #4a5156;border-radius:999px;padding:7px 10px;background:#171717;color:#fff;font-size:11px}
+.feedItem{border-top:1px solid #292f33;padding:11px 0}
+.feedItem:first-child{border-top:0}
+.feedMeta{font-size:10px;color:#87939b;margin-top:4px}
+.badgeDot{display:inline-flex;min-width:18px;height:18px;border-radius:999px;align-items:center;justify-content:center;background:#df3945;color:white;font-size:9px;font-weight:900;padding:0 4px;margin-left:5px}
+.todayHero{border:1px solid #7c2931;background:linear-gradient(145deg,#2c1014,#100b0c);border-radius:16px;padding:16px;margin:12px 0}
+.todayHero h3{font-size:16px!important;margin:0 0 5px}
+.todayHero p{margin:4px 0;color:#d2c7c9;font-size:12px}
+</style>
