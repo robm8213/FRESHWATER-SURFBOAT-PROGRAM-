@@ -785,11 +785,13 @@ let data=loadStoredDivision(currentDivision);
 if(!data.weeklyQuestions)data.weeklyQuestions=DEFAULT_WEEKLY;if(!data.raceQuestions)data.raceQuestions=DEFAULT_RACE;if(!data.archive)data.archive=[];if(!data.checkins)data.checkins=[];if(!data.sessionLogs)data.sessionLogs=[];if(!data.tests||!data.tests.length)data.tests=JSON.parse(JSON.stringify(DEFAULT_TESTS));if(!data.testResults)data.testResults=[];if(!Array.isArray(data.carnivals))data.carnivals=[];
 DAYS.forEach(d=>{if(!data.days[d])data.days[d]={sessions:[]};if(!Array.isArray(data.days[d].sessions))data.days[d].sessions=[]});
 let coachMode=true;let activeAthlete="";let activeTrainingDay="";let lastCloudUpdatedAt="";let cloudSyncBusy=false;let plannerSyncTimer=null;
+function isAthleteLink(){return !!new URLSearchParams(location.search).get("athlete")}
+function denyAthleteCoachAccess(){alert("Coach Mode is not available from an athlete link. Coaches must use Coach Access from the main Freshwater app.");return true}
 function persist(){localStorage.setItem(divisionStoreKey(),JSON.stringify(data));localStorage.setItem("freshwaterCurrentDivision",currentDivision)}
 function saveRender(){persist();if(coachMode)syncCoachCloud(false);renderAll()}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
 function nav(id){if(document.getElementById("planner")?.classList.contains("active")&&id!=="planner"){savePlannerDraftToData();clearTimeout(plannerSyncTimer);syncCoachCloud(false,true)}const target=(id==="checkin"&&coachMode)?"review":id;document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===target));document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));window.scrollTo(0,0);renderAll()}
-function toggleMode(){coachMode=!coachMode;modePill.textContent=coachMode?"COACH MODE":"ATHLETE VIEW";modeBtn.textContent=coachMode?"Athlete View":"Coach Mode";document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display=coachMode?"":"none"});if(!coachMode&&!activeAthlete&&data.athletes.length)activeAthlete=data.athletes[0].id;nav(coachMode?"dashboard":"training")}
+function toggleMode(){if(!coachMode&&isAthleteLink()){denyAthleteCoachAccess();return}coachMode=!coachMode;modePill.textContent=coachMode?"COACH MODE":"ATHLETE VIEW";modeBtn.textContent=coachMode?"Athlete View":"Coach Mode";document.querySelectorAll(".sidebar .navbtn").forEach(b=>{if(["planner","programs","athletes","review","settings"].includes(b.dataset.screen))b.style.display=coachMode?"":"none"});if(!coachMode&&!activeAthlete&&data.athletes.length)activeAthlete=data.athletes[0].id;nav(coachMode?"dashboard":"training")}
 
 
 function normalizeDivisionData(){
@@ -809,7 +811,7 @@ function setFreshwaterDivision(name){
  const tag=document.getElementById("divisionTag");if(tag)tag.textContent=currentDivision.toUpperCase()+" • SURF BOAT PROGRAM";
  renderAll();
 }
-function showFreshwaterHome(){persist();document.getElementById("freshwaterApp").style.display="none";document.getElementById("freshwaterHome").style.display="";hideCoachDivisionPicker();window.scrollTo(0,0)}
+function showFreshwaterHome(){persist();document.getElementById("freshwaterApp").style.display="none";document.getElementById("freshwaterHome").style.display="";const ct=document.querySelector(".coachTile");if(ct)ct.style.display=isAthleteLink()?"none":"";hideCoachDivisionPicker();window.scrollTo(0,0)}
 function enterFreshwaterApp(){document.getElementById("freshwaterHome").style.display="none";document.getElementById("freshwaterApp").style.display="";hideCoachDivisionPicker();window.scrollTo(0,0)}
 
 let clubAnnouncements=[],clubMedia=[],clubMediaFilter="all",clubSharedScope="all",clubSharedDivision="",clubSharedReturn="home";
@@ -881,6 +883,7 @@ async function verifyCoachKey(key){
  }catch(e){console.error(e);return false}
 }
 async function ensureCoachAccess(){
+ if(isAthleteLink()){denyAthleteCoachAccess();return ""}
  let key=localStorage.getItem("freshwaterCoachKey")||"";
  if(key&&await verifyCoachKey(key))return key;
  if(key)localStorage.removeItem("freshwaterCoachKey");
@@ -892,6 +895,7 @@ async function ensureCoachAccess(){
  return key;
 }
 async function showCoachDivisionPicker(){
+ if(isAthleteLink()){denyAthleteCoachAccess();return}
  const key=await ensureCoachAccess();if(!key)return;
  document.getElementById("coachDivisionPicker").style.display="grid";
 }
@@ -904,7 +908,7 @@ function hideCoachDivisionPicker(){document.getElementById("coachDivisionPicker"
 function openDivisionAthlete(name){
  const token=new URLSearchParams(location.search).get("athlete");
  if(token&&athleteInviteDivision&&divisionSlug(name)!==athleteInviteDivision){const assigned=FRESHWATER_DIVISIONS.find(x=>divisionSlug(x)===athleteInviteDivision)||"your assigned division";alert(`Your athlete link is for ${assigned}. Tap ${assigned} to open your training.`);return}
- setFreshwaterDivision(name);enterFreshwaterApp();coachMode=false;modePill.textContent="ATHLETE VIEW";modeBtn.textContent="Coach Mode";configureAthleteNavigation();nav("training");refreshNotificationBadges();
+ setFreshwaterDivision(name);enterFreshwaterApp();coachMode=false;modePill.textContent="ATHLETE VIEW";modeBtn.textContent="Coach Mode";if(isAthleteLink()){modeBtn.style.display="none"}configureAthleteNavigation();nav("training");refreshNotificationBadges();
 }
 function restoreCoachNavigation(){
  document.querySelectorAll(".sidebar .navbtn").forEach(b=>b.style.display="");
@@ -912,6 +916,7 @@ function restoreCoachNavigation(){
  const bar=document.querySelector(".mobilebar");if(bar)bar.style.gridTemplateColumns="";
 }
 async function openDivisionCoach(name){
+ if(isAthleteLink()){denyAthleteCoachAccess();return}
  const key=await ensureCoachAccess();if(!key)return;
  setFreshwaterDivision(name);enterFreshwaterApp();coachMode=true;modePill.textContent="COACH MODE";modeBtn.textContent="Athlete View";restoreCoachNavigation();
  await loadCoachCloud(false);
