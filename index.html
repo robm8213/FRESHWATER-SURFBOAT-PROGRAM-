@@ -3,227 +3,419 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#080506">
-<title>Freshwater Surf Boat — Final Test</title>
+<meta name="theme-color" content="#0a0607">
+<title>FRESHWATER SURF BOAT PROGRAM — FINAL TEST</title>
 <style>
 :root{
-  --bg:#070506;--panel:#161012;--panel2:#211619;--line:#402a2e;
-  --txt:#f8f5f4;--mut:#b9aaac;--maroon:#7c1f26;--maroon2:#9d2932;
-  --green:#2cc36b;--amber:#c99643;--blue:#356da8;
+  --bg:#0a0607;--panel:#171012;--panel2:#231517;--line:#3a2629;--txt:#f7f4f3;--mut:#b6a6a8;
+  --maroon:#7c1f26;--green:#29c46d;--red:#b83a40;--amber:#c58b3b;--blue:#24577f;
 }
 *{box-sizing:border-box}
-html,body{margin:0;background:#040304;color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
-button{font:inherit}
-.shell{min-height:100vh;background:radial-gradient(circle at 50% 0,#241317 0,#0d090a 34%,#050405 75%);padding-bottom:calc(24px + env(safe-area-inset-bottom))}
-.topbar{
-  position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;
-  gap:10px;padding:12px 14px;background:rgba(7,5,6,.94);backdrop-filter:blur(12px);
-  border-bottom:1px solid #2a1a1d
-}
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-.mark{
-  width:42px;height:42px;border-radius:50%;border:2px solid #fff;display:grid;place-items:center;
-  font-weight:1000;font-style:italic;flex:0 0 42px
-}
-.brandText{font-weight:1000;font-style:italic;line-height:1.05;font-size:18px;white-space:nowrap}
-.brandText span{display:block;color:#c64e59}
-.testPill{font-size:10px;font-weight:900;letter-spacing:.5px;padding:7px 9px;border:1px solid #784048;border-radius:999px;background:#2a1519;color:#ffcbd0;white-space:nowrap}
-.wrap{max-width:760px;margin:0 auto;padding:18px 14px 30px}
-.hero{
-  border:1px solid #5d343a;border-radius:22px;overflow:hidden;background:
-  linear-gradient(180deg,rgba(124,31,38,.32),rgba(11,8,9,.96)),
-  linear-gradient(135deg,#2c171b,#0a0708);
-  padding:28px 18px 22px;text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.25)
-}
-.crest{width:74px;height:74px;border-radius:50%;border:3px solid white;margin:0 auto 14px;display:grid;place-items:center;font-size:26px;font-weight:1000;font-style:italic;background:#741f26}
-.hero h1{margin:0;font-size:30px;line-height:1.05}
-.hero p{margin:10px auto 0;max-width:520px;color:#d9ccce;font-size:13px;line-height:1.5}
-.notice{margin:14px 0;padding:12px 13px;border:1px solid #554047;border-radius:13px;background:#151012;color:#d9ccce;font-size:12px}
-.sectionTitle{margin:22px 2px 10px;font-size:11px;letter-spacing:1.4px;font-weight:900;color:#cbbec0}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.tile{
-  border:1px solid var(--line);border-radius:17px;background:linear-gradient(180deg,var(--panel2),var(--panel));
-  color:var(--txt);padding:17px 14px;text-align:left;min-height:84px;cursor:pointer;
-  transition:.15s transform,.15s border-color,.15s background
-}
-.tile:active{transform:scale(.985)}
-.tile:hover{border-color:#77424a}
-.tile b{display:block;font-size:17px}
-.tile small{display:block;color:var(--mut);font-size:11px;margin-top:5px}
-.tile .arrow{float:right;font-size:24px;color:#d5636e;margin-top:-1px}
-.owner{
-  width:100%;margin-top:10px;border:1px solid #6a5631;border-radius:16px;background:linear-gradient(180deg,#282012,#171107);
-  color:#f5e1ad;padding:15px;font-weight:900;cursor:pointer
-}
-.screen{display:none}
-.screen.active{display:block}
-.back{border:0;background:#1a1214;color:#f1e9ea;border-radius:11px;padding:10px 12px;font-weight:800;margin:2px 0 12px;cursor:pointer}
-.pageHead{margin:5px 0 6px;font-size:29px}
-.sub{color:var(--mut);font-size:12px;line-height:1.5}
-.teamCard,.accessCard{
-  border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--panel2),var(--panel));
-  padding:16px;margin:12px 0
-}
-.teamBtn{
-  width:100%;border:1px solid #63363e;border-radius:15px;background:#261518;color:#fff;
-  padding:17px 15px;font-weight:1000;text-align:left;cursor:pointer;margin-top:10px
-}
-.teamBtn span{float:right;color:#dc6973;font-size:21px}
-.accessGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
-.accessBtn{
-  border:1px solid #50373b;border-radius:16px;background:#161012;color:#fff;padding:20px 12px;cursor:pointer;text-align:center
-}
-.accessBtn .ico{font-size:28px;display:block;margin-bottom:8px}
-.accessBtn b{font-size:16px}
-.accessBtn small{display:block;color:var(--mut);font-size:10px;margin-top:5px}
-.accessBtn.coach{border-color:#6d4b2e;background:linear-gradient(180deg,#271c10,#171107)}
-.accessBtn.athlete{border-color:#31576e;background:linear-gradient(180deg,#112332,#0c151c)}
-.mockApp{border:1px solid #482d32;border-radius:18px;background:#100b0d;overflow:hidden;margin-top:12px}
-.mockAppHead{padding:16px;background:linear-gradient(180deg,#251619,#160e10);border-bottom:1px solid #3d272b}
-.mockAppHead .scope{font-size:10px;color:#d76c75;font-weight:1000;letter-spacing:1px}
-.mockAppHead h2{margin:5px 0 2px;font-size:23px}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;padding:12px}
-.stat{border:1px solid #35262a;border-radius:13px;background:#0b0809;padding:12px}
-.stat small{color:var(--mut)}
-.stat b{display:block;font-size:20px;margin-top:4px}
-.navMock{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;padding:9px;border-top:1px solid #2f2024;background:#090607}
-.navMock div{text-align:center;font-size:9px;color:#baaaad;padding:7px 2px}
-.navMock span{display:block;font-size:18px;margin-bottom:2px}
-.ok{
-  width:100%;margin-top:14px;border:0;border-radius:14px;background:var(--green);color:white;
-  padding:14px;font-weight:1000;cursor:pointer
-}
-.reset{width:100%;margin-top:9px;border:1px solid #3b2b2f;border-radius:14px;background:#140e10;color:#d6c9cb;padding:12px;font-weight:800;cursor:pointer}
-@media(max-width:430px){
-  .wrap{padding-left:10px;padding-right:10px}
-  .hero{padding-left:14px;padding-right:14px}.hero h1{font-size:27px}
-  .tile{min-height:78px;padding:15px 12px}.tile b{font-size:16px}
-  .accessGrid{grid-template-columns:1fr 1fr}
+html,body{margin:0;background:#050405;color:var(--txt);font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+#testBanner{position:sticky;top:0;z-index:80;background:#37191e;border-bottom:1px solid #713a43;padding:8px 12px;text-align:center;font-size:10px;font-weight:1000;letter-spacing:1px;color:#ffd6da}
+.front,.appShell{min-height:100vh;background:linear-gradient(180deg,#080506,#0c0809)}
+.frontWrap{max-width:760px;margin:auto;padding:16px 14px 34px}
+.frontHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0 15px;border-bottom:1px solid #2f1f22}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{width:44px;height:44px;border:2px solid #fff;border-radius:50%;display:grid;place-items:center;font-weight:1000;font-style:italic}
+.brandText{font-size:20px;font-weight:1000;font-style:italic;line-height:1}
+.brandText span{display:block;color:#c34853;margin-top:4px}
+.ownerPill{border:1px solid #6c3b43;background:#2b171b;color:#ffd6da;border-radius:999px;padding:9px 12px;font-size:11px;font-weight:1000}
+.hero{margin:18px 0;border:1px solid #60353c;border-radius:20px;padding:20px;background:linear-gradient(180deg,#381a20,#150d0f)}
+.kicker{font-size:11px;letter-spacing:1.2px;color:#d7bfc2;font-weight:900}
+.hero h1{font-size:31px;margin:7px 0}
+.hero p{color:#cdbec0;line-height:1.5;margin:0;font-size:13px}
+.sectionLabel{margin:22px 2px 10px;font-size:11px;letter-spacing:1.3px;font-weight:1000;color:#c7b8ba}
+.divGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.divTile,.teamTile{width:100%;border:1px solid #503238;border-radius:17px;background:linear-gradient(180deg,#221619,#151012);color:#fff;text-align:left;padding:17px 15px}
+.divTile b,.teamTile b{font-size:18px}
+.divTile small,.teamTile small{display:block;color:var(--mut);font-size:11px;margin-top:5px}
+.arrow{float:right;font-size:25px;color:#d25b66}
+.back{border:0;background:#211619;color:#fff;border-radius:11px;padding:10px 12px;font-weight:900;margin-bottom:12px}
+.card{border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,var(--panel2),var(--panel));padding:15px;margin:11px 0}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sub{font-size:12px;color:var(--mut);line-height:1.45}
+.btn{border:0;border-radius:11px;background:var(--maroon);color:#fff;padding:11px 13px;font-weight:900}
+.btn.secondary{background:#1c2933}.btn.green{background:var(--green)}.btn.amber{background:#80602b}.btn.full{width:100%}
+input,select,textarea{width:100%;background:#0a1117;border:1px solid #35424c;color:#fff;border-radius:9px;padding:10px}
+.label{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;margin:8px 0 5px}
+.accessGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.accessBtn{border:1px solid #52363b;background:#161012;color:#fff;border-radius:16px;padding:22px 12px;text-align:center}
+.accessBtn span{display:block;font-size:28px;margin-bottom:7px}
+.accessBtn b{font-size:17px}
+.accessBtn small{display:block;color:var(--mut);margin-top:4px;font-size:10px}
+.accessBtn.coach{border-color:#745329;background:#241b10}
+.accessBtn.athlete{border-color:#315a75;background:#101f2a}
+.hidden{display:none!important}
+
+/* Main-app styled section */
+.appShell{max-width:1180px;margin:auto}
+.appHeader{height:72px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #342126;background:#0b0708;position:sticky;top:29px;z-index:40}
+.appBrand{display:flex;align-items:center;gap:10px}
+.appBrand .logo{width:40px;height:40px}
+.modepill{font-size:10px;padding:8px 10px;border-radius:999px;background:#32171c;color:#ffc8cd;font-weight:900}
+.layout{display:grid;grid-template-columns:220px 1fr}
+.sidebar{border-right:1px solid #342126;padding:16px 10px;min-height:calc(100vh - 101px)}
+.navbtn{display:block;width:100%;border:0;background:none;color:#ae9da0;padding:11px;border-radius:9px;text-align:left;font-weight:800}
+.navbtn.active{background:#28171b;color:#f5d4d7}
+.content{padding:20px;max-width:980px;width:100%;margin:auto}
+.screen{display:none}.screen.active{display:block}
+h1{font-size:29px;margin:5px 0}
+.statGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{border:1px solid var(--line);border-radius:13px;padding:13px;background:#110c0e}
+.stat b{display:block;font-size:22px;margin-top:4px}
+.weekLine{padding:11px 0;border-top:1px solid #352429}.weekLine:first-child{border-top:0}
+.notice{background:#162838;border:1px solid #294f6c;border-radius:12px;padding:12px;color:#d9e7ef;font-size:12px;line-height:1.5}
+.copyHighlight{border:1px solid #8b6933;background:linear-gradient(180deg,#332713,#1a130a);border-radius:15px;padding:15px}
+.copyHighlight h2{margin:0 0 6px;font-size:19px}
+.copyResult{display:none;margin-top:10px;border:1px solid #287b4b;border-radius:11px;background:#10291b;padding:11px;color:#a9efc2;font-size:12px}
+.mobilebar{display:none}
+.frontFoot{margin-top:18px;text-align:center;color:#806f72;font-size:10px}
+
+@media(max-width:760px){
+  .frontWrap{padding:12px 10px 30px}
+  .brandText{font-size:18px}
+  .ownerPill{font-size:9px;padding:8px}
+  .hero h1{font-size:27px}
+  .divTile{padding:15px 12px}
+  .layout{display:block}.sidebar{display:none}
+  .content{padding:14px 10px 86px}
+  .statGrid{grid-template-columns:1fr 1fr}
+  .mobilebar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;bottom:0;left:0;right:0;background:#0b0708;border-top:1px solid #342126;padding:6px 2px calc(6px + env(safe-area-inset-bottom));z-index:50}
+  .mobilebar button{border:0;background:none;color:#9f8f92;font-size:9px;padding:5px 1px}
+  .mobilebar button span{display:block;font-size:18px}
+  .mobilebar button.active{color:#dc6973}
+  .grid2{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-<div class="shell">
-  <div class="topbar">
-    <div class="brand">
-      <div class="mark">FS</div>
-      <div class="brandText">FRESHWATER <span>SURF BOAT</span></div>
+<div id="testBanner">FINAL TEST MODE — SAFE PREVIEW ONLY</div>
+
+<div id="front" class="front">
+  <div class="frontWrap">
+    <div class="frontHead">
+      <div class="brand">
+        <div class="logo">FS</div>
+        <div class="brandText">FRESHWATER <span>SURF BOAT</span></div>
+      </div>
+      <button class="ownerPill" onclick="openAdmin()">OWNER / ADMIN</button>
     </div>
-    <div class="testPill">FINAL TEST MODE</div>
+
+    <section id="frontHome">
+      <div class="hero">
+        <div class="kicker">FRESHWATER SURF BOAT PROGRAM</div>
+        <h1>Choose Division</h1>
+        <p>This is the proposed front door. After choosing a division and team, Coach or Athlete enters the familiar Freshwater training app.</p>
+      </div>
+      <div class="sectionLabel">SURF BOAT DIVISIONS</div>
+      <div class="divGrid" id="divisionGrid"></div>
+      <div class="frontFoot">Test version only — does not alter live Coach Cloud or athlete data.</div>
+    </section>
+
+    <section id="teamScreen" class="hidden">
+      <button class="back" onclick="frontShow('frontHome')">‹ Divisions</button>
+      <div class="kicker">DIVISION</div>
+      <h1 id="teamDivisionTitle"></h1>
+      <div class="sub">Choose the crew/team.</div>
+      <div id="teamTiles"></div>
+    </section>
+
+    <section id="accessScreen" class="hidden">
+      <button class="back" onclick="frontShow('teamScreen')">‹ Teams</button>
+      <div class="kicker">TEAM ACCESS</div>
+      <h1 id="accessTitle"></h1>
+      <div class="sub">Coach and athlete access are separated here.</div>
+      <div class="card">
+        <div class="accessGrid">
+          <button class="accessBtn coach" onclick="enterMain('coach')"><span>🧭</span><b>Coach</b><small>Program & manage team</small></button>
+          <button class="accessBtn athlete" onclick="enterMain('athlete')"><span>🚣</span><b>Athlete</b><small>Training & results</small></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="adminScreen" class="hidden">
+      <button class="back" onclick="frontShow('frontHome')">‹ Home</button>
+      <div class="kicker">OWNER / ADMIN</div>
+      <h1>Club Control</h1>
+      <div class="sub">This sits above every division and team.</div>
+
+      <div class="copyHighlight" style="margin-top:14px">
+        <h2>Copy Program Between Divisions</h2>
+        <div class="sub">This is the control that was missing from the first simple test. It belongs in the final system.</div>
+
+        <div class="grid2" style="margin-top:10px">
+          <div>
+            <div class="label">Copy from division</div>
+            <select id="copyFromDivision"></select>
+          </div>
+          <div>
+            <div class="label">From team</div>
+            <select id="copyFromTeam"></select>
+          </div>
+          <div>
+            <div class="label">Copy to division</div>
+            <select id="copyToDivision"></select>
+          </div>
+          <div>
+            <div class="label">To team</div>
+            <select id="copyToTeam"></select>
+          </div>
+          <div>
+            <div class="label">What to copy</div>
+            <select id="copyScope">
+              <option>Current Week</option>
+              <option>Entire Current Block</option>
+              <option>Full Season Program</option>
+            </select>
+          </div>
+          <div>
+            <div class="label">Copy mode</div>
+            <select id="copyMode">
+              <option>Replace destination program</option>
+              <option>Add to destination program</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn amber full" style="margin-top:12px" onclick="previewCopy()">Preview Copy</button>
+        <button class="btn green full" style="margin-top:8px" onclick="runCopyTest()">Copy Program</button>
+        <div id="copyResult" class="copyResult"></div>
+      </div>
+
+      <div class="card">
+        <h2 style="margin-top:0">Admin Access</h2>
+        <div class="sub">In the final app, Owner/Admin can open any division and any team, then enter Coach view for that crew.</div>
+        <button class="btn full" style="margin-top:10px" onclick="frontShow('frontHome')">Choose a Division</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="mainApp" class="appShell hidden">
+  <header class="appHeader">
+    <div class="appBrand">
+      <div class="logo">FS</div>
+      <div>
+        <div class="brandText" style="font-size:17px">FRESHWATER <span>SURF BOAT</span></div>
+        <div class="sub" id="appScope"></div>
+      </div>
+    </div>
+    <div class="modepill" id="modePill">COACH MODE</div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <button class="navbtn active" data-screen="dashboard" onclick="nav('dashboard')">⌂ Home</button>
+      <button class="navbtn" data-screen="planner" onclick="nav('planner')">▦ Week</button>
+      <button class="navbtn" data-screen="athletes" onclick="nav('athletes')">♟ Athletes</button>
+      <button class="navbtn" data-screen="checkin" onclick="nav('checkin')">☑ Check-In</button>
+      <button class="navbtn" data-screen="history" onclick="nav('history')">☷ Athlete History</button>
+      <button class="navbtn" data-screen="programs" onclick="nav('programs')">▣ Training Blocks</button>
+      <button class="navbtn" data-screen="testing" onclick="nav('testing')">⏱ Testing</button>
+      <button class="navbtn" data-screen="carnivals" onclick="nav('carnivals')">🏁 Carnivals</button>
+      <button class="navbtn" data-screen="settings" onclick="nav('settings')">⚙ Settings</button>
+      <button class="navbtn" onclick="exitMain()">← Back to Divisions</button>
+    </aside>
+
+    <main class="content">
+      <section id="dashboard" class="screen active">
+        <div class="kicker">OVERVIEW</div>
+        <h1 id="dashTitle">Coach Dashboard</h1>
+        <div class="sub" id="dashScope"></div>
+
+        <div class="statGrid" style="margin-top:14px">
+          <div class="stat"><span class="sub">Athletes</span><b>4</b></div>
+          <div class="stat"><span class="sub">Programmed Days</span><b>6/7</b></div>
+          <div class="stat"><span class="sub">Current Block</span><b>1</b></div>
+          <div class="stat"><span class="sub">Current Week</span><b>1</b></div>
+        </div>
+
+        <div class="card">
+          <div class="row">
+            <div>
+              <h2 style="margin:0">This Week</h2>
+              <div class="sub">Monday → Sunday</div>
+            </div>
+            <button class="btn" onclick="nav('planner')">Edit Week</button>
+          </div>
+          <div class="weekLine"><b>Monday</b><div class="sub">Gym — Strength</div></div>
+          <div class="weekLine"><b>Tuesday</b><div class="sub">Erg — Aerobic</div></div>
+          <div class="weekLine"><b>Wednesday</b><div class="sub">Boat Session</div></div>
+          <div class="weekLine"><b>Thursday</b><div class="sub">Gym — Power</div></div>
+          <div class="weekLine"><b>Friday</b><div class="sub">Recovery</div></div>
+          <div class="weekLine"><b>Saturday</b><div class="sub">Boat Session</div></div>
+          <div class="weekLine"><b>Sunday</b><div class="sub">Rest</div></div>
+        </div>
+      </section>
+
+      <section id="planner" class="screen">
+        <div class="kicker">PROGRAM BUILDER</div>
+        <h1>Weekly Planner</h1>
+        <div class="notice">This screen represents the existing Freshwater weekly planner. The final merge keeps the existing program builder, saving, history and Coach Cloud logic.</div>
+        <div class="card">
+          <div class="grid2">
+            <div><div class="label">Season</div><input value="2026/27"></div>
+            <div><div class="label">Block name</div><input value="Pre-Season / Base Building"></div>
+            <div><div class="label">Block number</div><input value="1"></div>
+            <div><div class="label">Week number</div><input value="1"></div>
+          </div>
+          <button class="btn green full" style="margin-top:12px">Save / Archive Week to History</button>
+        </div>
+        <div class="card"><h2>Monday</h2><div class="sub">Existing session builder remains here.</div></div>
+        <div class="card"><h2>Tuesday</h2><div class="sub">Existing session builder remains here.</div></div>
+      </section>
+
+      <section id="athletes" class="screen">
+        <div class="kicker">TEAM MANAGEMENT</div>
+        <h1>Athletes</h1>
+        <div class="card"><b>Team athlete list</b><div class="sub">Athletes belong to the selected division/team.</div></div>
+      </section>
+
+      <section id="checkin" class="screen">
+        <div class="kicker">ATHLETE WELLNESS & FEEDBACK</div>
+        <h1>Weekly Athlete Check-In</h1>
+        <div class="card"><div class="sub">The existing Monday check-in remains unchanged.</div></div>
+      </section>
+
+      <section id="history" class="screen">
+        <div class="kicker">ATHLETE HISTORY</div>
+        <h1>Athlete Training History</h1>
+        <div class="card"><div class="sub">Existing session results and athlete history remain unchanged.</div></div>
+      </section>
+
+      <section id="programs" class="screen">
+        <div class="kicker">TRAINING BLOCKS</div>
+        <h1>Program History</h1>
+        <div class="card">
+          <b>Block 1</b>
+          <div class="sub">Weeks remain archived here with Load, Copy to Current and Create Next Week controls.</div>
+        </div>
+        <div class="copyHighlight">
+          <h2>Owner/Admin Cross-Division Copy</h2>
+          <div class="sub">The existing Program History remains team-specific. Owner/Admin gets the extra cross-division copy control from the front-page Admin area.</div>
+          <button class="btn amber full" style="margin-top:10px" onclick="exitToAdmin()">Open Copy Program Tool</button>
+        </div>
+      </section>
+
+      <section id="testing" class="screen">
+        <div class="kicker">PERFORMANCE TESTING</div>
+        <h1>Testing</h1>
+        <div class="card"><div class="sub">Existing Erg and Gym testing remains unchanged and stays linked to the athlete/team.</div></div>
+      </section>
+
+      <section id="carnivals" class="screen">
+        <div class="kicker">SEASON CARNIVALS</div>
+        <h1>Carnivals</h1>
+        <div class="card"><div class="sub">Existing carnival dates, locations, meet times and results remain unchanged.</div></div>
+      </section>
+
+      <section id="settings" class="screen">
+        <div class="kicker">APP SETUP</div>
+        <h1>Settings</h1>
+        <div class="card"><div class="sub">Existing Coach Cloud connection, questions, backup and restore remain in Settings.</div></div>
+      </section>
+    </main>
   </div>
 
-  <div class="wrap">
-    <section id="home" class="screen active">
-      <div class="hero">
-        <div class="crest">FS</div>
-        <h1>Freshwater Surf Boat</h1>
-        <p>Select your division, then your team. Coach and athlete access are separated before entering the existing training program.</p>
-      </div>
-      <div class="notice"><b>Test only.</b> This version does not change live athlete data, Coach Cloud or the main Freshwater app.</div>
-
-      <div class="sectionTitle">SURF BOAT DIVISIONS</div>
-      <div class="grid" id="divisionGrid"></div>
-      <button class="owner" onclick="openOwner()">🔐 OWNER / ADMIN</button>
-    </section>
-
-    <section id="teams" class="screen">
-      <button class="back" onclick="show('home')">‹ Divisions</button>
-      <div class="sectionTitle">DIVISION</div>
-      <h1 class="pageHead" id="divisionTitle"></h1>
-      <div class="sub">Choose the crew/team you want to open.</div>
-      <div id="teamList"></div>
-    </section>
-
-    <section id="access" class="screen">
-      <button class="back" onclick="show('teams')">‹ Teams</button>
-      <div class="sectionTitle">TEAM ACCESS</div>
-      <h1 class="pageHead" id="teamTitle"></h1>
-      <div class="sub" id="teamSub"></div>
-      <div class="accessCard">
-        <div class="accessGrid">
-          <button class="accessBtn coach" onclick="enterApp('Coach')">
-            <span class="ico">🧭</span><b>Coach</b><small>Program, manage & review</small>
-          </button>
-          <button class="accessBtn athlete" onclick="enterApp('Athlete')">
-            <span class="ico">🚣</span><b>Athlete</b><small>Training, testing & check-in</small>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section id="appView" class="screen">
-      <button class="back" onclick="show('access')">‹ Access</button>
-      <div class="sectionTitle">EXISTING MAIN APP</div>
-      <div class="mockApp">
-        <div class="mockAppHead">
-          <div class="scope" id="scopeLabel"></div>
-          <h2 id="modeTitle"></h2>
-          <div class="sub">This represents where the existing Freshwater training app opens after selection.</div>
-        </div>
-        <div class="stats">
-          <div class="stat"><small>Current Block</small><b>1</b></div>
-          <div class="stat"><small>Current Week</small><b>1</b></div>
-          <div class="stat"><small>Training</small><b>Mon–Sun</b></div>
-          <div class="stat"><small>Carnivals</small><b>Season</b></div>
-        </div>
-        <div class="navMock" id="mockNav"></div>
-      </div>
-      <button class="ok" onclick="show('home')">✓ FLOW LOOKS RIGHT — RETURN HOME</button>
-      <button class="reset" onclick="resetTest()">Reset test</button>
-    </section>
-
-    <section id="owner" class="screen">
-      <button class="back" onclick="show('home')">‹ Home</button>
-      <div class="sectionTitle">OWNER / ADMIN</div>
-      <h1 class="pageHead">Club Control</h1>
-      <div class="sub">Owner/Admin sits above every division and team.</div>
-      <div class="teamCard">
-        <b>Full club access</b>
-        <div class="sub" style="margin-top:7px">All divisions • All teams • Coach access • Athlete management • Club announcements/media • Settings</div>
-      </div>
-      <button class="ok" onclick="show('home')">Back to divisions</button>
-    </section>
+  <div class="mobilebar">
+    <button class="active" data-screen="dashboard" onclick="nav('dashboard')"><span>⌂</span>Home</button>
+    <button data-screen="planner" onclick="nav('planner')"><span>▦</span>Week</button>
+    <button data-screen="athletes" onclick="nav('athletes')"><span>♟</span>Athletes</button>
+    <button data-screen="testing" onclick="nav('testing')"><span>⏱</span>Testing</button>
+    <button data-screen="carnivals" onclick="nav('carnivals')"><span>🏁</span>Carnivals</button>
   </div>
 </div>
 
 <script>
 const divisions=["Open Men","Open Women","Reserve Men","Reserve Women","U23 Men","U23 Women","U19 Men","U19 Women"];
-let selectedDivision="",selectedTeam="";
-const grid=document.getElementById("divisionGrid");
-grid.innerHTML=divisions.map(d=>`<button class="tile" onclick="openDivision('${d}')"><span class="arrow">›</span><b>${d}</b><small>Choose division</small></button>`).join("");
+const teams=["Team 1","Team 2"];
+let selectedDivision="Open Men",selectedTeam="Team 1",currentRole="coach";
 
-function show(id){
-  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));
+divisionGrid.innerHTML=divisions.map(d=>`
+  <button class="divTile" onclick="openDivision('${d}')">
+    <span class="arrow">›</span><b>${d}</b><small>Choose division</small>
+  </button>`).join("");
+
+function fillCopySelectors(){
+  copyFromDivision.innerHTML=divisions.map(d=>`<option>${d}</option>`).join("");
+  copyToDivision.innerHTML=divisions.map(d=>`<option ${d==="Reserve Men"?"selected":""}>${d}</option>`).join("");
+  copyFromTeam.innerHTML=teams.map(t=>`<option>${t}</option>`).join("");
+  copyToTeam.innerHTML=teams.map(t=>`<option>${t}</option>`).join("");
+}
+fillCopySelectors();
+
+function frontShow(id){
+  ["frontHome","teamScreen","accessScreen","adminScreen"].forEach(x=>document.getElementById(x).classList.toggle("hidden",x!==id));
   window.scrollTo(0,0);
 }
 function openDivision(d){
   selectedDivision=d;
-  document.getElementById("divisionTitle").textContent=d;
-  const teams = d.startsWith("U19") ? ["Team 1","Team 2"] : ["Team 1","Team 2"];
-  document.getElementById("teamList").innerHTML=teams.map(t=>`<div class="teamCard"><button class="teamBtn" onclick="openTeam('${t}')">${d} — ${t}<span>›</span></button></div>`).join("");
-  show("teams");
+  teamDivisionTitle.textContent=d;
+  teamTiles.innerHTML=teams.map(t=>`
+    <div class="card">
+      <button class="teamTile" onclick="openTeam('${t}')">
+        <span class="arrow">›</span><b>${d} — ${t}</b><small>Open team</small>
+      </button>
+    </div>`).join("");
+  frontShow("teamScreen");
 }
 function openTeam(t){
   selectedTeam=t;
-  document.getElementById("teamTitle").textContent=`${selectedDivision} — ${t}`;
-  document.getElementById("teamSub").textContent="Choose how you are entering this team.";
-  show("access");
+  accessTitle.textContent=`${selectedDivision} — ${selectedTeam}`;
+  frontShow("accessScreen");
 }
-function enterApp(role){
-  document.getElementById("scopeLabel").textContent=`${selectedDivision.toUpperCase()} • ${selectedTeam.toUpperCase()}`;
-  document.getElementById("modeTitle").textContent=role==="Coach"?"Coach Dashboard":"My Training";
-  const coachNav=[
-    ["⌂","Home"],["▦","Week"],["♟","Athletes"],["⏱","Testing"],["🏁","Carnivals"]
-  ];
-  const athleteNav=[
-    ["▦","Training"],["⏱","Testing"],["☑","Check-In"],["▦","Ahead"],["🏁","Carnivals"]
-  ];
-  const nav=role==="Coach"?coachNav:athleteNav;
-  document.getElementById("mockNav").innerHTML=nav.map(x=>`<div><span>${x[0]}</span>${x[1]}</div>`).join("");
-  show("appView");
+function openAdmin(){frontShow("adminScreen")}
+function previewCopy(){
+  copyResult.style.display="block";
+  copyResult.textContent=`Preview: ${copyScope.value} from ${copyFromDivision.value} / ${copyFromTeam.value} → ${copyToDivision.value} / ${copyToTeam.value}. No data changed in this test.`;
 }
-function openOwner(){show("owner")}
-function resetTest(){selectedDivision="";selectedTeam="";show("home")}
+function runCopyTest(){
+  copyResult.style.display="block";
+  copyResult.textContent=`TEST SUCCESS: ${copyScope.value} copied from ${copyFromDivision.value} / ${copyFromTeam.value} to ${copyToDivision.value} / ${copyToTeam.value} using "${copyMode.value}". In the real app this will duplicate program data only — athlete results/check-ins will not be copied.`;
+}
+function enterMain(role){
+  currentRole=role;
+  front.classList.add("hidden");
+  mainApp.classList.remove("hidden");
+  appScope.textContent=`${selectedDivision.toUpperCase()} • ${selectedTeam.toUpperCase()}`;
+  dashScope.textContent=`${selectedDivision} • ${selectedTeam}`;
+  modePill.textContent=role==="coach"?"COACH MODE":"ATHLETE VIEW";
+  dashTitle.textContent=role==="coach"?"Coach Dashboard":"My Training";
+  configureRole(role);
+  nav(role==="coach"?"dashboard":"planner");
+  window.scrollTo(0,0);
+}
+function configureRole(role){
+  const coachOnly=["athletes","history","programs","settings"];
+  document.querySelectorAll(".sidebar .navbtn[data-screen]").forEach(b=>{
+    if(role==="athlete" && coachOnly.includes(b.dataset.screen)) b.style.display="none";
+    else b.style.display="";
+  });
+  if(role==="athlete"){
+    document.querySelector('.sidebar .navbtn[data-screen="planner"]').textContent="▦ Training";
+  }else{
+    document.querySelector('.sidebar .navbtn[data-screen="planner"]').textContent="▦ Week";
+  }
+}
+function nav(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("active",s.id===id));
+  document.querySelectorAll("[data-screen]").forEach(b=>b.classList.toggle("active",b.dataset.screen===id));
+  window.scrollTo(0,0);
+}
+function exitMain(){
+  mainApp.classList.add("hidden");
+  front.classList.remove("hidden");
+  frontShow("frontHome");
+}
+function exitToAdmin(){
+  mainApp.classList.add("hidden");
+  front.classList.remove("hidden");
+  frontShow("adminScreen");
+}
 </script>
 </body>
 </html>
