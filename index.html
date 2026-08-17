@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#071019">
 <title>Freshwater Surf Boat Program</title>
 <style>
+*{box-sizing:border-box}
 html,body{
   margin:0;
   min-height:100%;
@@ -13,28 +14,51 @@ html,body{
   color:#fff;
   font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif
 }
-#boot{
+.ready{
   min-height:100vh;
   display:grid;
   place-items:center;
-  padding:24px;
-  text-align:center
+  padding:28px;
+  text-align:center;
+  background:linear-gradient(180deg,#071019,#170708)
 }
-.box{
-  max-width:520px;
+.readyBox{
+  max-width:540px;
   width:100%;
   background:#171012;
   border:1px solid #3a2629;
   border-radius:18px;
   padding:22px
 }
+.logo{
+  width:54px;
+  height:54px;
+  border:3px solid #fff;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-weight:1000;
+  margin:0 auto 14px
+}
+h1{font-size:24px;margin:0 0 8px}
+p{color:#c8babc;line-height:1.5;margin:7px 0}
+.spinner{
+  width:38px;
+  height:38px;
+  border:4px solid #3a2629;
+  border-top-color:#a42933;
+  border-radius:50%;
+  margin:0 auto 16px;
+  animation:s 1s linear infinite
+}
+@keyframes s{to{transform:rotate(360deg)}}
 </style>
 </head>
-
 <body>
 
-<div id="boot">
-  <div class="box">
+<div id="boot" class="ready">
+  <div class="readyBox">
+    <div class="logo">FW</div>
     <h1>Freshwater Surf Boat Program</h1>
     <p>Loading your program…</p>
   </div>
@@ -42,55 +66,42 @@ html,body{
 
 <script>
 (async function(){
+  if(location.protocol==='file:' || location.protocol==='blob:') return;
+
+  const boot=document.getElementById('boot');
+
+  boot.innerHTML=
+    '<div class="readyBox">' +
+    '<div class="spinner"></div>' +
+    '<h1>Loading Freshwater Surf Boat Program…</h1>' +
+    '<p>Loading your program…</p>' +
+    '</div>';
 
   try{
-
-    const url =
-      'https://raw.githubusercontent.com/robm8213/FRESHWATER-SURFBOAT-PROGRAM-/957d3ed72e83580e560d30095bb6b87bb61ece16/index.html';
-
-    const response = await fetch(url,{cache:'no-store'});
-
-    if(!response.ok){
-      throw new Error('Base file returned '+response.status);
-    }
-
-    let source = await response.text();
-
-    const patch = decodeURIComponent(
-      escape(
-        atob(
-'PHNjcmlwdD4KKGZ1bmN0aW9uKCl7Cid1c2Ugc3RyaWN0JzsKCmZ1bmN0aW9uIGFkZEZpbmFsU3R5bGVzKCl7CiAgaWYoZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2Z3LWZpbmFsLWRlc2t0b3Atc3R5bGVzJykpIHJldHVybjsKICBjb25zdCBzPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3N0eWxlJyk7CiAgcy5pZD0nZnctZmluYWwtZGVza3RvcC1zdHlsZXMnOwogIHMudGV4dENvbnRlbnQ9YAogICAgLmF0aGxldGVBY2Nlc3NTaG9ydGN1dHN7ZGlzcGxheTpub25lIWltcG9ydGFudH0KICAgIC53ZWVrSWRlbnRpdHlNYWlue2ZvbnQtc2l6ZToyOHB4IWltcG9ydGFudDtsaW5lLWhlaWdodDoxLjA1IWltcG9ydGFudH0KICAgIEBtZWRpYShtaW4td2lkdGg6NzYxcHgpewogICAgICAud2Vla0lkZW50aXR5TWFpbntmb250LXNpemU6MjhweCFpbXBvcnRhbnR9CiAgICAgIC5zaWRlYmFyIC5md01vcmVEZXNrdG9we2Rpc3BsYXk6ZmxleH0KICAgIH0KICBgOwogIGRvY3VtZW50LmhlYWQuYXBwZW5kQ2hpbGQocyk7Cn0KCmZ1bmN0aW9uIGFkZERlc2t0b3BNb3JlKCl7CiAgaWYod2luZG93LmlubmVyV2lkdGg8PTc2MCkgcmV0dXJuOwogIGNvbnN0IHNpZGU9ZG9jdW1lbnQucXVlcnlTZWxlY3RvcignLnNpZGViYXInKTsKICBpZighc2lkZSB8fCBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnZndNb3JlRGVza3RvcCcpKSByZXR1cm47CgogIGNvbnN0IGI9ZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnYnV0dG9uJyk7CiAgYi5pZD0nZndNb3JlRGVza3RvcCc7CiAgYi5jbGFzc05hbWU9J25hdmJ0biBmd01vcmVEZXNrdG9wJzsKICBiLmlubmVySFRNTD0n4piwIE1vcmUnOwogIGIub25jbGljaz1mdW5jdGlvbigpewogICAgaWYodHlwZW9mIG9wZW5Nb3JlTWVudT09PSdmdW5jdGlvbicpIG9wZW5Nb3JlTWVudSgpOwogIH07CiAgc2lkZS5hcHBlbmRDaGlsZChiKTsKfQoKZnVuY3Rpb24gYWRkQ29ubmVjdGVkQXBwcygpewogIGNvbnN0IGdyaWQ9ZG9jdW1lbnQucXVlcnlTZWxlY3RvcignI21vcmVNZW51UGFuZWwgLm1vcmVHcmlkJyk7CiAgaWYoIWdyaWQgfHwgZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2Z3Q29ubmVjdGVkQXBwc01vcmUnKSkgcmV0dXJuOwoKICBjb25zdCBiPWRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ2J1dHRvbicpOwogIGIuaWQ9J2Z3Q29ubmVjdGVkQXBwc01vcmUnOwogIGIuY2xhc3NOYW1lPSdtb3JlQ2hvaWNlJzsKICBiLmlubmVySFRNTD0nPHNwYW4+4oyqPC9zcGFuPkNvbm5lY3RlZCBBcHBzPHNtYWxsPkdhcm1pbiAmIEFwcGxlIEhlYWx0aDwvc21hbGw+JzsKICBiLm9uY2xpY2s9ZnVuY3Rpb24oKXsKICAgIGlmKHR5cGVvZiBoaWRlTGF5ZXI9PT0nZnVuY3Rpb24nKSBoaWRlTGF5ZXIoJ21vcmVNZW51UGFuZWwnKTsKICAgIG9wZW5Db25uZWN0ZWRBcHBzKCk7CiAgfTsKCiAgY29uc3Qgc2V0dGluZ3M9Wy4uLmdyaWQucXVlcnlTZWxlY3RvckFsbCgnLm1vcmVDaG9pY2UnKV0uZmluZCh4PT4vU2V0dGluZ3MvaS50ZXN0KHgudGV4dENvbnRlbnR8fCcnKSk7CiAgaWYoc2V0dGluZ3MpIGdyaWQuaW5zZXJ0QmVmb3JlKGIsc2V0dGluZ3MpOwogIGVsc2UgZ3JpZC5hcHBlbmRDaGlsZChiKTsKfQoKZnVuY3Rpb24gb3BlbkNvbm5lY3RlZEFwcHMoKXsKICBsZXQgbGF5ZXI9ZG9jdW1lbnQuZ2V0RWxlbWVudEJ5SWQoJ2Z3Q29ubmVjdGVkQXBwc0xheWVyJyk7CgogIGlmKCFsYXllcil7CiAgICBsYXllcj1kb2N1bWVudC5jcmVhdGVFbGVtZW50KCdkaXYnKTsKICAgIGxheWVyLmlkPSdmd0Nvbm5lY3RlZEFwcHNMYXllcic7CiAgICBsYXllci5jbGFzc05hbWU9J2FjY2Vzc0xheWVyJzsKICAgIGxheWVyLnN0eWxlLmRpc3BsYXk9J25vbmUnOwogICAgbGF5ZXIuaW5uZXJIVE1MPWAKICAgICAgPGRpdiBjbGFzcz0iYWNjZXNzUGFuZWwiPgogICAgICAgIDxkaXYgY2xhc3M9ImFjY2Vzc1BhbmVsSGVhZCI+CiAgICAgICAgICA8ZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJhY2Nlc3NFeWVicm93Ij5DT05ORUNURUQgQVBQUzwvZGl2PgogICAgICAgICAgICA8aDI+R2FybWluICYgQXBwbGUgSGVhbHRoPC9oMj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0ic2NvcGVDaGlwIj5BVEhMRVRFIFBFUk1JU1NJT04gUkVRVUlSRUQ8L2Rpdj4KICAgICAgICAgIDwvZGl2PgogICAgICAgICAgPGJ1dHRvbiBjbGFzcz0iYWNjZXNzQ2xvc2UiIHR5cGU9ImJ1dHRvbiI+Q2xvc2U8L2J1dHRvbj4KICAgICAgICA8L2Rpdj4KCiAgICAgICAgPGRpdiBjbGFzcz0ibW9yZUdyaWQiPgogICAgICAgICAgPGRpdiBjbGFzcz0ibW9yZUNob2ljZSIgc3R5bGU9ImN1cnNvcjpkZWZhdWx0Ij4KICAgICAgICAgICAgPHNwYW4+4oyqPC9zcGFuPkdhcm1pbgogICAgICAgICAgICA8c21hbGw+VHJhaW5pbmcgYW5kIHJlY292ZXJ5IGNvbm5lY3Rpb24g4oCUI GNvbWluZyBzb29uPC9zbWFsbD4KICAgICAgICAgIDwvZGl2PgogICAgICAgICAgPGRpdiBjbGFzcz0ibW9yZUNob2ljZSIgc3R5bGU9ImN1cnNvcjpkZWZhdWx0Ij4KICAgICAgICAgICAgPHNwYW4+4p2k77iPPC9zcGFuPkFwcGxlIEhlYWx0aAogICAgICAgICAgICA8c21hbGw+aVBob25lIEhlYWx0aEtpdCBjb25uZWN0aW9uIOKAlCBjb21pbmcgc29vbjwvc21hbGw+CiAgICAgICAgICA8L2Rpdj4KICAgICAgICA8L2Rpdj4KCiAgICAgICAgPGRpdiBjbGFzcz0ibm90aWNlIiBzdHlsZT0ibWFyZ2luLXRvcDoxMnB4Ij4KICAgICAgICAgIE5vIEdhcm1pbiBvciBBcHBsZSBIZWFsdGggZGF0YSBpcyBjb2xsZWN0ZWQgaW4gdGhpcyB2ZXJzaW9uLgogICAgICAgIDwvZGl2PgogICAgICA8L2Rpdj5gOwogICAgbGF5ZXIucXVlcnlTZWxlY3RvcignLmFjY2Vzc0Nsb3NlJykub25jbGljaz1mdW5jdGlvbigpe2xheWVyLnN0eWxlLmRpc3BsYXk9J25vbmUnO307CiAgICBkb2N1bWVudC5ib2R5LmFwcGVuZENoaWxkKGxheWVyKTsKICB9CgogIGxheWVyLnN0eWxlLmRpc3BsYXk9J2Jsb2NrJzsKfQoKZnVuY3Rpb24gc3RhYmlsaXNlUHJvZ3JhbUhlYWRpbmcoKXsKICBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCdoMSxoMixoMyxkaXYsc3BhbicpLmZvckVhY2goZWw9PnsKICAgIGlmKGVsLmNoaWxkcmVuLmxlbmd0aCkgcmV0dXJuOwogICAgY29uc3QgdD0oZWwudGV4dENvbnRlbnR8fCcnKS5yZXBsYWNlKC9ccysvZywnICcpLnRyaW0oKTsKICAgIGlmKC9eT1BFTiBNRU4oPzpcXHMqW+KAosK·XC3XOKAlF0uKik/JC9pLnRlc3QodCkpewogICAgICBlbC5zdHlsZS5mb250U2l6ZT13aW5kb3cuaW5uZXJXaWR0aD43NjA/JzIwcHgnOicxOHB4JzsKICAgICAgZWwuc3R5bGUuZm9udFdlaWdodD0nOTAwJzsKICAgICAgZWwuc3R5bGUubGluZUhlaWdodD0nMS4wNSc7CiAgICB9CiAgICBpZigvXkJMT0NLXHMrXGQrXHMqW+KAosK·XC3XOKAlF1ccypXRU\/eS9pLnRlc3QodCkpewogICAgICBlbC5zdHlsZS5mb250U2l6ZT0nMjhweCc7CiAgICAgIGVsLnN0eWxlLmZvbnRXZWlnaHQ9JzkwMCc7CiAgICAgIGVsLnN0eWxlLmxpbmVIZWlnaHQ9JzEuMDUnOwogICAgfQogIH0pOwp9CgpmdW5jdGlvbiBydW4oKXsKICBhZGRGaW5hbFN0eWxlcygpOwogIGFkZERlc2t0b3BNb3JlKCk7CiAgYWRkQ29ubmVjdGVkQXBwcygpOwogIHN0YWJpbGlzZVByb2dyYW1IZWFkaW5nKCk7Cn0KCnNldFRpbWVvdXQocnVuLDYwMCk7CnNldFRpbWVvdXQocnVuLDE0MDApOwpzZXRJbnRlcnZhbChydW4sMzAwMCk7CndpbmRvdy5hZGRFdmVudExpc3RlbmVyKCdyZXNpemUnLHJ1bik7Cn0pKCk7Cjwvc2NyaXB0Pg=='
-        )
-      )
+    const r=await fetch(
+      'https://raw.githubusercontent.com/robm8213/FRESHWATER-SURFBOAT-PROGRAM-/24f3622264f5657b6019ecc1dbfac56078e180a0/index.html',
+      {cache:'no-store'}
     );
 
-    const re =
-      /const addon=(decodeURIComponent\(escape\(atob\('[^']+'\)\)\));/;
-
-    if(!re.test(source)){
-      throw new Error('Freshwater addon marker not found');
+    if(!r.ok){
+      throw new Error('Base app returned '+r.status);
     }
 
-    source = source.replace(
-      re,
-      function(_,expr){
-        return 'const addon='+expr+'+'+JSON.stringify(patch)+';';
-      }
-    );
+    const full=await r.text();
 
     document.open();
-    document.write(source);
+    document.write(full);
     document.close();
 
-  }catch(err){
+  }catch(e){
+    console.error(e);
 
-    console.error(err);
-
-    document.getElementById('boot').innerHTML =
-      '<div class="box"><h1>Freshwater Surf Boat Program</h1><p>The program could not load. Please refresh the page.</p></div>';
-
+    boot.innerHTML=
+      '<div class="readyBox">' +
+      '<h1>Freshwater Surf Boat Program</h1>' +
+      '<p>The program could not load. Please refresh the page.</p>' +
+      '</div>';
   }
-
 })();
 </script>
 
