@@ -17,7 +17,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
 .btn{border:0;border-radius:12px;background:var(--maroon);color:#fff;font-weight:1000;padding:12px 14px;font-size:14px;cursor:pointer}.btn.secondary{background:#2a2022}.btn.green{background:var(--green);color:#07120b}.btn.full{width:100%}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.toolbar .btn{flex:1 1 150px}
 .stationList{display:grid;gap:8px;margin-top:12px}.station{display:grid;grid-template-columns:38px 1fr auto;align-items:center;gap:10px;padding:11px 12px;background:#0c090a;border:1px solid var(--line);border-radius:13px}.stationNo{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:#3a171b;color:#ffdce0;font-weight:1000}.station b{font-size:14px}.station small{display:block;color:var(--mut);margin-top:3px}.stationTime{font-size:12px;font-weight:1000;color:#f1b2b7}.stationTools{grid-column:2 / 4;margin-top:2px}.swapSelect{width:100%;background:#171012;color:#f7f4f3;border:1px solid #4a3034;border-radius:10px;padding:8px 10px;font-size:12px;font-weight:800}.core .stationNo{background:#193324;color:#bdf4ce}
 .timerShell{display:none}.timerShell.show{display:block}.timerTop{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.timerPhase{font-size:11px;color:#e2767d;font-weight:1000;letter-spacing:1px;text-transform:uppercase}.timerExercise{font-size:31px;font-weight:1000;line-height:1.05;margin-top:5px}.timerMeta{font-size:13px;color:var(--mut);margin-top:6px}.clock{font-variant-numeric:tabular-nums;font-size:72px;font-weight:1000;text-align:center;letter-spacing:-4px;margin:24px 0 14px}.progress{height:10px;background:#0a0708;border:1px solid var(--line);border-radius:999px;overflow:hidden}.progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--maroon),#d7555f);transition:width .25s linear}.next{margin:12px 0;padding:11px;border-radius:12px;background:#100b0c;border:1px solid var(--line);font-size:12px;color:var(--mut)}.next b{color:#fff}.controls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.controls .btn{padding:11px 8px}.roundNotice{display:none;margin:12px 0;padding:12px;border:1px solid #65431e;border-radius:12px;background:#2a1d0d;color:#ffe2a7;font-weight:900;text-align:center}.roundNotice.show{display:block}.complete{display:none;text-align:center;padding:24px 8px}.complete.show{display:block}.complete h2{font-size:30px;margin-bottom:8px}
-.switchRow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:11px 12px;background:#0c090a;border:1px solid var(--line);border-radius:12px}.switch{width:52px;height:30px;border:0;border-radius:999px;background:#3b2f31;padding:3px;cursor:pointer}.switch i{display:block;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.switch.on{background:var(--green)}.switch.on i{transform:translateX(22px)}.setupDetails{border:1px solid var(--line);border-radius:14px;background:#0c090a;overflow:hidden}.setupDetails summary{list-style:none;cursor:pointer;padding:12px 13px;font-size:13px;font-weight:1000;display:flex;align-items:center;justify-content:space-between}.setupDetails summary::-webkit-details-marker{display:none}.setupDetails summary:after{content:'▾';color:#e2767d;font-size:15px}.setupDetails[open] summary:after{content:'▴'}.setupBody{padding:0 12px 12px}.setupRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.setupRow:first-child{border-top:0}.stepper{display:flex;align-items:center;gap:8px}.stepBtn{width:34px;height:34px;border:1px solid #4a3034;border-radius:10px;background:#261719;color:#fff;font-size:20px;font-weight:1000}.stepValue{min-width:30px;text-align:center;font-size:16px;font-weight:1000}.hint{font-size:11px;color:var(--mut);margin-top:6px}
+.switchRow{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:11px 12px;background:#0c090a;border:1px solid var(--line);border-radius:12px}.switch{width:52px;height:30px;border:0;border-radius:999px;background:#3b2f31;padding:3px;cursor:pointer}.switch i{display:block;width:24px;height:24px;border-radius:50%;background:#fff;transition:.2s}.switch.on{background:var(--green)}.switch.on i{transform:translateX(22px)}.setupDetails{border:1px solid var(--line);border-radius:14px;background:#0c090a;overflow:hidden}.setupDetails summary{list-style:none;cursor:pointer;padding:12px 13px;font-size:13px;font-weight:1000;display:flex;align-items:center;justify-content:space-between}.setupDetails summary::-webkit-details-marker{display:none}.setupDetails summary:after{content:'▾';color:#e2767d;font-size:15px}.setupDetails[open] summary:after{content:'▴'}.setupBody{padding:0 12px 12px}.setupRow{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}.setupRow:first-child{border-top:0}.stepper{display:flex;align-items:center;gap:8px}.stepBtn{width:34px;height:34px;border:1px solid #4a3034;border-radius:10px;background:#261719;color:#fff;font-size:20px;font-weight:1000}.stepValue{min-width:30px;text-align:center;font-size:16px;font-weight:1000}.hint{font-size:11px;color:var(--mut);margin-top:6px}.notice{background:#171012;border:1px solid #4a3034;border-radius:12px;padding:11px 12px;font-size:12px;color:#eee2e3;line-height:1.45}
 @media(max-width:620px){.hero h1{font-size:32px}.grid{grid-template-columns:1fr 1fr}.clock{font-size:64px}.controls{grid-template-columns:1fr 1fr 1fr}.timerExercise{font-size:27px}}
 @media(max-width:390px){.app{padding-left:10px;padding-right:10px}.hero h1{font-size:29px}.clock{font-size:56px}.station{grid-template-columns:34px 1fr auto}.stationTime{font-size:11px}}
 </style>
@@ -46,7 +46,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:12px;pa
   </div>
 
   <div class="card">
-    <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><h2>This week's circuit</h2><div class="sub">Anyone can use the dropdown under an exercise to substitute it before the session starts.</div></div></div>
+    <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start"><div><h2>This week's circuit</h2><div class="sub">Anyone can substitute an exercise before the session starts. Athletes are spread across different starting stations, so there is no single exercise order for the crew.</div></div></div>
     <div class="hint">No suitable equipment? Choose a replacement from the same movement group.</div>
     <div id="stationList" class="stationList"></div>
     <div class="toolbar"><button class="btn secondary" onclick="generateWorkout()">↻ Generate Again</button><button class="btn green" onclick="startWorkout()">▶ Start Sweat Sesh</button></div>
@@ -142,18 +142,26 @@ function startWorkout(){
 function startPhase(seconds){remaining=seconds;total=seconds;lastSpoken='';renderTimer();if(timer)clearInterval(timer);timer=setInterval(tick,1000);announcePhaseStart()}
 function announcePhaseStart(){
  if(state.mode==='ready')speak(`Alright crew! Round ${state.round}. Five seconds, get ready!`);
- if(state.mode==='work')speak(`${workout[state.index].name}. Let’s go crew!`);
- if(state.mode==='change')speak(`Great work! Forty-five seconds. Next up, ${workout[state.index+1]?.name||'Team Run'}.`);
- if(state.mode==='changeToRun')speak('Great work crew! Forty-five seconds, then we finish the round together.');
+ if(state.mode==='work')speak('Work time! Let’s go crew!');
+ if(state.mode==='change')speak('Great work! Forty-five seconds. Rotate to your next station.');
+ if(state.mode==='changeToRun')speak('Great work crew! Forty-five seconds, then we finish the round together with the team run.');
  if(state.mode==='run')speak('Team run! Three minutes. Stay together and bring everyone home. Let’s go!');
  if(state.mode==='roundRest')speak('Nice work crew! Three minutes recovery. Reset and get ready for the next round.');
  if(state.mode==='coreReady')speak('Rounds done! Great work. Time to finish strong with core.');
- if(state.mode==='coreWork')speak(`${core[state.coreIndex].name}. Finish strong, crew!`);
- if(state.mode==='coreRest')speak(`Good work! Next up, ${core[state.coreIndex+1]?.name||'the final core station'}.`);
+ if(state.mode==='coreWork')speak('Core work! Finish strong, crew!');
+ if(state.mode==='coreRest')speak('Good work! Get ready for the next core station.');
 }
 function tick(){if(paused)return;remaining--;cueWarnings();if(remaining<=0){clearInterval(timer);timer=null;beep(state.mode==='work'||state.mode==='run'||state.mode==='coreWork'?620:980,.18);advance();}renderTimer()}
 function cueWarnings(){
  if(['change','roundRest','ready','coreReady','coreRest'].includes(state.mode)&&remaining<=5&&remaining>0){speak(String(remaining),true);beep(760+remaining*35,.06)}
+ if(state.mode==='work'){
+  if(remaining===20)speak('Twenty seconds to go! Keep working!');
+  if(remaining===10)speak('Ten seconds! Finish strong!');
+ }
+ if(state.mode==='coreWork'){
+  if(remaining===20)speak('Twenty seconds to go!');
+  if(remaining===10)speak('Ten seconds! Finish strong!');
+ }
  if(state.mode==='roundRest'){
   if(remaining===60)speak('One minute to go, crew. Reset and get ready!');
   if(remaining===30)speak('Thirty seconds. Start getting into position.');
