@@ -13,19 +13,31 @@
     .logo{width:54px;height:54px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;font-weight:1000;margin:0 auto 14px}
     h1{font-size:24px;margin:0 0 8px}p{color:#c8babc;line-height:1.5;margin:7px 0}.badge{display:inline-block;margin-top:12px;padding:7px 10px;border-radius:999px;background:#193324;color:#bdf4ce;font-size:11px;font-weight:1000}
     .spinner{width:38px;height:38px;border:4px solid #3a2629;border-top-color:#a42933;border-radius:50%;margin:0 auto 16px;animation:s 1s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
-    /* --- small helper to ensure overlay elements are above loaded app --- */
+    /* overlay helpers */
     .fwsb-overlay-root{position:fixed;left:0;right:0;top:0;bottom:0;pointer-events:none;z-index:2147483000}
+    .fwsb-root{pointer-events:auto;position:fixed;left:0;right:0;top:0;bottom:0;z-index:2147483646}
+    .fwsb-header{position:sticky;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(7,16,24,0.6),rgba(7,10,14,0.2));backdrop-filter:blur(4px);border-bottom:1px solid rgba(255,255,255,0.02);height:64px;box-sizing:border-box}
+    .fwsb-brand{display:flex;align-items:center;gap:12px}
+    .fwsb-brand .logo{width:44px;height:44px;border-radius:10px;border:2px solid rgba(255,255,255,0.06);display:grid;place-items:center;background:rgba(255,255,255,0.02);font-weight:800}
+    .fwsb-primary{font-size:16px;font-weight:700;letter-spacing:0.8px}
+    .fwsb-secondary{font-size:11px;opacity:0.9;margin-top:2px}
+    .fwsb-menu-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:10px;color:#fff;cursor:pointer}
+    .fwsb-bottom-nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;align-items:center;padding:10px 8px;background:linear-gradient(180deg,rgba(7,10,14,0.95),rgba(7,10,14,0.88));border-top:1px solid rgba(255,255,255,0.03);z-index:2147483647}
+    .fwsb-nav-btn{background:transparent;border:none;color:#cbd5e1;font-size:13px;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .fwsb-nav-btn.active{color:#fff;font-weight:700;text-decoration:underline;text-decoration-color:rgba(255,255,255,0.06)}
+    .fwsb-drawer{position:fixed;left:0;right:0;bottom:0;max-height:70vh;background:linear-gradient(180deg,#071019,#0b1218);border-top-left-radius:14px;border-top-right-radius:14px;padding:16px;box-shadow:0 -10px 30px rgba(0,0,0,0.6);z-index:2147483648;transform:translateY(8px);overflow:auto}
+    .fwsb-overlay{position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(0,0,0,0.45);z-index:2147483645}
+    .fwsb-menu-item{display:block;padding:10px 8px;border-radius:8px;color:#e6eef6;background:transparent;border:0;text-align:left;width:100%;cursor:pointer}
+    .fwsb-card{background:rgba(255,255,255,0.03);padding:12px;border-radius:10px;margin-bottom:12px}
+    .fwsb-form-row{display:flex;gap:8px;align-items:center}
+    input[type=text], select{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);color:#fff;padding:8px;border-radius:8px}
+    button.primary{background:#0ea5a3;border:none;padding:8px 12px;border-radius:8px;color:#042024;cursor:pointer}
+    .small{font-size:12px;opacity:0.9}
+    @media (max-width:900px){.fwsb-header{height:72px;padding:14px}.fwsb-primary{font-size:15px}}
   </style>
 </head>
 <body>
-  <div id="boot" class="ready">
-    <div class="readyBox">
-      <div class="logo">FW</div>
-      <h1>Freshwater Surf Boat Program</h1>
-      <p>Freshwater Surf Boat Program</p>
-      <span class="badge">FRESHWATER SURF BOAT PROGRAM</span>
-    </div>
-  </div>
+  <div id="boot" class="ready"><div class="readyBox"><div class="logo">FW</div><h1>Freshwater Surf Boat Program</h1><p>This index.html is the lightweight test shell. The original app is loaded and left intact; this overlay provides the new UI and admin previews.</p><span class="badge">FRESHWATER SURF BOAT PROGRAM</span></div></div>
 
 <script>
 (async function(){
@@ -38,292 +50,231 @@
     if(!r.ok)throw new Error('Base app returned '+r.status);
     let full=await r.text();
 
-    /* --- Addon: UI shell and overlays (menus, bottom nav, athlete header) ---
-       This runs on top of the fetched app (does not change server/data).
-       It is intentionally lightweight and only adds UI hooks & placeholders.
-    */
+    /* --- UI overlay addon (extended with admin & simulated security) --- */
     const addon = (function(){
-
 return `
-<!-- FWSB overlay start -->
 <style>
-  /* Basic shared styles for overlay controls */
-  .fwsb-root{pointer-events:auto;position:fixed;left:0;right:0;top:0;bottom:0;z-index:2147483646;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
-  /* compact athlete header */
-  .fwsb-header{position:sticky;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(7,16,24,0.6),rgba(7,10,14,0.2));backdrop-filter:blur(4px);border-bottom:1px solid rgba(255,255,255,0.02);height:64px;box-sizing:border-box}
-  .fwsb-brand{display:flex;align-items:center;gap:12px}
-  .fwsb-brand .logo{width:44px;height:44px;border-radius:10px;border:2px solid rgba(255,255,255,0.06);display:grid;place-items:center;background:rgba(255,255,255,0.02);font-weight:800}
-  .fwsb-titles{line-height:1}
-  .fwsb-primary{font-size:16px;font-weight:700;letter-spacing:0.8px}
-  .fwsb-secondary{font-size:11px;opacity:0.9;margin-top:2px}
-  .fwsb-menu-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:10px;color:#fff;cursor:pointer}
-  /* bottom nav */
-  .fwsb-bottom-nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;align-items:center;padding:10px 8px;background:linear-gradient(180deg,rgba(7,10,14,0.95),rgba(7,10,14,0.88));border-top:1px solid rgba(255,255,255,0.03);z-index:2147483647}
-  .fwsb-nav-btn{background:transparent;border:none;color:#cbd5e1;font-size:13px;padding:8px 12px;border-radius:8px;cursor:pointer}
-  .fwsb-nav-btn.active{color:#fff;font-weight:700;text-decoration:underline;text-decoration-color:rgba(255,255,255,0.06)}
-  /* drawers & modals */
-  .fwsb-drawer{position:fixed;left:0;right:0;bottom:0;max-height:70vh;background:linear-gradient(180deg,#071019,#0b1218);border-top-left-radius:14px;border-top-right-radius:14px;padding:16px;box-shadow:0 -10px 30px rgba(0,0,0,0.6);z-index:2147483648;transform:translateY(8px)}
-  .fwsb-overlay{position:fixed;left:0;right:0;top:0;bottom:0;background:rgba(0,0,0,0.45);z-index:2147483645}
-  .fwsb-drawer h4{margin:0 0 8px 0}
-  .fwsb-menu-item{display:block;padding:10px 8px;border-radius:8px;color:#e6eef6;background:transparent;border:0;text-align:left;width:100%;cursor:pointer}
-  .fwsb-cards{display:grid;grid-template-columns:1fr 320px;gap:12px}
-  .fwsb-placeholder{padding:12px;background:rgba(255,255,255,0.03);border-radius:10px}
-  /* small screens */
-  @media (max-width:900px){
-    .fwsb-cards{grid-template-columns:1fr}
-    .fwsb-header{height:72px;padding:14px}
-    .fwsb-primary{font-size:15px}
-  }
+/* small inline helper styles (kept local to addon) */
 </style>
-
 <div id="fwsb-overlay-root" class="fwsb-overlay-root"></div>
-
 <script>
 (function(){
-  // create root container
-  const root = document.createElement('div');
-  root.className = 'fwsb-root';
-  // header
-  const header = document.createElement('header');
-  header.className = 'fwsb-header';
-  header.innerHTML = `\n    <div class="fwsb-brand">\n      <div class="logo">FW</div>\n      <div class="fwsb-titles">\n        <div class="fwsb-primary" id="fwsb-primary">OPEN MEN • [CREW NAME] PROGRAM</div>\n        <div class="fwsb-secondary" id="fwsb-secondary">2026/27 • Block 1 • Week 2 • Pre-Season / Base Building</div>\n      </div>\n    </div>\n    <div>\n      <button id="fwsb-athlete-menu-btn" class="fwsb-menu-btn" aria-haspopup="true" aria-expanded="false">Menu ▾</button>\n    </div>`;
-  root.appendChild(header);
-
-  // main overlay container (transparent so app below remains interactive)
-  const container = document.createElement('div');
-  container.style.pointerEvents='none';
-  container.style.position='absolute';
-  container.style.left='0';
-  container.style.right='0';
-  container.style.top='64px';
-  container.style.bottom='64px';
-  root.appendChild(container);
-
-  // bottom nav
-  const bottom = document.createElement('nav');
-  bottom.className = 'fwsb-bottom-nav';
-  bottom.innerHTML = `\n    <button class="fwsb-nav-btn" data-page="home">Home</button>\n    <button class="fwsb-nav-btn" data-page="week">Week</button>\n    <button class="fwsb-nav-btn" data-page="athletes">Athletes</button>\n    <button class="fwsb-nav-btn" data-page="testing">Testing</button>\n    <button class="fwsb-nav-btn" id="fwsb-more-btn">More ▾</button>\n  `;
-  root.appendChild(bottom);
-
-  // overlay root insertion
-  const overlayRoot = document.getElementById('fwsb-overlay-root') || document.body;
-  overlayRoot.appendChild(root);
-
-  // create dropdowns/drawers (hidden initially)
-  let athleteMenu, teamToolsDrawer, overlayDim;
-
-  function makeOverlayDim(){
-    overlayDim = document.createElement('div');
-    overlayDim.className='fwsb-overlay';
-    overlayDim.style.display='none';
-    overlayDim.addEventListener('click',closeDrawers);
-    document.body.appendChild(overlayDim);
+  // Simple persistent demo store using localStorage so admin changes can be reviewed without backend
+  const STORE_KEY='fwsb_demo_store_v1';
+  function uid(prefix='id'){return prefix+Math.random().toString(36).slice(2,9);} 
+  function loadStore(){
+    try{const s=localStorage.getItem(STORE_KEY); if(s) return JSON.parse(s);}catch(e){}
+    // default seed: divisions with crews and a coach
+    const seed={divisions:[{id:'div-open-men',name:'Open Men',crews:[{id:'crew-open-a',name:'Freshwater A',coachId:'coach-1'},{id:'crew-open-b',name:'Freshwater B',coachId:null}]},{id:'div-open-women',name:'Open Women',crews:[{id:'crew-openw-a',name:'Freshwater Women',coachId:null}]}],coaches:[{id:'coach-1',name:'Rob Coach',token:null}],athletes:[],links:{}};
+    localStorage.setItem(STORE_KEY,JSON.stringify(seed));
+    return seed;
   }
+  function saveStore(s){ localStorage.setItem(STORE_KEY,JSON.stringify(s)); }
+  let store=loadStore();
 
-  function makeAthleteMenu(){
-    athleteMenu = document.createElement('div');
-    athleteMenu.className='fwsb-drawer';
-    athleteMenu.style.bottom='auto';
-    athleteMenu.style.top='72px';
-    athleteMenu.style.left='16px';
-    athleteMenu.style.maxWidth='360px';
-    athleteMenu.style.right='auto';
-    athleteMenu.style.display='none';
-    athleteMenu.style.pointerEvents='auto';
-    athleteMenu.innerHTML = `\n      <h4>Athlete Menu</h4>\n      <button class="fwsb-menu-item" data-action="messages">Team Messages</button>\n      <button class="fwsb-menu-item" data-action="notifications">Notifications</button>\n      <button class="fwsb-menu-item" data-action="garmin">Garmin (test)</button>\n      <button class="fwsb-menu-item" data-action="apple">Apple Health (test)</button>\n      <button class="fwsb-menu-item" data-action="checkin">Check-In / Today</button>\n      <button class="fwsb-menu-item" data-action="history">Training History</button>\n      <button class="fwsb-menu-item" data-action="weeks">Weeks Ahead</button>\n      <button class="fwsb-menu-item" data-action="carnivals">Carnivals</button>\n    `;
-    document.body.appendChild(athleteMenu);
-  }
+  // parse role/token from URL for simulated access
+  const params=new URLSearchParams(location.search);
+  const role=params.get('role');
+  const token=params.get('token');
+  let session={role:null,coachId:null,crewId:null,athleteId:null};
+  if(role==='coach'&&token){ const mapping=store.links && store.links.coachTokens || {}; const crewId=mapping[token]; if(crewId){ session.role='coach'; session.coachToken=token; session.crewId=crewId; const coach=store.coaches.find(c=>c.token===token); if(coach) session.coachId=coach.id; }}
+  if(role==='athlete'){ session.role='athlete'; session.athleteId=params.get('athleteId')||null; }
+  // If no role in URL, treat as guest/athlete view
 
-  function makeTeamTools(){
-    teamToolsDrawer = document.createElement('div');
-    teamToolsDrawer.className='fwsb-drawer';
-    teamToolsDrawer.style.display='none';
-    teamToolsDrawer.style.pointerEvents='auto';
-    teamToolsDrawer.innerHTML = `\n      <h4>Team Tools</h4>\n      <button class="fwsb-menu-item" data-tool="today">Today / Next Session</button>\n      <button class="fwsb-menu-item" data-tool="messages">Team Messages</button>\n      <button class="fwsb-menu-item" data-tool="crew-availability">Crew Availability</button>\n      <button class="fwsb-menu-item" data-tool="attendance">Attendance</button>\n      <button class="fwsb-menu-item" data-tool="carnival-availability">Carnival Availability</button>\n      <button class="fwsb-menu-item" data-tool="notifications">Notifications</button>\n      <button class="fwsb-menu-item" data-tool="checkin">Check-In</button>\n      <button class="fwsb-menu-item" data-tool="athlete-history">Athlete History</button>\n      <button class="fwsb-menu-item" data-tool="training-blocks">Training Blocks</button>\n      <button class="fwsb-menu-item" data-tool="weeks-ahead">Weeks Ahead</button>\n      <button class="fwsb-menu-item" data-tool="carnivals">Carnivals</button>\n      <button class="fwsb-menu-item" data-tool="announcements">Announcements</button>\n      <button class="fwsb-menu-item" data-tool="garmin">Garmin (integration test)</button>\n      <button class="fwsb-menu-item" data-tool="apple">Apple Health (integration test)</button>\n      <button class="fwsb-menu-item" data-tool="settings">Settings / Coach tools</button>\n    `;
-    document.body.appendChild(teamToolsDrawer);
-  }
+  // Build overlay UI
+  function mount(){
+    const root=document.getElementById('fwsb-overlay-root'); if(!root) return;
+    // Header
+    const header=document.createElement('div'); header.className='fwsb-header'; header.id='fwsb-header';
+    header.innerHTML=`
+      <div class='fwsb-brand'><div class='logo'>FW</div><div><div class='fwsb-primary' id='fwsb-primary'></div><div class='fwsb-secondary' id='fwsb-secondary'></div></div></div>
+      <div>
+        <button id='fwsb-athlete-menu-btn' class='fwsb-menu-btn' aria-haspopup='true' aria-expanded='false'>Menu ▾</button>
+        <button id='fwsb-admin-btn' class='fwsb-menu-btn' style='margin-left:8px'>Admin</button>
+      </div>`;
+    root.appendChild(header);
 
-  function closeDrawers(){
-    if(athleteMenu) athleteMenu.style.display='none';
-    if(teamToolsDrawer) teamToolsDrawer.style.display='none';
-    if(overlayDim) overlayDim.style.display='none';
-    Array.from(document.querySelectorAll('.fwsb-nav-btn')).forEach(b=>b.classList.remove('active'));
-  }
+    // Bottom nav
+    const bottom=document.createElement('nav'); bottom.className='fwsb-bottom-nav';
+    bottom.innerHTML=`<button class='fwsb-nav-btn' data-page='home'>Home</button><button class='fwsb-nav-btn' data-page='week'>Week</button><button class='fwsb-nav-btn' data-page='athletes'>Athletes</button><button class='fwsb-nav-btn' data-page='testing'>Testing</button><button class='fwsb-nav-btn' id='fwsb-more-btn'>More ▾</button>`;
+    root.appendChild(bottom);
 
-  function openAthleteMenu(){
-    makeOverlayDimIfNeeded();
-    makeAthleteMenuIfNeeded();
-    athleteMenu.style.display='block';
-    overlayDim.style.display='block';
-    document.getElementById('fwsb-athlete-menu-btn').setAttribute('aria-expanded','true');
-  }
+    // attach containers
+    const content=document.createElement('div'); content.style.pointerEvents='none'; content.style.position='absolute'; content.style.left='0'; content.style.right='0'; content.style.top='72px'; content.style.bottom='72px'; content.id='fwsb-content'; root.appendChild(content);
 
-  function openTeamTools(){
-    makeOverlayDimIfNeeded();
-    makeTeamToolsIfNeeded();
-    teamToolsDrawer.style.display='block';
-    overlayDim.style.display='block';
-  }
+    // overlays
+    const overlayDim=document.createElement('div'); overlayDim.className='fwsb-overlay'; overlayDim.style.display='none'; overlayDim.id='fwsb-overlay-dim'; document.body.appendChild(overlayDim);
 
-  function makeOverlayDimIfNeeded(){ if(!overlayDim) makeOverlayDim(); }
-  function makeAthleteMenuIfNeeded(){ if(!athleteMenu) makeAthleteMenu(); }
-  function makeTeamToolsIfNeeded(){ if(!teamToolsDrawer) makeTeamTools(); }
+    // drawers
+    const athleteDrawer=document.createElement('div'); athleteDrawer.className='fwsb-drawer'; athleteDrawer.style.display='none'; athleteDrawer.id='fwsb-athlete-drawer';
+    athleteDrawer.innerHTML=`<h4>Athlete Menu</h4>
+      <button class='fwsb-menu-item' data-action='messages'>Team Messages</button>
+      <button class='fwsb-menu-item' data-action='notifications'>Notifications</button>
+      <button class='fwsb-menu-item' data-action='garmin'>Garmin (test)</button>
+      <button class='fwsb-menu-item' data-action='apple'>Apple Health (test)</button>
+      <button class='fwsb-menu-item' data-action='checkin'>Check-In / Today</button>
+      <button class='fwsb-menu-item' data-action='history'>Training History</button>
+      <button class='fwsb-menu-item' data-action='weeks'>Weeks Ahead</button>
+      <button class='fwsb-menu-item' data-action='carnivals'>Carnivals</button>`;
+    document.body.appendChild(athleteDrawer);
 
-  // nav behavior: mark active and open Team Tools for "More"
-  bottom.querySelectorAll('.fwsb-nav-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      closeDrawers();
-      if(btn.id==='fwsb-more-btn'){ openTeamTools(); btn.classList.add('active'); return; }
-      // mark active
-      bottom.querySelectorAll('.fwsb-nav-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      // try to focus or reveal relevant content in the page down below
-      const page = btn.getAttribute('data-page');
-      // attempt to find anchors or sections in host app to navigate (best-effort)
-      try{
-        if(page==='home'){
-          // scroll to top area / cover
-          const top = document.querySelector('header, .cover, .fw-cover, #cover-photo, .brandRow, .readyBox');
-          (top||document.body).scrollIntoView({behavior:'smooth',block:'start'});
-        } else if(page==='week'){
-          const el = document.querySelector('[data-page=week], #week, .week');
-          if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-        } else if(page==='athletes'){
-          const el = document.querySelector('[data-page=athletes], #athletes, .athletes');
-          if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-        } else if(page==='testing'){
-          const el = document.querySelector('[data-page=testing], #testing, .testing');
-          if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
-        }
-      }catch(e){ /* no-op */ }
-    });
-  });
+    const toolsDrawer=document.createElement('div'); toolsDrawer.className='fwsb-drawer'; toolsDrawer.style.display='none'; toolsDrawer.id='fwsb-tools-drawer';
+    toolsDrawer.innerHTML=`<h4>Team Tools</h4>
+      <button class='fwsb-menu-item' data-tool='today'>Today / Next Session</button>
+      <button class='fwsb-menu-item' data-tool='messages'>Team Messages</button>
+      <button class='fwsb-menu-item' data-tool='crew-availability'>Crew Availability</button>
+      <button class='fwsb-menu-item' data-tool='attendance'>Attendance</button>
+      <button class='fwsb-menu-item' data-tool='carnival-availability'>Carnival Availability</button>
+      <button class='fwsb-menu-item' data-tool='notifications'>Notifications</button>
+      <button class='fwsb-menu-item' data-tool='checkin'>Check-In</button>
+      <button class='fwsb-menu-item' data-tool='athlete-history'>Athlete History</button>
+      <button class='fwsb-menu-item' data-tool='training-blocks'>Training Blocks</button>
+      <button class='fwsb-menu-item' data-tool='weeks-ahead'>Weeks Ahead</button>
+      <button class='fwsb-menu-item' data-tool='carnivals'>Carnivals</button>
+      <button class='fwsb-menu-item' id='fwsb-admin-crews'>Admin: Crews</button>
+      <button class='fwsb-menu-item' data-tool='announcements'>Announcements</button>
+      <button class='fwsb-menu-item' data-tool='garmin'>Garmin (integration test)</button>
+      <button class='fwsb-menu-item' data-tool='apple'>Apple Health (integration test)</button>
+      <button class='fwsb-menu-item' data-tool='settings'>Settings</button>`;
+    document.body.appendChild(toolsDrawer);
 
-  // header menu hook
-  document.getElementById('fwsb-athlete-menu-btn').addEventListener('click',()=>{
-    const ex = athleteMenu && athleteMenu.style.display==='block';
-    if(ex) closeDrawers(); else openAthleteMenu();
-  });
+    // admin modal (hidden)
+    const adminModal=document.createElement('div'); adminModal.className='fwsb-drawer'; adminModal.style.display='none'; adminModal.id='fwsb-admin-modal'; adminModal.style.maxHeight='80vh';
+    adminModal.innerHTML=`<h4>Admin: Crews & Divisions</h4><div id='fwsb-admin-body'></div>`;
+    document.body.appendChild(adminModal);
 
-  // delegate click for athlete menu & team tools
-  document.addEventListener('click',function(e){
-    const menuItem = e.target.closest('.fwsb-menu-item');
-    if(!menuItem) return;
-    const action = menuItem.getAttribute('data-action') || menuItem.getAttribute('data-tool');
-    // close drawers for clarity
-    closeDrawers();
-    // navigation placeholders: try to reveal or open special pages in host app
-    if(action==='messages' || action==='Team Messages' || action==='messages'){
-      // try to find message link
-      const a = document.querySelector('a[href*="messages"], a[href*="message"], [data-page="messages"]');
-      if(a) { a.click(); return; }
-      alert('Team Messages — opened placeholder. In the full app this goes to Team Messages.');
-      return;
-    }
-    if(action==='notifications'){
-      const a = document.querySelector('a[href*="notification"], [data-page="notifications"]');
-      if(a){ a.click(); return;}
-      alert('Notifications — placeholder. Notifications live behind the menu.');
-      return;
-    }
-    if(action==='garmin' || action==='apple'){
-      alert(action.toUpperCase() + ' — integration/testing area (placeholder).');
-      return;
-    }
-    if(action==='today' || action==='checkin'){
-      // attempt to find "today" or "check-in" section
-      const el = document.querySelector('[data-page=today], [data-page=checkin], #today, .today');
-      if(el){ el.scrollIntoView({behavior:'smooth'}); return; }
-      alert('Today / Next Session — placeholder (existing program UI remains unchanged).');
-      return;
-    }
-    if(action==='crew-availability' || action==='attendance' || action==='carnival-availability' || action==='training-blocks' || action==='weeks-ahead' || action==='carnivals' || action==='announcements' || action==='settings' || action==='athlete-history'){
-      alert('Team Tool: ' + (action || 'tool') + ' — placeholder. Admin/coach tools will be accessible here.');
-      return;
-    }
-    // admin placeholders
-    if(action==='admin-crews'){
-      alert('Admin: Crews — placeholder. Admin UI to create/rename/delete crews will go here.');
-      return;
-    }
-    // fallback
-    alert('Opened: ' + (action||'item') + ' (placeholder).');
-  }, {capture:false});
-
-  // remove obvious dev/test banners text nodes in fetched content (best-effort)
-  function removeDevWords(root){
-    const badPhrases = ['FINAL SHARED SYNC','MERGED MAIN APP TEST','MAIN APP TEST','APP TEST','DEVELOPMENT','DEV BUILD'];
-    const walker = document.createTreeWalker(root||document.body, NodeFilter.SHOW_TEXT, null, false);
-    const toRemove=[];
-    while(walker.nextNode()){
-      const t = walker.currentNode;
-      const v = (t.nodeValue||'').toUpperCase().trim();
-      for(const p of badPhrases){
-        if(v.includes(p)){
-          // remove ancestor block (try to remove whole banner)
-          const anc = t.parentElement;
-          if(anc) toRemove.push(anc);
-          else toRemove.push(t);
-          break;
-        }
+    // populate header text
+    function updateHeader(){
+      let title=''; let sub='';
+      // if session coach with crew context
+      if(session.role==='coach'&&session.crewId){
+        const crew=findCrewById(session.crewId);
+        if(crew){ title=(crew.name||'Crew')+' PROGRAM'; sub='Coach access'; }
+      }else{
+        title='FRESHWATER PROGRAM'; sub='Coach / Athlete';
       }
+      document.getElementById('fwsb-primary').textContent= (session.role==='coach' && session.crewId)? ('OPEN MEN • '+(findCrewById(session.crewId)?.name||'[CREW]')+' PROGRAM') : 'OPEN MEN • [CREW NAME] PROGRAM';
+      document.getElementById('fwsb-secondary').textContent='2026/27 • Block 1 • Week 2 • Pre-Season / Base Building';
     }
-    toRemove.forEach(n=>n.remove && n.remove());
+
+    // store helpers
+    function findDivisionById(id){ return store.divisions.find(d=>d.id===id); }
+    function findCrewById(id){ for(const d of store.divisions) { const c=d.crews.find(x=>x.id===id); if(c) return Object.assign({},c,{divisionId:d.id,divisionName:d.name}); } return null; }
+    function findCoachById(id){ return store.coaches.find(c=>c.id===id); }
+
+    // Admin UI rendering
+    function openAdminModal(){
+      overlayDim.style.display='block'; adminModal.style.display='block'; renderAdminBody();
+    }
+    function closeAdminModal(){ overlayDim.style.display='none'; adminModal.style.display='none'; }
+
+    function renderAdminBody(){
+      const body=document.getElementById('fwsb-admin-body'); body.innerHTML='';
+      // crew register table
+      const reg=document.createElement('div'); reg.className='fwsb-card';
+      const headerRow=document.createElement('div'); headerRow.innerHTML=`<div style='display:flex;gap:12px;align-items:center;justify-content:space-between'><strong>Division | Crew Name | Coach</strong><button id='fwsb-add-division' class='primary'>Add Division</button></div>`;
+      reg.appendChild(headerRow);
+      const table=document.createElement('div'); table.style.marginTop='12px';
+      store.divisions.forEach(div=>{
+        div.crews.forEach(crew=>{
+          const row=document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.gap='8px'; row.style.alignItems='center';
+          const left=document.createElement('div'); left.innerHTML=`<div style='font-weight:700'>${div.name} • ${crew.name}</div><div class='small'>ID: ${crew.id}</div>`;
+          const coachName=findCoachById(crew.coachId)?.name||'<em>Unassigned</em>';
+          const right=document.createElement('div'); right.innerHTML=`<span class='small'>Coach: ${coachName}</span> <button class='fwsb-edit-crew' data-id='${crew.id}'>Edit</button> <button class='fwsb-del-crew' data-id='${crew.id}'>Delete</button>`;
+          row.appendChild(left); row.appendChild(right); table.appendChild(row);
+        });
+      });
+      reg.appendChild(table);
+      body.appendChild(reg);
+
+      // controls: add coach
+      const coachCard=document.createElement('div'); coachCard.className='fwsb-card'; coachCard.innerHTML=`<strong>Coaches</strong><div id='fwsb-coach-list'></div><div style='margin-top:8px'><input id='fwsb-new-coach' placeholder='Coach name'> <button id='fwsb-add-coach' class='primary'>Add Coach</button></div>`;
+      body.appendChild(coachCard);
+
+      // division/crew creation UI
+      const createCard=document.createElement('div'); createCard.className='fwsb-card'; createCard.innerHTML=`<strong>Create Crew</strong><div style='margin-top:8px' class='fwsb-form-row'><select id='fwsb-select-division'></select><input id='fwsb-crew-name' placeholder='Crew name'><button id='fwsb-create-crew' class='primary'>Create</button></div>`;
+      body.appendChild(createCard);
+
+      // wire events
+      document.getElementById('fwsb-add-division').onclick = ()=>{ const n=prompt('Division name'); if(n){ store.divisions.push({id:uid('div-'),name:n,crews:[]}); saveStore(store); renderAdminBody(); }}
+      const coachList=document.getElementById('fwsb-coach-list'); coachList.innerHTML=''; store.coaches.forEach(c=>{ const el=document.createElement('div'); el.innerHTML=`${c.name} <button class='fwsb-gen-link' data-id='${c.id}'>Generate link</button>`; coachList.appendChild(el); });
+      document.getElementById('fwsb-add-coach').onclick=()=>{ const name=document.getElementById('fwsb-new-coach').value.trim(); if(!name) return alert('Enter coach name'); const id=uid('coach-'); store.coaches.push({id:id,name:name,token:null}); saveStore(store); renderAdminBody(); }
+
+      // populate division select
+      const sel=document.getElementById('fwsb-select-division'); sel.innerHTML=''; store.divisions.forEach(d=>{ const op=document.createElement('option'); op.value=d.id; op.textContent=d.name; sel.appendChild(op); });
+      document.getElementById('fwsb-create-crew').onclick=()=>{ const divId=sel.value; const name=document.getElementById('fwsb-crew-name').value.trim(); if(!name) return alert('Enter crew name'); const div=findDivisionById(divId); const crewId=uid('crew-'); div.crews.push({id:crewId,name:name,coachId:null}); saveStore(store); renderAdminBody(); }
+
+      // edit / delete handlers
+      Array.from(document.querySelectorAll('.fwsb-edit-crew')).forEach(btn=>btn.onclick=()=>{ const id=btn.dataset.id; const crew=findCrewById(id); const newName=prompt('Crew name',crew.name); if(newName){ const div=findDivisionById(crew.divisionId); const target=div.crews.find(c=>c.id===id); target.name=newName; saveStore(store); renderAdminBody(); }});
+      Array.from(document.querySelectorAll('.fwsb-del-crew')).forEach(btn=>btn.onclick=()=>{ const id=btn.dataset.id; if(!confirm('Delete crew?')) return; for(const d of store.divisions){ const idx=d.crews.findIndex(c=>c.id===id); if(idx>=0){ d.crews.splice(idx,1); saveStore(store); renderAdminBody(); return; }} });
+      Array.from(document.querySelectorAll('.fwsb-gen-link')).forEach(btn=>btn.onclick=()=>{ const id=btn.dataset.id; // generate token and map to a crew when assigned later
+        const coach=store.coaches.find(c=>c.id===id); if(!coach) return; if(!coach.token) coach.token=uid('t-'); // assign token
+        // show link generator UI to assign coach to crew
+        const crewId=prompt('Enter crew id to assign coach to (or leave blank to copy token):'); if(crewId){ // assign mapping
+          // ensure mapping object
+          store.links=store.links||{}; store.links.coachTokens=store.links.coachTokens||{}; store.links.coachTokens[coach.token]=crewId; // set coach token -> crew
+          // set coachId on crew
+          const c=findCrewById(crewId); if(c){ const div=findDivisionById(c.divisionId); const cr=div.crews.find(x=>x.id===crewId); cr.coachId=coach.id; }
+        }
+        saveStore(store); alert('Coach token: '+coach.token+"\nUse link: " + location.origin+location.pathname+"?role=coach&token="+coach.token);
+      });
+    }
+
+    // Drawer open/close
+    function openAthleteDrawer(){ document.getElementById('fwsb-athlete-drawer').style.display='block'; document.getElementById('fwsb-overlay-dim').style.display='block'; }
+    function openToolsDrawer(){ document.getElementById('fwsb-tools-drawer').style.display='block'; document.getElementById('fwsb-overlay-dim').style.display='block'; }
+    function closeDrawers(){ document.getElementById('fwsb-athlete-drawer').style.display='none'; document.getElementById('fwsb-tools-drawer').style.display='none'; document.getElementById('fwsb-overlay-dim').style.display='none'; document.querySelectorAll('.fwsb-nav-btn').forEach(b=>b.classList.remove('active')); }
+
+    // nav wiring
+    document.querySelectorAll('.fwsb-nav-btn').forEach(btn=> btn.addEventListener('click', ()=>{ closeDrawers(); if(btn.id==='fwsb-more-btn'){ openToolsDrawer(); btn.classList.add('active'); return;} document.querySelectorAll('.fwsb-nav-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }));
+    document.getElementById('fwsb-athlete-menu-btn').addEventListener('click',()=>{ const d=document.getElementById('fwsb-athlete-drawer'); if(d.style.display==='block') closeDrawers(); else openAthleteDrawer(); });
+    document.getElementById('fwsb-admin-btn').addEventListener('click',()=>{ openAdminModal(); });
+    document.getElementById('fwsb-admin-crews').addEventListener('click',()=>{ openAdminModal(); });
+    document.getElementById('fwsb-overlay-dim').addEventListener('click',()=>{ closeDrawers(); closeAdminModal(); });
+
+    // tools/action delegation
+    document.addEventListener('click', function(e){ const it=e.target.closest('.fwsb-menu-item'); if(!it) return; const action=it.dataset.action||it.dataset.tool; if(!action) return; closeDrawers(); if(action==='messages'){ alert('Open Team Messages (placeholder)'); } else if(action==='notifications'){ alert('Notifications (placeholder)'); } else if(action==='garmin' || action==='apple'){ alert(action.toUpperCase()+" - integration/test area"); } else if(action==='today'){ alert('Today / Next Session - placeholder'); } else if(action==='crew-availability'){ alert('Crew Availability (placeholder)'); } else if(action==='attendance'){ alert('Attendance (placeholder)'); } else if(action==='training-blocks'){ alert('Training Blocks (placeholder)'); } else if(action==='weeks-ahead'){ alert('Weeks Ahead (placeholder)'); } else if(action==='carnivals'){ alert('Carnivals (placeholder)'); } else if(action==='checkin'){ alert('Check-In (placeholder)'); } else if(action==='athlete-history'){ alert('Athlete History (placeholder)'); } else if(action==='settings'){ alert('Settings (placeholder)'); } }, false);
+
+    // simulate Division->Crew selection on front load
+    function showDivisionCrewSelector(){
+      // create modal-like drawer
+      const modal=document.createElement('div'); modal.className='fwsb-drawer'; modal.style.maxHeight='60vh'; modal.id='fwsb-select-modal';
+      let html=`<h4>Select Division → Crew</h4><div class='fwsb-card'><div class='fwsb-form-row'><select id='fwsb-select-division-sel'></select><select id='fwsb-select-crew-sel'></select></div><div style='margin-top:10px'><button id='fwsb-select-crew-enter' class='primary'>Enter Crew</button> <button id='fwsb-select-crew-skip' class='fwsb-menu-item'>Skip</button></div></div>`;
+      modal.innerHTML=html; document.body.appendChild(modal);
+      const selD=document.getElementById('fwsb-select-division-sel'); const selC=document.getElementById('fwsb-select-crew-sel');
+      store.divisions.forEach(d=>{ const op=document.createElement('option'); op.value=d.id; op.textContent=d.name; selD.appendChild(op); });
+      function populateCrews(){ const d=findDivisionById(selD.value); selC.innerHTML=''; d.crews.forEach(c=>{ const op=document.createElement('option'); op.value=c.id; op.textContent=c.name; selC.appendChild(op); }); }
+      selD.addEventListener('change',populateCrews); populateCrews();
+      document.getElementById('fwsb-select-crew-enter').onclick=()=>{ const crewId=selC.value; session.crewId=crewId; // set selected crew in session (non-persistent)
+        updateHeader(); modal.remove(); }
+      document.getElementById('fwsb-select-crew-skip').onclick=()=>{ modal.remove(); }
+    }
+
+    updateHeader();
+
+    // if no crew selected and not a coach with token, show selector once
+    if(!session.crewId && session.role!=='coach'){ setTimeout(showDivisionCrewSelector,600); }
+
+    // load admin UI content if modal open
+    function renderAdminIfOpen(){ if(document.getElementById('fwsb-admin-modal').style.display==='block') renderAdminBody(); }
+
+    // expose global small helpers for testing
+    window.FWSB_DEMO={store:store,save:()=>{saveStore(store); renderAdminIfOpen();},session:session};
   }
 
-  // ensure overlay elements exist even if fetched app replaces DOM; we re-attach after fetch
-  function ensureOverlayAttached(){
-    const rootEl = document.getElementById('fwsb-overlay-root');
-    if(!rootEl){
-      const el = document.createElement('div');
-      el.id='fwsb-overlay-root';
-      document.body.appendChild(el);
-    }
+  // ensure overlay-root exists, then mount
+  if(!document.getElementById('fwsb-overlay-root')){
+    const root=document.createElement('div'); root.id='fwsb-overlay-root'; document.body.appendChild(root);
   }
-
-  // Insert the overlay markup now (we will re-insert after remote app is written)
-  (function attachNow(){
-    const host = document.getElementById('fwsb-overlay-root') || document.body;
-    // if our overlay already exists (from previous run), skip
-    if(document.getElementById('fwsb-root')) return;
-    // mount root container (we used 'root' earlier, but after fetch the DOM will be replaced; re-create)
-    // we will append later; here we just ensure the functions can create them after fetch if needed
-  })();
-
-  // After building addon content, return the string
+  // defer mounting to allow host app to settle
+  setTimeout(mount,200);
+})();
+</script>
 `;} )();
 
-    // Merge the addon into the fetched page.
-    // We keep the fetched app intact and append our overlay script/styles just before </body>
-    // Note: do not remove existing program content. This is a UI shell only.
-    const merged = full.includes('</body>')
-      ? full.replace('</body>', addon + '\n</body>')
-      : full + addon;
-
-    // Write the merged page to the document
-    document.open();
-    document.write(merged);
-    document.close();
-
-    // A short delay then run overlay-specific DOM repairs (best effort)
-    setTimeout(function(){
-      try{
-        // attach overlay root and minimal behaviors (the inserted addon contains the heavy logic)
-        // Try to call helper from the injected addon if present (best-effort)
-        // Remove dev/test wording (best-effort)
-        (function removeDev(){
-          const bad = ['FINAL SHARED SYNC','MERGED MAIN APP TEST','MAIN APP TEST','APP TEST','DEVELOPMENT','DEV BUILD'];
-          const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-          const rem = [];
-          while(walker.nextNode()){
-            const t = walker.currentNode;
-            const v = (t.nodeValue||'').toUpperCase();
-            for(const p of bad) if(v.includes(p)) { rem.push(t.parentElement); break; }
-          }
-          rem.forEach(n=>n && n.remove && n.remove());
-        })();
-      }catch(e){ console.warn('overlay post-init failed',e); }
-    },350);
+    // Merge the addon into the fetched page and write
+    const merged = full.includes('</body>') ? full.replace('</body>', addon + '\n</body>') : full + addon;
+    document.open(); document.write(merged); document.close();
 
   }catch(err){
     boot.innerHTML='<div class="readyBox"><div class="logo">FW</div><h1>Freshwater app could not load</h1><p>'+String(err.message||err)+'</p><p>Refresh once and send a screenshot if it remains here.</p></div>';
