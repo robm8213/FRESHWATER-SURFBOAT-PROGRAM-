@@ -6,20 +6,24 @@
   <meta name="theme-color" content="#071019">
   <title>Freshwater Surf Boat Program</title>
   <style>
-    *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:#071019;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
-    .ready{min-height:100vh;display:grid;place-items:center;padding:28px;text-align:center;background:linear-gradient(180deg,#071019,#170708)}
-    .readyBox{max-width:540px;width:100%;background:#171012;border:1px solid #3a2629;border-radius:18px;padding:22px}
-    .logo{width:54px;height:54px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;font-weight:1000;margin:0 auto 14px}
-    h1{font-size:24px;margin:0 0 8px}p{color:#c8babc;line-height:1.5;margin:7px 0}.badge{display:inline-block;margin-top:12px;padding:7px 10px;border-radius:999px;background:#193324;color:#bdf4ce;font-size:11px;font-weight:1000}
-    .spinner{width:38px;height:38px;border:4px solid #3a2629;border-top-color:#a42933;border-radius:50%;margin:0 auto 16px;animation:s 1s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
-    /* overlay helpers (desktop-focused) */
+    /* Boot-only styles are scoped to #boot so they don't affect the host app */
+    #boot *{box-sizing:border-box}
+    #boot{margin:0;min-height:100vh;display:grid;place-items:center;padding:28px;text-align:center}
+    #boot .readyBox{max-width:540px;width:100%;background:#171012;border:1px solid #3a2629;border-radius:18px;padding:22px}
+    #boot .logo{width:54px;height:54px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;font-weight:1000;margin:0 auto 14px}
+    #boot h1{font-size:24px;margin:0 0 8px}
+    #boot p{color:#c8babc;line-height:1.5;margin:7px 0}
+    #boot .badge{display:inline-block;margin-top:12px;padding:7px 10px;border-radius:999px;background:#193324;color:#bdf4ce;font-size:11px;font-weight:1000}
+    #boot .spinner{width:38px;height:38px;border:4px solid #3a2629;border-top-color:#a42933;border-radius:50%;margin:0 auto 16px;animation:s 1s linear infinite}
+    @keyframes s{to{transform:rotate(360deg)}}
+
+    /* overlay helpers (namespaced; safe for host) */
     .fwsb-overlay-root{position:fixed;left:0;right:0;top:0;bottom:0;pointer-events:none;z-index:2147483000}
     .fwsb-root{pointer-events:auto;position:fixed;left:0;right:0;top:0;bottom:0;z-index:2147483646}
     .fwsb-container{max-width:1280px;margin:0 auto;padding-left:12px;padding-right:12px}
-    .fwsb-header{position:sticky;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(7,16,24,0.6),rgba(7,10,14,0.2));backdrop-filter:blur(4px);border-bottom:1px solid rgba(255,255,255,0.02);height:64px;box-sizing:border-box}
+    .fwsb-header{position:sticky;top:0;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(7,16,24,0.6),rgba(7,10,14,0.2));backdrop-filter:blur(4px);border-bottom:1px solid rgba(255,255,255,0.02);height:64px;box-sizing:border-box}
     .fwsb-brand{display:flex;align-items:center;gap:12px}
-    .fwsb-brand .fwsb-logo{width:44px;height:44px;border-radius:10px;border:2px solid rgba(255,255,255,0.06);display:grid;place-items:center;background:rgba(255,255,255,0.02);font-weight:800}
+    .fwsb-logo{width:44px;height:44px;border-radius:10px;border:2px solid rgba(255,255,255,0.06);display:grid;place-items:center;background:rgba(255,255,255,0.02);font-weight:800}
     .fwsb-primary{font-size:16px;font-weight:700;letter-spacing:0.8px}
     .fwsb-secondary{font-size:11px;opacity:0.9;margin-top:2px}
     .fwsb-menu-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:10px;color:#fff;cursor:pointer}
@@ -34,8 +38,13 @@
     .fwsb-root input[type=text], .fwsb-root select{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);color:#fff;padding:8px;border-radius:8px}
     .fwsb-root button.primary{background:#0ea5a3;border:none;padding:8px 12px;border-radius:8px;color:#042024;cursor:pointer}
     .fwsb-small{font-size:12px;opacity:0.9}
-    @media (max-width:900px){.fwsb-header{height:72px;padding:14px}.fwsb-primary{font-size:15px}}
+
+    @media (max-width:900px){
+      .fwsb-header{height:72px;padding:14px}
+      .fwsb-primary{font-size:15px}
+    }
     @media (min-width:901px){
+      /* center drawers on large screens */
       .fwsb-drawer{left:50%;right:auto;transform:translate(-50%,0);width:720px;border-radius:12px}
       .fwsb-overlay-root{pointer-events:none}
       .fwsb-root{left:0;right:0}
@@ -44,67 +53,94 @@
   </style>
 </head>
 <body>
-  <div id="boot" class="ready"><div class="readyBox"><div class="logo">FW</div><h1>Freshwater Surf Boat Program</h1><p>This index.html is the lightweight test shell. The original app is loaded and left intact; this overlay provides the new UI and admin previews.</p><span class="badge">FRESHWATER SURF BOAT PROGRAM</span></div></div>
+  <!-- Boot placeholder only -->
+  <div id="boot">
+    <div class="readyBox">
+      <div class="logo">FW</div>
+      <h1>Freshwater Surf Boat Program</h1>
+      <p>This index.html is a lightweight test shell. The original app is loaded and left intact; this overlay provides the new UI and admin previews for review only.</p>
+      <span class="badge">FRESHWATER SURF BOAT PROGRAM</span>
+    </div>
+  </div>
 
 <script>
+/* Boot + overlay injector script (keeps original app intact, overlay is namespaced) */
 (async function(){
+  // Don't run if opened as file:// or blob://
   if(location.protocol==='file:'||location.protocol==='blob:')return;
-  const boot=document.getElementById('boot');
-  boot.innerHTML='<div class="readyBox"><div class="spinner"></div><h1>Loading Freshwater Surf Boat Program…</h1><p>Loading your program…</p></div>';
 
-  try{
-    const r=await fetch('https://raw.githubusercontent.com/robm8213/FRESHWATER-SURFBOAT-PROGRAM-/957d3ed72e83580e560d30095bb6b87bb61ece16/index.html',{cache:'no-store'});
-    if(!r.ok)throw new Error('Base app returned '+r.status);
-    let full=await r.text();
+  const boot = document.getElementById('boot');
+  if(boot) boot.innerHTML = '<div class="readyBox"><div class="spinner"></div><h1>Loading Freshwater Surf Boat Program…</h1><p>Loading your program…</p></div>';
 
-    const addon = (function(){
-return `
+  try {
+    const r = await fetch('https://raw.githubusercontent.com/robm8213/FRESHWATER-SURFBOAT-PROGRAM-/957d3ed72e83580e560d30095bb6b87bb61ece16/index.html', {cache:'no-store'});
+    if(!r.ok) throw new Error('Base app returned '+r.status);
+    let full = await r.text();
+
+    /* Addon (overlay + demo admin). Kept namespaced under .fwsb- to avoid collisions. */
+    const addon = (function(){ return `
 <div id="fwsb-overlay-root" class="fwsb-overlay-root"></div>
 <script>
 (function(){
   const STORE_KEY='fwsb_demo_store_v1';
-  function uid(prefix='id'){return prefix+Math.random().toString(36).slice(2,9);} 
+  function uid(prefix='id'){return prefix+Math.random().toString(36).slice(2,9);}
   function loadStore(){
-    try{const s=localStorage.getItem(STORE_KEY); if(s) return JSON.parse(s);}catch(e){}
-    const seed={divisions:[{id:'div-open-men',name:'Open Men',crews:[{id:'crew-open-a',name:'Freshwater A',coachId:'coach-1'},{id:'crew-open-b',name:'Freshwater B',coachId:null}]},{id:'div-open-women',name:'Open Women',crews:[{id:'crew-openw-a',name:'Freshwater Women',coachId:null}]}],coaches:[{id:'coach-1',name:'Rob Coach',token:null}],athletes:[],links:{}};    localStorage.setItem(STORE_KEY,JSON.stringify(seed));    return seed;
+    try{ const s=localStorage.getItem(STORE_KEY); if(s) return JSON.parse(s); }catch(e){}
+    const seed={
+      divisions:[
+        {id:'div-open-men',name:'Open Men',crews:[{id:'crew-open-a',name:'Freshwater A',coachId:'coach-1'},{id:'crew-open-b',name:'Freshwater B',coachId:null}]},
+        {id:'div-open-women',name:'Open Women',crews:[{id:'crew-openw-a',name:'Freshwater Women',coachId:null}]}
+      ],
+      coaches:[{id:'coach-1',name:'Rob Coach',token:null}],
+      athletes:[], links:{}
+    };
+    localStorage.setItem(STORE_KEY,JSON.stringify(seed));
+    return seed;
   }
   function saveStore(s){ localStorage.setItem(STORE_KEY,JSON.stringify(s)); }
-  let store=loadStore();
+  let store = loadStore();
 
-  const params=new URLSearchParams(location.search);
-  const role=params.get('role');
-  const token=params.get('token');
-  let session={role:null,coachId:null,crewId:null,athleteId:null};
-  if(role==='coach'&&token){ const mapping=store.links && store.links.coachTokens || {}; const crewId=mapping[token]; if(crewId){ session.role='coach'; session.coachToken=token; session.crewId=crewId; const coach=store.coaches.find(c=>c.token===token); if(coach) session.coachId=coach.id; }}
-  if(role==='athlete'){ session.role='athlete'; session.athleteId=params.get('athleteId')||null; }
+  const params = new URLSearchParams(location.search);
+  const role = params.get('role');
+  const token = params.get('token');
+  let session = {role:null, coachId:null, crewId:null, athleteId:null};
+  if(role==='coach' && token){
+    const mapping = store.links && store.links.coachTokens || {};
+    const crewId = mapping[token];
+    if(crewId){ session.role='coach'; session.coachToken=token; session.crewId=crewId; const coach = store.coaches.find(c=>c.token===token); if(coach) session.coachId = coach.id; }
+  }
+  if(role==='athlete'){ session.role='athlete'; session.athleteId = params.get('athleteId')||null; }
 
   function mount(){
-    const root=document.getElementById('fwsb-overlay-root'); if(!root) return;
-    const container=document.createElement('div'); container.className='fwsb-root'; container.id='fwsb-root';
-    const inner=document.createElement('div'); inner.className='fwsb-container'; inner.id='fwsb-container';
+    const root = document.getElementById('fwsb-overlay-root'); if(!root) return;
+    const container = document.createElement('div'); container.className='fwsb-root';
+    const inner = document.createElement('div'); inner.className='fwsb-container';
     container.appendChild(inner);
 
-    const header=document.createElement('div'); header.className='fwsb-header'; header.id='fwsb-header';
-    header.innerHTML=`
+    const header = document.createElement('div'); header.className='fwsb-header';
+    header.innerHTML = \`
       <div class='fwsb-brand'><div class='fwsb-logo'>FW</div><div><div class='fwsb-primary' id='fwsb-primary'></div><div class='fwsb-secondary' id='fwsb-secondary'></div></div></div>
       <div>
         <button id='fwsb-athlete-menu-btn' class='fwsb-menu-btn' aria-haspopup='true' aria-expanded='false'>Menu ▾</button>
         <button id='fwsb-admin-btn' class='fwsb-menu-btn' style='margin-left:8px'>Admin</button>
-      </div>`;
+      </div>\`;
     inner.appendChild(header);
 
-    const bottomWrap=document.createElement('div'); bottomWrap.style.position='fixed'; bottomWrap.style.left='0'; bottomWrap.style.right='0'; bottomWrap.style.bottom='0'; bottomWrap.style.zIndex='2147483647';
-    const bottom=document.createElement('nav'); bottom.className='fwsb-bottom-nav';
-    bottom.innerHTML=`<div class='fwsb-container'><button class='fwsb-nav-btn' data-page='home'>Home</button><button class='fwsb-nav-btn' data-page='week'>Week</button><button class='fwsb-nav-btn' data-page='athletes'>Athletes</button><button class='fwsb-nav-btn' data-page='testing'>Testing</button><button class='fwsb-nav-btn' id='fwsb-more-btn'>More ▾</button></div>`;
+    const bottomWrap = document.createElement('div');
+    bottomWrap.style.position='fixed'; bottomWrap.style.left='0'; bottomWrap.style.right='0'; bottomWrap.style.bottom='0'; bottomWrap.style.zIndex='2147483647';
+    const bottom = document.createElement('nav'); bottom.className='fwsb-bottom-nav';
+    bottom.innerHTML = \`<div class='fwsb-container'><button class='fwsb-nav-btn' data-page='home'>Home</button><button class='fwsb-nav-btn' data-page='week'>Week</button><button class='fwsb-nav-btn' data-page='athletes'>Athletes</button><button class='fwsb-nav-btn' data-page='testing'>Testing</button><button class='fwsb-nav-btn' id='fwsb-more-btn'>More ▾</button></div>\`;
     bottomWrap.appendChild(bottom);
     container.appendChild(bottomWrap);
 
-    const content=document.createElement('div'); content.style.pointerEvents='none'; content.style.position='absolute'; content.style.left='0'; content.style.right='0'; content.style.top='72px'; content.style.bottom='72px'; content.id='fwsb-content'; inner.appendChild(content);
+    const content = document.createElement('div'); content.style.pointerEvents='none'; content.style.position='absolute'; content.style.left='0'; content.style.right='0'; content.style.top='72px'; content.style.bottom='72px';
+    inner.appendChild(content);
 
-    const overlayDim=document.createElement('div'); overlayDim.className='fwsb-overlay'; overlayDim.style.display='none'; overlayDim.id='fwsb-overlay-dim'; document.body.appendChild(overlayDim);
+    const overlayDim = document.createElement('div'); overlayDim.className='fwsb-overlay'; overlayDim.style.display='none'; overlayDim.id='fwsb-overlay-dim';
+    document.body.appendChild(overlayDim);
 
-    const athleteDrawer=document.createElement('div'); athleteDrawer.className='fwsb-drawer'; athleteDrawer.style.display='none'; athleteDrawer.id='fwsb-athlete-drawer';
-    athleteDrawer.innerHTML=`<h4>Athlete Menu</h4>
+    const athleteDrawer = document.createElement('div'); athleteDrawer.className='fwsb-drawer'; athleteDrawer.style.display='none'; athleteDrawer.id='fwsb-athlete-drawer';
+    athleteDrawer.innerHTML = \`<h4>Athlete Menu</h4>
       <button class='fwsb-menu-item' data-action='messages'>Team Messages</button>
       <button class='fwsb-menu-item' data-action='notifications'>Notifications</button>
       <button class='fwsb-menu-item' data-action='garmin'>Garmin (test)</button>
@@ -112,11 +148,11 @@ return `
       <button class='fwsb-menu-item' data-action='checkin'>Check-In / Today</button>
       <button class='fwsb-menu-item' data-action='history'>Training History</button>
       <button class='fwsb-menu-item' data-action='weeks'>Weeks Ahead</button>
-      <button class='fwsb-menu-item' data-action='carnivals'>Carnivals</button>`;
+      <button class='fwsb-menu-item' data-action='carnivals'>Carnivals</button>\`;
     document.body.appendChild(athleteDrawer);
 
-    const toolsDrawer=document.createElement('div'); toolsDrawer.className='fwsb-drawer'; toolsDrawer.style.display='none'; toolsDrawer.id='fwsb-tools-drawer';
-    toolsDrawer.innerHTML=`<h4>Team Tools</h4>
+    const toolsDrawer = document.createElement('div'); toolsDrawer.className='fwsb-drawer'; toolsDrawer.style.display='none'; toolsDrawer.id='fwsb-tools-drawer';
+    toolsDrawer.innerHTML = \`<h4>Team Tools</h4>
       <button class='fwsb-menu-item' data-tool='today'>Today / Next Session</button>
       <button class='fwsb-menu-item' data-tool='messages'>Team Messages</button>
       <button class='fwsb-menu-item' data-tool='crew-availability'>Crew Availability</button>
@@ -132,21 +168,21 @@ return `
       <button class='fwsb-menu-item' data-tool='announcements'>Announcements</button>
       <button class='fwsb-menu-item' data-tool='garmin'>Garmin (integration test)</button>
       <button class='fwsb-menu-item' data-tool='apple'>Apple Health (integration test)</button>
-      <button class='fwsb-menu-item' data-tool='settings'>Settings</button>`;
+      <button class='fwsb-menu-item' data-tool='settings'>Settings</button>\`;
     document.body.appendChild(toolsDrawer);
 
-    const adminModal=document.createElement('div'); adminModal.className='fwsb-drawer'; adminModal.style.display='none'; adminModal.id='fwsb-admin-modal'; adminModal.style.maxHeight='80vh';
-    adminModal.innerHTML=`<h4>Admin: Crews & Divisions</h4><div id='fwsb-admin-body'></div>`;
+    const adminModal = document.createElement('div'); adminModal.className='fwsb-drawer'; adminModal.style.display='none'; adminModal.id='fwsb-admin-modal'; adminModal.style.maxHeight='80vh';
+    adminModal.innerHTML = \`<h4>Admin: Crews & Divisions</h4><div id='fwsb-admin-body'></div>\`;
     document.body.appendChild(adminModal);
 
     function updateHeader(){
-      if(session.role==='coach'&&session.crewId){
-        const crew=findCrewById(session.crewId);
-        document.getElementById('fwsb-primary').textContent='OPEN MEN • '+(crew?.name||'[CREW]')+' PROGRAM';
+      if(session.role==='coach' && session.crewId){
+        const crew = findCrewById(session.crewId);
+        document.getElementById('fwsb-primary').textContent = 'OPEN MEN • ' + (crew?.name||'[CREW]') + ' PROGRAM';
       } else {
-        document.getElementById('fwsb-primary').textContent='OPEN MEN • [CREW NAME] PROGRAM';
+        document.getElementById('fwsb-primary').textContent = 'OPEN MEN • [CREW NAME] PROGRAM';
       }
-      document.getElementById('fwsb-secondary').textContent='2026/27 • Block 1 • Week 2 • Pre-Season / Base Building';
+      document.getElementById('fwsb-secondary').textContent = '2026/27 • Block 1 • Week 2 • Pre-Season / Base Building';
     }
 
     function findDivisionById(id){ return store.divisions.find(d=>d.id===id); }
@@ -157,23 +193,31 @@ return `
     function closeAdminModal(){ overlayDim.style.display='none'; adminModal.style.display='none'; }
 
     function renderAdminBody(){
-      const body=document.getElementById('fwsb-admin-body'); body.innerHTML='';
-      const reg=document.createElement('div'); reg.className='fwsb-card';
-      const headerRow=document.createElement('div'); headerRow.innerHTML=`<div style='display:flex;gap:12px;align-items:center;justify-content:space-between'><strong>Division | Crew Name | Coach</strong><button id='fwsb-add-division' class='fwsb-root button primary'>Add Division</button></div>`;
+      const body = document.getElementById('fwsb-admin-body'); body.innerHTML = '';
+      const reg = document.createElement('div'); reg.className = 'fwsb-card';
+      const headerRow = document.createElement('div'); headerRow.innerHTML = \`<div style='display:flex;gap:12px;align-items:center;justify-content:space-between'><strong>Division | Crew Name | Coach</strong><button id='fwsb-add-division' class='fwsb-root button primary'>Add Division</button></div>\`;
       reg.appendChild(headerRow);
-      const table=document.createElement('div'); table.style.marginTop='12px';
-      store.divisions.forEach(div=>{ div.crews.forEach(crew=>{ const row=document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.gap='8px'; row.style.alignItems='center'; const left=document.createElement('div'); left.innerHTML=`<div style='font-weight:700'>${div.name} • ${crew.name}</div><div class='fwsb-small'>ID: ${crew.id}</div>`; const coachName=findCoachById(crew.coachId)?.name||'<em>Unassigned</em>'; const right=document.createElement('div'); right.innerHTML=`<span class='fwsb-small'>Coach: ${coachName}</span> <button class='fwsb-edit-crew' data-id='${crew.id}'>Edit</button> <button class='fwsb-del-crew' data-id='${crew.id}'>Delete</button>`; row.appendChild(left); row.appendChild(right); table.appendChild(row); }); });
+      const table = document.createElement('div'); table.style.marginTop = '12px';
+      store.divisions.forEach(div=>{ div.crews.forEach(crew=>{ const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.gap='8px'; row.style.alignItems='center'; const left = document.createElement('div'); left.innerHTML = \`<div style='font-weight:700'>${div.name} • ${crew.name}</div><div class='fwsb-small'>ID: ${crew.id}</div>\`; const coachName = findCoachById(crew.coachId)?.name||'<em>Unassigned</em>'; const right = document.createElement('div'); right.innerHTML = \`<span class='fwsb-small'>Coach: ${coachName}</span> <button class='fwsb-edit-crew' data-id='${crew.id}'>Edit</button> <button class='fwsb-del-crew' data-id='${crew.id}'>Delete</button>\`; row.appendChild(left); row.appendChild(right); table.appendChild(row); }); });
       reg.appendChild(table); body.appendChild(reg);
-      const coachCard=document.createElement('div'); coachCard.className='fwsb-card'; coachCard.innerHTML=`<strong>Coaches</strong><div id='fwsb-coach-list'></div><div style='margin-top:8px'><input id='fwsb-new-coach' placeholder='Coach name'> <button id='fwsb-add-coach' class='fwsb-root button primary'>Add Coach</button></div>`; body.appendChild(coachCard);
-      const createCard=document.createElement('div'); createCard.className='fwsb-card'; createCard.innerHTML=`<strong>Create Crew</strong><div style='margin-top:8px' class='fwsb-form-row'><select id='fwsb-select-division'></select><input id='fwsb-crew-name' placeholder='Crew name'><button id='fwsb-create-crew' class='fwsb-root button primary'>Create</button></div>`; body.appendChild(createCard);
-      document.getElementById('fwsb-add-division').onclick = ()=>{ const n=prompt('Division name'); if(n){ store.divisions.push({id:uid('div-'),name:n,crews:[]}); saveStore(store); renderAdminBody(); }}
-      const coachList=document.getElementById('fwsb-coach-list'); coachList.innerHTML=''; store.coaches.forEach(c=>{ const el=document.createElement('div'); el.innerHTML=`${c.name} <button class='fwsb-gen-link' data-id='${c.id}'>Generate link</button>`; coachList.appendChild(el); });
-      document.getElementById('fwsb-add-coach').onclick=()=>{ const name=document.getElementById('fwsb-new-coach').value.trim(); if(!name) return alert('Enter coach name'); const id=uid('coach-'); store.coaches.push({id:id,name:name,token:null}); saveStore(store); renderAdminBody(); }
-      const sel=document.getElementById('fwsb-select-division'); sel.innerHTML=''; store.divisions.forEach(d=>{ const op=document.createElement('option'); op.value=d.id; op.textContent=d.name; sel.appendChild(op); });
-      document.getElementById('fwsb-create-crew').onclick=()=>{ const divId=sel.value; const name=document.getElementById('fwsb-crew-name').value.trim(); if(!name) return alert('Enter crew name'); const div=findDivisionById(divId); const crewId=uid('crew-'); div.crews.push({id:crewId,name:name,coachId:null}); saveStore(store); renderAdminBody(); }
-      Array.from(document.querySelectorAll('.fwsb-edit-crew')).forEach(btn=>btn.onclick=()=>{ const id=btn.dataset.id; const crew=findCrewById(id); const newName=prompt('Crew name',crew.name); if(newName){ const div=findDivisionById(crew.divisionId); const target=div.crews.find(c=>c.id===id); target.name=newName; saveStore(store); renderAdminBody(); }});
+
+      const coachCard = document.createElement('div'); coachCard.className='fwsb-card'; coachCard.innerHTML = \`<strong>Coaches</strong><div id='fwsb-coach-list'></div><div style='margin-top:8px'><input id='fwsb-new-coach' placeholder='Coach name'> <button id='fwsb-add-coach' class='fwsb-root button primary'>Add Coach</button></div>\`; body.appendChild(coachCard);
+
+      const createCard = document.createElement('div'); createCard.className='fwsb-card'; createCard.innerHTML = \`<strong>Create Crew</strong><div style='margin-top:8px' class='fwsb-form-row'><select id='fwsb-select-division'></select><input id='fwsb-crew-name' placeholder='Crew name'><button id='fwsb-create-crew' class='fwsb-root button primary'>Create</button></div>\`; body.appendChild(createCard);
+
+      document.getElementById('fwsb-add-division').onclick = ()=>{ const n=prompt('Division name'); if(n){ store.divisions.push({id:uid('div-'),name:n,crews:[]}); saveStore(store); renderAdminBody(); }};
+
+      const coachList = document.getElementById('fwsb-coach-list'); coachList.innerHTML=''; store.coaches.forEach(c=>{ const el=document.createElement('div'); el.innerHTML = \`${'${c.name}'} <button class='fwsb-gen-link' data-id='${c.id}'>Generate link</button>\`; coachList.appendChild(el); });
+
+      document.getElementById('fwsb-add-coach').onclick = ()=>{ const name = document.getElementById('fwsb-new-coach').value.trim(); if(!name) return alert('Enter coach name'); const id = uid('coach-'); store.coaches.push({id:id, name:name, token:null}); saveStore(store); renderAdminBody(); }
+
+      const sel = document.getElementById('fwsb-select-division'); sel.innerHTML=''; store.divisions.forEach(d=>{ const op=document.createElement('option'); op.value=d.id; op.textContent=d.name; sel.appendChild(op); });
+      document.getElementById('fwsb-create-crew').onclick = ()=>{ const divId = sel.value; const name = document.getElementById('fwsb-crew-name').value.trim(); if(!name) return alert('Enter crew name'); const div = findDivisionById(divId); const crewId = uid('crew-'); div.crews.push({id:crewId, name:name, coachId:null}); saveStore(store); renderAdminBody(); }
+
+      Array.from(document.querySelectorAll('.fwsb-edit-crew')).forEach(btn=>btn.onclick=()=>{ const id=btn.dataset.id; const crew=findCrewById(id); const newName = prompt('Crew name', crew.name); if(newName){ const div=findDivisionById(crew.divisionId); const target = div.crews.find(c=>c.id===id); target.name = newName; saveStore(store); renderAdminBody(); }});
       Array.from(document.querySelectorAll('.fwsb-del-crew')).forEach(btn=>btn.onclick=()=>{ const id=btn.dataset.id; if(!confirm('Delete crew?')) return; for(const d of store.divisions){ const idx=d.crews.findIndex(c=>c.id===id); if(idx>=0){ d.crews.splice(idx,1); saveStore(store); renderAdminBody(); return; }} });
-      Array.from(document.querySelectorAll('.fwsb-gen-link')).forEach(btn=>btn.onclick=()=>{ const id=btn.dataset.id; const coach=store.coaches.find(c=>c.id===id); if(!coach) return; if(!coach.token) coach.token=uid('t-'); const crewId=prompt('Enter crew id to assign coach to (or leave blank to copy token):'); if(crewId){ store.links=store.links||{}; store.links.coachTokens=store.links.coachTokens||{}; store.links.coachTokens[coach.token]=crewId; const c=findCrewById(crewId); if(c){ const div=findDivisionById(c.divisionId); const cr=div.crews.find(x=>x.id===crewId); cr.coachId=coach.id; } } saveStore(store); alert('Coach token: '+coach.token+"\nUse link: " + location.origin+location.pathname+"?role=coach&token="+coach.token); });
+
+      Array.from(document.querySelectorAll('.fwsb-gen-link')).forEach(btn=>btn.onclick=()=>{ const id=btn.dataset.id; const coach=store.coaches.find(c=>c.id===id); if(!coach) return; if(!coach.token) coach.token = uid('t-'); const crewId = prompt('Enter crew id to assign coach to (or leave blank to copy token):'); if(crewId){ store.links = store.links || {}; store.links.coachTokens = store.links.coachTokens || {}; store.links.coachTokens[coach.token] = crewId; const c=findCrewById(crewId); if(c){ const div=findDivisionById(c.divisionId); const cr=div.crews.find(x=>x.id===crewId); cr.coachId = coach.id; } } saveStore(store); alert('Coach token: '+coach.token+"\\nUse link: " + location.origin + location.pathname + "?role=coach&token=" + coach.token); });
     }
 
     function openAthleteDrawer(){ document.getElementById('fwsb-athlete-drawer').style.display='block'; document.getElementById('fwsb-overlay-dim').style.display='block'; }
@@ -181,43 +225,43 @@ return `
     function closeDrawers(){ document.getElementById('fwsb-athlete-drawer').style.display='none'; document.getElementById('fwsb-tools-drawer').style.display='none'; document.getElementById('fwsb-overlay-dim').style.display='none'; document.querySelectorAll('.fwsb-nav-btn').forEach(b=>b.classList.remove('active')); }
 
     document.querySelectorAll('.fwsb-nav-btn').forEach(btn=> btn.addEventListener('click', ()=>{ closeDrawers(); if(btn.id==='fwsb-more-btn'){ openToolsDrawer(); btn.classList.add('active'); return;} document.querySelectorAll('.fwsb-nav-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }));
-    document.getElementById('fwsb-athlete-menu-btn').addEventListener('click',()=>{ const d=document.getElementById('fwsb-athlete-drawer'); if(d.style.display==='block') closeDrawers(); else openAthleteDrawer(); });
-    document.getElementById('fwsb-admin-btn').addEventListener('click',()=>{ openAdminModal(); });
-    document.getElementById('fwsb-admin-crews').addEventListener('click',()=>{ openAdminModal(); });
-    document.getElementById('fwsb-overlay-dim').addEventListener('click',()=>{ closeDrawers(); closeAdminModal(); });
+    document.getElementById('fwsb-athlete-menu-btn').addEventListener('click', ()=>{ const d=document.getElementById('fwsb-athlete-drawer'); if(d.style.display==='block') closeDrawers(); else openAthleteDrawer(); });
+    document.getElementById('fwsb-admin-btn').addEventListener('click', ()=>{ openAdminModal(); });
+    document.getElementById('fwsb-admin-crews').addEventListener('click', ()=>{ openAdminModal(); });
+    document.getElementById('fwsb-overlay-dim').addEventListener('click', ()=>{ closeDrawers(); closeAdminModal(); });
 
-    document.addEventListener('click', function(e){ const it=e.target.closest('.fwsb-menu-item'); if(!it) return; const action=it.dataset.action||it.dataset.tool; if(!action) return; closeDrawers(); if(action==='messages'){ alert('Open Team Messages (placeholder)'); } else if(action==='notifications'){ alert('Notifications (placeholder)'); } else if(action==='garmin' || action==='apple'){ alert(action.toUpperCase() + ' - integration/test area'); } else if(action==='today'){ alert('Today / Next Session - placeholder'); } else if(action==='crew-availability'){ alert('Crew Availability (placeholder)'); } else if(action==='attendance'){ alert('Attendance (placeholder)'); } else if(action==='training-blocks'){ alert('Training Blocks (placeholder)'); } else if(action==='weeks-ahead'){ alert('Weeks Ahead (placeholder)'); } else if(action==='carnivals'){ alert('Carnivals (placeholder)'); } else if(action==='checkin'){ alert('Check-In (placeholder)'); } else if(action==='athlete-history'){ alert('Athlete History (placeholder)'); } else if(action==='settings'){ alert('Settings (placeholder)'); } }, false);
+    document.addEventListener('click', function(e){ const it=e.target.closest('.fwsb-menu-item'); if(!it) return; const action = it.dataset.action || it.dataset.tool; if(!action) return; closeDrawers(); if(action==='messages'){ alert('Open Team Messages (placeholder)'); } else if(action==='notifications'){ alert('Notifications (placeholder)'); } else if(action==='garmin' || action==='apple'){ alert(action.toUpperCase() + ' - integration/test area'); } else if(action==='today'){ alert('Today / Next Session - placeholder'); } else if(action==='crew-availability'){ alert('Crew Availability (placeholder)'); } else if(action==='attendance'){ alert('Attendance (placeholder)'); } else if(action==='training-blocks'){ alert('Training Blocks (placeholder)'); } else if(action==='weeks-ahead'){ alert('Weeks Ahead (placeholder)'); } else if(action==='carnivals'){ alert('Carnivals (placeholder)'); } else if(action==='checkin'){ alert('Check-In (placeholder)'); } else if(action==='athlete-history'){ alert('Athlete History (placeholder)'); } else if(action==='settings'){ alert('Settings (placeholder)'); } }, false);
 
     function showDivisionCrewSelector(){
-      const modal=document.createElement('div'); modal.className='fwsb-drawer'; modal.style.maxHeight='60vh'; modal.id='fwsb-select-modal';
-      let html=`<h4>Select Division → Crew</h4><div class='fwsb-card'><div class='fwsb-form-row'><select id='fwsb-select-division-sel'></select><select id='fwsb-select-crew-sel'></select></div><div style='margin-top:10px'><button id='fwsb-select-crew-enter' class='fwsb-root button primary'>Enter Crew</button> <button id='fwsb-select-crew-skip' class='fwsb-menu-item'>Skip</button></div></div>`;
-      modal.innerHTML=html; document.body.appendChild(modal);
-      const selD=document.getElementById('fwsb-select-division-sel'); const selC=document.getElementById('fwsb-select-crew-sel');
+      const modal = document.createElement('div'); modal.className='fwsb-drawer'; modal.style.maxHeight='60vh'; modal.id='fwsb-select-modal';
+      let html = "<h4>Select Division → Crew</h4><div class='fwsb-card'><div class='fwsb-form-row'><select id='fwsb-select-division-sel'></select><select id='fwsb-select-crew-sel'></select></div><div style='margin-top:10px'><button id='fwsb-select-crew-enter' class='fwsb-root button primary'>Enter Crew</button> <button id='fwsb-select-crew-skip' class='fwsb-menu-item'>Skip</button></div></div>";
+      modal.innerHTML = html; document.body.appendChild(modal);
+      const selD = document.getElementById('fwsb-select-division-sel'); const selC = document.getElementById('fwsb-select-crew-sel');
       store.divisions.forEach(d=>{ const op=document.createElement('option'); op.value=d.id; op.textContent=d.name; selD.appendChild(op); });
       function populateCrews(){ const d=findDivisionById(selD.value); selC.innerHTML=''; d.crews.forEach(c=>{ const op=document.createElement('option'); op.value=c.id; op.textContent=c.name; selC.appendChild(op); }); }
-      selD.addEventListener('change',populateCrews); populateCrews();
-      document.getElementById('fwsb-select-crew-enter').onclick=()=>{ const crewId=selC.value; session.crewId=crewId; updateHeader(); modal.remove(); }
-      document.getElementById('fwsb-select-crew-skip').onclick=()=>{ modal.remove(); }
+      selD.addEventListener('change', populateCrews); populateCrews();
+      document.getElementById('fwsb-select-crew-enter').onclick = ()=>{ const crewId = selC.value; session.crewId = crewId; updateHeader(); modal.remove(); }
+      document.getElementById('fwsb-select-crew-skip').onclick = ()=>{ modal.remove(); }
     }
 
     updateHeader();
-    if(!session.crewId && session.role!=='coach'){ setTimeout(showDivisionCrewSelector,600); }
+    if(!session.crewId && session.role!=='coach'){ setTimeout(showDivisionCrewSelector, 600); }
     function renderAdminIfOpen(){ if(document.getElementById('fwsb-admin-modal').style.display==='block') renderAdminBody(); }
-    window.FWSB_DEMO={store:store,save:()=>{saveStore(store); renderAdminIfOpen();},session:session};
+    window.FWSB_DEMO = { store: store, save: ()=>{ saveStore(store); renderAdminIfOpen(); }, session: session };
     document.getElementById('fwsb-overlay-root').appendChild(container);
   }
 
   if(!document.getElementById('fwsb-overlay-root')){ const root=document.createElement('div'); root.id='fwsb-overlay-root'; document.body.appendChild(root); }
-  setTimeout(mount,200);
+  setTimeout(mount, 200);
 })();
 </script>
-`;} )();
+`; })();
 
     const merged = full.includes('</body>') ? full.replace('</body>', addon + '\n</body>') : full + addon;
     document.open(); document.write(merged); document.close();
-
-  }catch(err){
-    boot.innerHTML='<div class=\"readyBox\"><div class=\"logo\">FW</div><h1>Freshwater app could not load</h1><p>'+String(err.message||err)+'</p><p>Refresh once and send a screenshot if it remains here.</p></div>';
+  } catch(err){
+    const boot = document.getElementById('boot');
+    if(boot) boot.innerHTML = '<div class="readyBox"><div class="logo">FW</div><h1>Freshwater app could not load</h1><p>' + String(err.message||err) + '</p><p>Refresh once and send a screenshot if it remains here.</p></div>';
   }
 })();
 </script>
