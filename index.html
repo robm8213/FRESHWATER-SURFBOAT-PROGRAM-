@@ -143,26 +143,35 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true, su
     try{ return JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}').crews||{}; }catch(e){ return {}; }
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
-  function fixTeamChoicesFor(div){
-    var box=document.getElementById('teamAccessChoices');
-    if(!box) return;
-    var crews=(getCrews()[div])||[];
-    if(!crews.length) return;
-    var html = crews.map(function(c){
-      return '<button class="teamChoice" onclick="chooseAccessTeam(\''+c.id.replace(/'/g,"\\'")+'\')"><b>'+esc(c.name)+'</b></button>';
-    }).join('');
-    box.innerHTML = html;
-  }
-  var oldOpenTeamPicker=window.openTeamPicker;
-  if(typeof oldOpenTeamPicker==='function' && !oldOpenTeamPicker.__fwWrapped){
-    window.openTeamPicker=function(div){
-      var r=oldOpenTeamPicker.apply(this,arguments);
-      fixTeamChoicesFor(div);
-      return r;
-    };
-    window.openTeamPicker.__fwWrapped=true;
-  }
+
+  window.openTeamPicker = function(name){
+    var token=new URLSearchParams(location.search).get("athlete");
+    if(token && typeof athleteInviteDivision!=='undefined' && athleteInviteDivision && divisionSlug(name)!==athleteInviteDivision){
+      var assigned=FRESHWATER_DIVISIONS.find(function(x){return divisionSlug(x)===athleteInviteDivision})||"your assigned division";
+      alert('Your athlete link is for '+assigned+'. Tap '+assigned+' to open your training.');
+      return;
+    }
+    pendingAccessDivision=name;
+    document.getElementById("teamAccessDivision").textContent=name;
+    var assignedTeam=(token && typeof athleteInviteTeam!=='undefined' && athleteInviteTeam)?athleteInviteTeam:"";
+    var crews=(getCrews()[name])||[];
+    var box=document.getElementById("teamAccessChoices");
+    if(crews.length){
+      box.innerHTML = crews.map(function(c){
+        var disabled = assignedTeam && c.id!==assignedTeam;
+        return '<button class="teamChoice" onclick="chooseAccessTeam(\''+c.id.replace(/'/g,"\\'")+'\')" '+(disabled?'style="opacity:.42"':'')+'><b>'+esc(c.name)+'</b><small>'+(disabled?'Your athlete link is assigned to '+esc(assignedTeam):'')+'</small></button>';
+      }).join('');
+    } else {
+      box.innerHTML = FRESHWATER_TEAMS.map(function(t){
+        var disabled = assignedTeam && t!==assignedTeam;
+        return '<button class="teamChoice" onclick="chooseAccessTeam(\''+t+'\')" '+(disabled?'style="opacity:.42"':'')+'><b>'+esc(t)+'</b><small>'+(disabled?'Your athlete link is assigned to '+esc(assignedTeam):'')+'</small></button>';
+      }).join('');
+    }
+    document.getElementById("teamAccessNotice").innerHTML = token && assignedTeam ? 'Your personal athlete link is assigned to <b>'+esc(name)+' — '+esc(assignedTeam)+'</b>.' : 'TEST MODE: Choose a team, then choose Athlete or Coach.';
+    showLayer("teamAccessPicker");
+  };
 })();
+
 
 (function(){
   function apply(){
