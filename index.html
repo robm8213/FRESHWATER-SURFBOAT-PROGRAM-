@@ -154,8 +154,9 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true, su
     }).join('');
     if(box.innerHTML !== html) box.innerHTML = html;
   }
-  var boxTarget=document.getElementById('teamAccessChoices');
-if(boxTarget){ new MutationObserver(fixTeamChoices).observe(boxTarget,{childList:true,subtree:true}); }
+ var pickerParent=document.getElementById('teamAccessPicker');
+if(pickerParent){ new MutationObserver(fixTeamChoices).observe(pickerParent,{childList:true,subtree:true}); }
+
 setInterval(function(){
     var picker=document.getElementById('teamAccessPicker');
     if(picker && getComputedStyle(picker).display!=='none'){ fixTeamChoices(); }
@@ -177,8 +178,9 @@ setInterval(function(){
     }catch(e){}
   }
  apply();
-var diTarget=document.getElementById('dashboardDivisionIdentity');
-if(diTarget){ new MutationObserver(apply).observe(diTarget,{childList:true,characterData:true,subtree:true}); }
+var diParent=document.getElementById('dashboard');
+if(diParent){ new MutationObserver(apply).observe(diParent,{childList:true,characterData:true,subtree:true}); }
+
 setInterval(apply,1000);
 
 })();
