@@ -143,33 +143,27 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true, su
     try{ return JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}').crews||{}; }catch(e){ return {}; }
   }
   function esc(s){ return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
-  function fixTeamChoices(){
+  function fixTeamChoicesFor(div){
     var box=document.getElementById('teamAccessChoices');
-    var divEl=document.getElementById('teamAccessDivision');
-    if(!box||!divEl) return;
-    var div=divEl.textContent;
+    if(!box) return;
     var crews=(getCrews()[div])||[];
     if(!crews.length) return;
     var html = crews.map(function(c){
       return '<button class="teamChoice" onclick="chooseAccessTeam(\''+c.id.replace(/'/g,"\\'")+'\')"><b>'+esc(c.name)+'</b></button>';
     }).join('');
-    if(box.innerHTML !== html) box.innerHTML = html;
+    box.innerHTML = html;
   }
- var pickerParent=document.getElementById('teamAccessPicker');
-var fixTeamChoicesTimer=null;
-function fixTeamChoicesDebounced(){
-  clearTimeout(fixTeamChoicesTimer);
-  fixTeamChoicesTimer=setTimeout(fixTeamChoices,60);
-}
-if(pickerParent){ new MutationObserver(fixTeamChoicesDebounced).observe(pickerParent,{childList:true,subtree:true}); }
-
-
-/*setInterval(function(){
-    var picker=document.getElementById('teamAccessPicker');
-    if(picker && getComputedStyle(picker).display!=='none'){ fixTeamChoices(); }
-  }, 500);*/
-
+  var oldOpenTeamPicker=window.openTeamPicker;
+  if(typeof oldOpenTeamPicker==='function' && !oldOpenTeamPicker.__fwWrapped){
+    window.openTeamPicker=function(div){
+      var r=oldOpenTeamPicker.apply(this,arguments);
+      fixTeamChoicesFor(div);
+      return r;
+    };
+    window.openTeamPicker.__fwWrapped=true;
+  }
 })();
+
 (function(){
   function apply(){
     try{
