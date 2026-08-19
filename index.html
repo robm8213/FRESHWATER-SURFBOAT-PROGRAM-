@@ -179,18 +179,22 @@ if(pickerParent){ new MutationObserver(fixTeamChoicesDebounced).observe(pickerPa
       var crews=(cfg.crews && cfg.crews[currentDivision])||[];
       var crew=crews.find(function(c){return c.id===currentTeam});
       var label=crew&&crew.name?crew.name:currentTeam;
-      var text=String(currentDivision).toUpperCase()+' • '+String(label).toUpperCase()+' PROGRAM';
-      if(di.textContent!==text) di.textContent=text;
+      di.textContent=String(currentDivision).toUpperCase()+' • '+String(label).toUpperCase()+' PROGRAM';
       di.style.fontSize='15px';
     }catch(e){}
   }
- apply();
-var diParent=document.getElementById('dashboard');
-if(diParent){ new MutationObserver(apply).observe(diParent,{childList:true,characterData:true,subtree:true}); }
-
-setInterval(apply,1000);
-
+  var oldRenderDashboard=window.renderDashboard;
+  if(typeof oldRenderDashboard==='function' && !oldRenderDashboard.__fwWrapped){
+    window.renderDashboard=function(){
+      var r=oldRenderDashboard.apply(this,arguments);
+      apply();
+      return r;
+    };
+    window.renderDashboard.__fwWrapped=true;
+  }
+  apply();
 })();
+
 
 
 
