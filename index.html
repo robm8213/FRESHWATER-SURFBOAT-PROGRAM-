@@ -111,6 +111,43 @@ if(di){
 
 
 })();
+(function(){
+  function getCrews(){
+    try{ return JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}').crews||{}; }catch(e){ return {}; }
+  }
+  function populateSelect(selectEl, crews){
+    if(!selectEl || !crews.length) return;
+    var prev = selectEl.value;
+    selectEl.innerHTML = crews.map(function(c){ return '<option value="'+c.id+'">'+c.name+'</option>'; }).join('');
+    if(crews.some(function(c){return c.id===prev})) selectEl.value = prev;
+  }
+  function refresh(divId, teamId){
+    var divSel=document.getElementById(divId), teamSel=document.getElementById(teamId);
+    if(!divSel||!teamSel) return;
+    var crews=(getCrews()[divSel.value])||[];
+    populateSelect(teamSel, crews);
+  }
+  function wireUp(divId, teamId){
+    var divSel=document.getElementById(divId);
+    if(divSel && !divSel.dataset.fwWired){
+      divSel.addEventListener('change', function(){ refresh(divId, teamId); });
+      divSel.dataset.fwWired='1';
+    }
+  }
+  function apply(){
+    try{
+      wireUp('masterDivisionSelect','masterTeamSelect');
+      wireUp('coachLinkDivision','coachLinkTeam');
+      var panel=document.getElementById('masterControlPanel');
+      if(panel && getComputedStyle(panel).display!=='none'){
+        refresh('masterDivisionSelect','masterTeamSelect');
+        refresh('coachLinkDivision','coachLinkTeam');
+      }
+    }catch(e){}
+  }
+  setInterval(apply,1000);
+})();
+
 </script>
 
 </script></body></html>
