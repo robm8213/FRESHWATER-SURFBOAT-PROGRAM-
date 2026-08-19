@@ -135,6 +135,9 @@
       function saveStore(s){ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
       let store = loadStore();
 
+      // local guard token to avoid stale renders
+      let latestRenderToken = 0;
+
       // session (simulated via ?role=coach&token=... on the overlay url)
       const params = new URLSearchParams(location.search);
       const role = params.get('role');
@@ -143,7 +146,7 @@
       if(role==='coach' && token){
         const mapping = store.links && store.links.coachTokens || {};
         const crewId = mapping[token];
-        if(crewId){ session.role='coach'; session.coachToken = token; session.crewId = crewId; const coach = store.coaches.find(c=>c.token===token); if(coach) session.coachId = coach.id; }
+        if(crewId){ session.role='coach'; session.coachToken = token; /* use setCrewSafe so we only update header when crew exists */ setCrewSafe(crewId); const coach = store.coaches.find(c=>c.token===token); if(coach) session.coachId = coach.id; }
       }
       if(role==='athlete'){ session.role='athlete'; session.athleteId = params.get('athleteId') || null; }
 
@@ -161,7 +164,12 @@
         const secondary = document.getElementById('fwsb-secondary');
         if(session.role==='coach' && session.crewId){
           const crew = findCrewById(session.crewId);
-          primary.textContent = 'OPEN MEN • ' + (crew?.name || '[CREW]') + ' PROGRAM';
+          if (crew) {
+            primary.textContent = 'OPEN MEN • ' + (crew.name || '[CREW]') + ' PROGRAM';
+          } else {
+            // If crew not yet available, don't change the header to avoid placeholder flicker
+            return;
+          }
         } else {
           primary.textContent = 'OPEN MEN • [CREW NAME] PROGRAM';
         }
@@ -171,6 +179,32 @@
       function findDivisionById(id){ return store.divisions.find(d=>d.id===id); }
       function findCrewById(id){ for(const d of store.divisions){ const c = d.crews.find(x=>x.id===id); if(c) return Object.assign({}, c, {divisionId:d.id, divisionName:d.name}); } return null; }
       function findCoachById(id){ return store.coaches.find(c=>c.id===id); }
+
+      // Safely set a crew id and update the header only when the crew exists.
+      // Uses latestRenderToken to avoid stale updates from rapid interactions.
+      function setCrewSafe(crewId){
+        const token = ++latestRenderToken;
+        // try immediate sync lookup
+        const crew = findCrewById(crewId);
+        if(crew){
+          session.crewId = crewId;
+          // update header in next frame to batch paints
+          window.requestAnimationFrame(()=>{
+            if(token !== latestRenderToken) return; // stale
+            updateHeader();
+          });
+          return;
+        }
+        // If not found immediately (edge cases), poll briefly for the crew to appear
+        const start = Date.now();
+        (function poll(){
+          if(token !== latestRenderToken) return; // newer change happened
+          const c = findCrewById(crewId);
+          if(c){ session.crewId = crewId; window.requestAnimationFrame(()=>{ if(token !== latestRenderToken) return; updateHeader(); }); return; }
+          if(Date.now() - start < 800){ setTimeout(poll, 50); }
+          // otherwise give up (do not set placeholder)
+        })();
+      }
 
       function open(ele){ if(!ele) return; ele.style.display='block'; ele.setAttribute('aria-hidden','false'); overlayDim.style.display='block'; }
       function close(ele){ if(!ele) return; ele.style.display='none'; ele.setAttribute('aria-hidden','true'); overlayDim.style.display='none'; }
@@ -255,15 +289,19 @@
         store.divisions.forEach(d=>{ const op = document.createElement('option'); op.value = d.id; op.textContent = d.name; selD.appendChild(op); });
         function populateCrews(){ const d = findDivisionById(selD.value); selC.innerHTML=''; d.crews.forEach(c=>{ const op=document.createElement('option'); op.value=c.id; op.textContent=c.name; selC.appendChild(op); }); }
         selD.addEventListener('change', populateCrews); populateCrews();
-        document.getElementById('fwsb-select-crew-enter').onclick = ()=>{ const crewId = selC.value; session.crewId = crewId; updateHeader(); modal.remove(); }
+        document.getElementById('fwsb-select-crew-enter').onclick = ()=>{ const crewId = selC.value; /* use safe setter to avoid placeholder flicker */ setCrewSafe(crewId); modal.remove(); }
         document.getElementById('fwsb-select-crew-skip').onclick = ()=>{ modal.remove(); }
       }
 
       // initial render
-      updateHeader();
+      // call updateHeader normally only if a crew is already set synchronously
+      if(session.crewId){ setCrewSafe(session.crewId); } else { updateHeader(); }
       if(!session.crewId && session.role !== 'coach'){ setTimeout(showDivisionCrewSelector, 400); }
       renderAdminBody();
       window.FWSB_DEMO = {store: store, save: ()=>{ saveStore(store); renderAdminBody(); }, session: session};
+
+      // expose setCrewSafe for debugging / console use
+      window.FWSB_DEMO.setCrewSafe = setCrewSafe;
     })();
   </script>
 </body>
