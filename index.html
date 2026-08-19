@@ -156,7 +156,13 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true, su
     if(box.innerHTML !== html) box.innerHTML = html;
   }
  var pickerParent=document.getElementById('teamAccessPicker');
-if(pickerParent){ new MutationObserver(fixTeamChoices).observe(pickerParent,{childList:true,subtree:true}); }
+var fixTeamChoicesTimer=null;
+function fixTeamChoicesDebounced(){
+  clearTimeout(fixTeamChoicesTimer);
+  fixTeamChoicesTimer=setTimeout(fixTeamChoices,60);
+}
+if(pickerParent){ new MutationObserver(fixTeamChoicesDebounced).observe(pickerParent,{childList:true,subtree:true}); }
+
 
 /*setInterval(function(){
     var picker=document.getElementById('teamAccessPicker');
