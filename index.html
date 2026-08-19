@@ -27,4 +27,54 @@ h1{font-size:24px;margin:0 0 8px}p{color:#c8babc;line-height:1.5;margin:7px 0}.b
   boot.innerHTML='<div class="readyBox"><div class="logo">FW</div><h1>Freshwater app could not load</h1><p>'+String(err.message||err)+'</p><p>Refresh once and send a screenshot if it remains here.</p></div>';
  }
 })();
+</script>
+<script>
+(function(){
+'use strict';
+function isVisible(el){
+  if(!el) return false;
+  const s=getComputedStyle(el);
+  const r=el.getBoundingClientRect();
+  return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0;
+}
+function sidebarLayoutIsActive(){
+  const layout=document.querySelector('.layout');
+  const sidebar=document.querySelector('.sidebar');
+  return window.innerWidth>760 && isVisible(layout) && isVisible(sidebar);
+}
+function installStyles(){
+  if(document.getElementById('fwUnifiedDesktopStyles')) return;
+  const st=document.createElement('style');
+  st.id='fwUnifiedDesktopStyles';
+  st.textContent=`
+    @media(min-width:761px){
+      body.fwDesktopWide .layout{display:block !important;grid-template-columns:1fr !important;}
+      body.fwDesktopWide .sidebar{display:none !important;}
+      body.fwDesktopWide .content{width:min(980px, calc(100vw - 40px)) !important;max-width:980px !important;min-width:0 !important;margin:0 auto !important;padding:20px 20px 100px !important;}
+      body.fwDesktopWide .screen, body.fwDesktopWide .screen.active{width:100% !important;max-width:none !important;min-width:0 !important;}
+      body.fwDesktopWide .card, body.fwDesktopWide .fwNext, body.fwDesktopWide .fwFeatureStrip, body.fwDesktopWide .dayCard{width:100% !important;max-width:none !important;}
+      body.fwDesktopWide .mobilebar{display:grid !important;grid-template-columns:repeat(5,1fr) !important;position:fixed !important;left:0 !important;right:0 !important;bottom:0 !important;width:100% !important;z-index:99999 !important;background:#0b0f13 !important;border-top:1px solid #3a4046 !important;padding:10px 12px !important;}
+      body.fwDesktopWide .mobilebar button{display:block !important;border:0 !important;background:transparent !important;color:#e4e8eb !important;font:inherit !important;font-size:13px !important;text-align:center !important;padding:8px 4px !important;cursor:pointer !important;}
+      body.fwDesktopWide .mobilebar button span{display:block !important;font-size:20px !important;line-height:1.1 !important;margin-bottom:2px !important;}
+      body.fwDesktopWide .mobilebar button.active{color:#ff5a63 !important;font-weight:800 !important;}
+    }
+  `;
+  document.head.appendChild(st);
+}
+function apply(){
+  try{
+    installStyles();
+    document.body.classList.toggle('fwDesktopWide', sidebarLayoutIsActive());
+  }catch(e){}
+}
+setTimeout(apply,300);
+setTimeout(apply,800);
+setTimeout(apply,1600);
+setInterval(apply,2000);
+window.addEventListener('resize',apply);
+window.addEventListener('focus',apply);
+new MutationObserver(apply).observe(document.documentElement,{childList:true, subtree:true, attributes:true, attributeFilter:['class','style']});
+})();
+</script>
+
 </script></body></html>
