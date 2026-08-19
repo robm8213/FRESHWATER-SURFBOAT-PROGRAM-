@@ -154,10 +154,13 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true, su
     }).join('');
     if(box.innerHTML !== html) box.innerHTML = html;
   }
-  setInterval(function(){
+  var boxTarget=document.getElementById('teamAccessChoices');
+if(boxTarget){ new MutationObserver(fixTeamChoices).observe(boxTarget,{childList:true,subtree:true}); }
+setInterval(function(){
     var picker=document.getElementById('teamAccessPicker');
     if(picker && getComputedStyle(picker).display!=='none'){ fixTeamChoices(); }
   }, 500);
+
 })();
 (function(){
   function apply(){
@@ -173,7 +176,11 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true, su
       di.style.fontSize='15px';
     }catch(e){}
   }
-  setInterval(apply,1000);
+ apply();
+var diTarget=document.getElementById('dashboardDivisionIdentity');
+if(diTarget){ new MutationObserver(apply).observe(diTarget,{childList:true,characterData:true,subtree:true}); }
+setInterval(apply,1000);
+
 })();
 
 
