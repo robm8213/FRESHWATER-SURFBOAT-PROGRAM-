@@ -92,7 +92,17 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true, su
     if(target) target.insertAdjacentElement('afterend', wrap);
     else dash.appendChild(wrap);
     var di=document.getElementById('dashboardDivisionIdentity');
-    if(di && !di.dataset.fwResized){ di.style.fontSize='15px'; di.dataset.fwResized='1'; }
+if(di){
+  di.style.fontSize='15px';
+  try{
+    var cfg=JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}');
+    var crews=(cfg.crews && cfg.crews[currentDivision])||[];
+    var crew=crews.find(function(c){return c.id===currentTeam});
+    var label=crew&&crew.name?crew.name:currentTeam;
+    di.textContent=String(currentDivision).toUpperCase()+' • '+String(label).toUpperCase()+' PROGRAM';
+  }catch(e){}
+}
+
   }
 
   setTimeout(addDashboardCards,1000);
