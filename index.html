@@ -80,6 +80,22 @@ new MutationObserver(apply).observe(document.documentElement,{childList:true, su
   st.textContent='#fwPreLiveAthlete{display:none !important;}';
   document.head.appendChild(st);
 })();
+(function(){
+  function addDashboardCards(){
+    var dash=document.getElementById('dashboard');
+    if(!dash || document.getElementById('fwDashboardMsgCards')) return;
+    var wrap=document.createElement('div');
+    wrap.id='fwDashboardMsgCards';
+    wrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;';
+    wrap.innerHTML='<button class="moreChoice" style="text-align:left;background:#0d090a;border:1px solid var(--line);border-radius:13px;padding:13px;color:#fff;font:inherit;cursor:pointer;" onclick="openMessages()"><b>💬 Team Messages</b><br><small style="color:#9aa6af;font-size:12px;">Crew conversation</small></button><button class="moreChoice" style="text-align:left;background:#0d090a;border:1px solid var(--line);border-radius:13px;padding:13px;color:#fff;font:inherit;cursor:pointer;" onclick="openNotificationPrefs()"><b>🔔 Notifications</b><br><small style="color:#9aa6af;font-size:12px;">Choose the alerts you receive</small></button>';
+    var target=dash.querySelector('h1')||dash.firstElementChild;
+    if(target) target.insertAdjacentElement('afterend', wrap);
+    else dash.appendChild(wrap);
+  }
+  setTimeout(addDashboardCards,1000);
+  setInterval(addDashboardCards,2000);
+})();
+
 
 })();
 </script>
