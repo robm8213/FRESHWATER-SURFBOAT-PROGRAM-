@@ -75,6 +75,12 @@ setInterval(apply,2000);
 window.addEventListener('resize',apply);
 window.addEventListener('focus',apply);
 new MutationObserver(apply).observe(document.documentElement,{childList:true, subtree:true, attributes:true, attributeFilter:['class','style']});
+(function(){
+  var st=document.createElement('style');
+  st.textContent='#fwPreLiveAthlete{display:none !important;}';
+  document.head.appendChild(st);
+})();
+
 })();
 </script>
 
