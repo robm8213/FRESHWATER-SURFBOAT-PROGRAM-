@@ -64,7 +64,8 @@ function installStyles(){
 function apply(){
   try{
     installStyles();
-    document.body.classList.toggle('fwDesktopWide', sidebarLayoutIsActive());
+   document.body.classList.toggle('fwDesktopWide', window.innerWidth>760);
+
   }catch(e){}
 }
 setTimeout(apply,300);
