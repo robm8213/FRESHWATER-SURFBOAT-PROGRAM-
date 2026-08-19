@@ -1,308 +1,250 @@
 <!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#071019" />
-  <title>Freshwater Surf Boat Program — Overlay Preview</title>
-  <style>
-    /* Page reset only for the overlay page itself (iframe is a separate document) */
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif;background:#071019;color:#fff}
-    /* iframe hosting the original app */
-    #fwsb-iframe { position:fixed; inset:0; width:100%; height:100%; border:0; z-index:1; background:#071019; }
-    /* overlay root (completely separate from iframe) */
-    .fwsb-overlay-root{position:fixed;inset:0;pointer-events:none;z-index:2147483647}
-    .fwsb-root{pointer-events:auto;position:fixed;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;z-index:2147483648}
-    .fwsb-container{max-width:1280px;width:100%;padding-left:12px;padding-right:12px;box-sizing:border-box}
-    .fwsb-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:linear-gradient(180deg,rgba(7,16,24,0.6),rgba(7,10,14,0.18));backdrop-filter:blur(4px);border-bottom:1px solid rgba(255,255,255,0.03);height:64px;border-radius:0;margin-top:8px}
-    .fwsb-brand{display:flex;align-items:center;gap:12px}
-    .fwsb-logo{width:44px;height:44px;border-radius:8px;border:2px solid rgba(255,255,255,0.06);display:grid;place-items:center;background:rgba(255,255,255,0.02);font-weight:800}
-    .fwsb-primary{font-size:16px;font-weight:700;letter-spacing:0.6px}
-    .fwsb-secondary{font-size:11px;opacity:0.9;margin-top:2px}
-    .fwsb-menu-btn{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:10px;color:#fff;cursor:pointer}
-    .fwsb-bottom-nav{display:flex;justify-content:space-around;align-items:center;padding:10px 8px;background:linear-gradient(180deg,rgba(7,10,14,0.95),rgba(7,10,14,0.88));border-top:1px solid rgba(255,255,255,0.03);width:100%;box-sizing:border-box}
-    .fwsb-bottom-inner{max-width:1280px;margin:0 auto;display:flex;gap:12px;justify-content:center}
-    .fwsb-nav-btn{background:transparent;border:none;color:#cbd5e1;font-size:13px;padding:8px 12px;border-radius:8px;cursor:pointer}
-    .fwsb-nav-btn.active{color:#fff;font-weight:700}
-    .fwsb-drawer{position:fixed;left:50%;transform:translateX(-50%);bottom:8vh;max-height:70vh;background:linear-gradient(180deg,#071019,#0b1218);width:720px;border-radius:12px;padding:16px;box-shadow:0 14px 40px rgba(0,0,0,0.6);z-index:2147483649;overflow:auto;display:none}
-    .fwsb-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:2147483646;display:none}
-    .fwsb-menu-item{display:block;padding:10px 8px;border-radius:8px;color:#e6eef6;background:transparent;border:0;text-align:left;width:100%;cursor:pointer}
-    .fwsb-card{background:rgba(255,255,255,0.03);padding:12px;border-radius:10px;margin-bottom:12px}
-    .fwsb-form-row{display:flex;gap:8px;align-items:center}
-    .fwsb-input, .fwsb-select{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);color:#fff;padding:8px;border-radius:8px}
-    .fwsb-primary-btn{background:#0ea5a3;border:none;padding:8px 12px;border-radius:8px;color:#042024;cursor:pointer}
-    .fwsb-small{font-size:12px;opacity:0.9}
-    .fwsb-admin-trigger{margin-left:8px}
-    /* small responsive adjustments */
-    @media (max-width:900px){
-      .fwsb-drawer{left:0;right:0;transform:none;width:auto;border-radius:14px}
-      .fwsb-header{padding:14px;height:72px}
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071019"><title>Freshwater Surf Boat Program</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#071019;color:#fff;font-family:Inter,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+.ready{min-height:100vh;display:grid;place-items:center;padding:28px;text-align:center;background:linear-gradient(180deg,#071019,#170708)}
+.readyBox{max-width:540px;width:100%;background:#171012;border:1px solid #3a2629;border-radius:18px;padding:22px}
+.logo{width:54px;height:54px;border:3px solid #fff;border-radius:50%;display:grid;place-items:center;font-weight:1000;margin:0 auto 14px}
+h1{font-size:24px;margin:0 0 8px}p{color:#c8babc;line-height:1.5;margin:7px 0}.badge{display:inline-block;margin-top:12px;padding:7px 10px;border-radius:999px;background:#193324;color:#bdf4ce;font-size:11px;font-weight:1000}
+.spinner{width:38px;height:38px;border:4px solid #3a2629;border-top-color:#a42933;border-radius:50%;margin:0 auto 16px;animation:s 1s linear infinite}@keyframes s{to{transform:rotate(360deg)}}
+</style></head><body>
+<div id="boot" class="ready"><div class="readyBox"><div class="logo">FW</div><h1>Freshwater Surf Boat Program</h1><p>Freshwater Surf Boat Program</p><span class="badge">FRESHWATER SURF BOAT PROGRAM</span></div></div>
+<script>
+(async function(){
+ if(location.protocol==='file:'||location.protocol==='blob:')return;
+ const boot=document.getElementById('boot');
+ boot.innerHTML='<div class="readyBox"><div class="spinner"></div><h1>Loading Freshwater Surf Boat Program…</h1><p>Loading your program…</p></div>';
+ try{
+  const r=await fetch('https://raw.githubusercontent.com/robm8213/FRESHWATER-SURFBOAT-PROGRAM-/957d3ed72e83580e560d30095bb6b87bb61ece16/index.html',{cache:'no-store'});
+  if(!r.ok)throw new Error('Base app returned '+r.status);
+  let full=await r.text();
+  const addon=decodeURIComponent(escape(atob('PHNjcmlwdD4KKGZ1bmN0aW9uKCl7Cid1c2Ugc3RyaWN0JzsKY29uc3QgS0VZPSdmd19mZWF0dXJlX3BhY2tfdjEnOwpjb25zdCBET1c9WydTdW5kYXknLCdNb25kYXknLCdUdWVzZGF5JywnV2Vkbm[...])));
+  full=full.includes('</body>')?full.replace('</body>',addon+'\n</body>'):full+addon;
+  document.open();document.write(full);document.close();
+ }catch(err){
+  boot.innerHTML='<div class="readyBox"><div class="logo">FW</div><h1>Freshwater app could not load</h1><p>'+String(err.message||err)+'</p><p>Refresh once and send a screenshot if it remains here.</p></div>';
+ }
+})();
+</script>
+<script>
+(function(){
+'use strict';
+function isVisible(el){
+  if(!el) return false;
+  const s=getComputedStyle(el);
+  const r=el.getBoundingClientRect();
+  return s.display!=='none' && s.visibility!=='hidden' && r.width>0 && r.height>0;
+}
+function sidebarLayoutIsActive(){
+  const layout=document.querySelector('.layout');
+  const sidebar=document.querySelector('.sidebar');
+  return window.innerWidth>760 && isVisible(layout) && isVisible(sidebar);
+}
+function installStyles(){
+  if(document.getElementById('fwUnifiedDesktopStyles')) return;
+  const st=document.createElement('style');
+  st.id='fwUnifiedDesktopStyles';
+  st.textContent=`
+    @media(min-width:761px){
+      body.fwDesktopWide .layout{display:block !important;grid-template-columns:1fr !important;}
+      body.fwDesktopWide .sidebar{display:none !important;}
+      body.fwDesktopWide .content{width:min(980px, calc(100vw - 40px)) !important;max-width:980px !important;min-width:0 !important;margin:0 auto !important;padding:20px 20px 100px !important;}
+      body.fwDesktopWide .screen, body.fwDesktopWide .screen.active{width:100% !important;max-width:none !important;min-width:0 !important;}
+      body.fwDesktopWide .card, body.fwDesktopWide .fwNext, body.fwDesktopWide .fwFeatureStrip, body.fwDesktopWide .dayCard{width:100% !important;max-width:none !important;}
+      body.fwDesktopWide .mobilebar{display:grid !important;grid-template-columns:repeat(5,1fr) !important;position:fixed !important;left:0 !important;right:0 !important;bottom:0 !important;width:100% !important;padding:10px 8px !important;box-sizing:border-box !important;background:linear-gradient(180deg,rgba(7,10,14,0.95),rgba(7,10,14,0.88)) !important;border-top:1px solid rgba(255,255,255,0.03) !important;}
+      body.fwDesktopWide .mobilebar button{display:block !important;border:0 !important;background:transparent !important;color:#e4e8eb !important;font:inherit !important;font-size:13px !important;padding:8px 12px !important;border-radius:8px !important;cursor:pointer !important}
+      body.fwDesktopWide .mobilebar button span{display:block !important;font-size:20px !important;line-height:1.1 !important;margin-bottom:2px !important;}
+      body.fwDesktopWide .mobilebar button.active{color:#ff5a63 !important;font-weight:800 !important;}
     }
-  </style>
-</head>
-<body>
-  <!-- iframe to host the original app (isolated) -->
-  <iframe id="fwsb-iframe" src="https://raw.githubusercontent.com/robm8213/FRESHWATER-SURFBOAT-PROGRAM-/feature/fwsb-unified-index/index.html"></iframe>
+  `;
+  document.head.appendChild(st);
+}
+function apply(){
+  try{
+    installStyles();
+   document.body.classList.toggle('fwDesktopWide', window.innerWidth>760);
 
-  <!-- overlay root (isolated from iframe) -->
-  <div class="fwsb-overlay-root" aria-hidden="false">
-    <div class="fwsb-root">
-      <div class="fwsb-container">
-        <header class="fwsb-header" role="banner">
-          <div class="fwsb-brand">
-            <div class="fwsb-logo">FW</div>
-            <div>
-              <div class="fwsb-primary" id="fwsb-primary">OPEN MEN • [CREW NAME] PROGRAM</div>
-              <div class="fwsb-secondary" id="fwsb-secondary">2026/27 • Block 1 • Week 2 • Pre-Season</div>
-            </div>
-          </div>
-          <div>
-            <button id="fwsb-athlete-menu-btn" class="fwsb-menu-btn" aria-haspopup="true">Menu ▾</button>
-            <button id="fwsb-admin-btn" class="fwsb-menu-btn fwsb-admin-trigger">Admin</button>
-          </div>
-        </header>
-      </div>
+  }catch(e){}
+}
+setTimeout(apply,300);
+setTimeout(apply,800);
+setTimeout(apply,1600);
+setInterval(apply,2000);
+window.addEventListener('resize',apply);
+window.addEventListener('focus',apply);
+new MutationObserver(apply).observe(document.documentElement,{childList:true, subtree:true, attributes:true, attributeFilter:['class','style']});
+(function(){
+  var st=document.createElement('style');
+  st.textContent='#fwPreLiveAthlete{display:none !important;}';
+  document.head.appendChild(st);
+})();
+(function(){
+  function addDashboardCards(){
+    var dash=document.getElementById('dashboard');
+    if(!dash || document.getElementById('fwDashboardMsgCards')) return;
+    var wrap=document.createElement('div');
+    wrap.id='fwDashboardMsgCards';
+    wrap.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0;';
+    wrap.innerHTML='<button class="moreChoice" style="text-align:left;background:#0d090a;border:1px solid var(--line);border-radius:13px;padding:13px;color:#fff;font:inherit;cursor:pointer;" onclick="alert(\'placeholder\')">Message</button>';
+    var target=dash.querySelector('.divisionIdentity')||dash.querySelector('h1')||dash.firstElementChild;
+    if(target) target.insertAdjacentElement('afterend', wrap);
+    else dash.appendChild(wrap);
+    
+  }
 
-      <nav class="fwsb-bottom-nav" aria-label="Primary">
-        <div class="fwsb-bottom-inner">
-          <button class="fwsb-nav-btn" data-page="home">Home</button>
-          <button class="fwsb-nav-btn" data-page="week">Week</button>
-          <button class="fwsb-nav-btn" data-page="athletes">Athletes</button>
-          <button class="fwsb-nav-btn" data-page="testing">Testing</button>
-          <button class="fwsb-nav-btn" id="fwsb-more-btn">More ▾</button>
-        </div>
-      </nav>
-    </div>
-  </div>
+  setTimeout(addDashboardCards,1000);
+  setInterval(addDashboardCards,2000);
+})();
 
-  <!-- overlay dim and drawers (hidden by default) -->
-  <div id="fwsb-overlay-dim" class="fwsb-overlay" role="presentation"></div>
 
-  <div id="fwsb-tools-drawer" class="fwsb-drawer" role="dialog" aria-hidden="true">
-    <h4>Team Tools</h4>
-    <button class="fwsb-menu-item" data-tool="today">Today / Next Session</button>
-    <button class="fwsb-menu-item" data-tool="messages">Team Messages</button>
-    <button class="fwsb-menu-item" data-tool="crew-availability">Crew Availability</button>
-    <button class="fwsb-menu-item" data-tool="attendance">Attendance</button>
-    <button class="fwsb-menu-item" data-tool="carnival-availability">Carnival Availability</button>
-    <button class="fwsb-menu-item" data-tool="notifications">Notifications</button>
-    <button class="fwsb-menu-item" data-tool="checkin">Check-In</button>
-    <button class="fwsb-menu-item" data-tool="athlete-history">Athlete History</button>
-    <button class="fwsb-menu-item" data-tool="training-blocks">Training Blocks</button>
-    <button class="fwsb-menu-item" data-tool="weeks-ahead">Weeks Ahead</button>
-    <button class="fwsb-menu-item" data-tool="carnivals">Carnivals</button>
-    <button class="fwsb-menu-item" data-tool="announcements">Announcements</button>
-    <button class="fwsb-menu-item" data-tool="garmin">Garmin (integration test)</button>
-    <button class="fwsb-menu-item" data-tool="apple">Apple Health (integration test)</button>
-    <button class="fwsb-menu-item" data-tool="settings">Settings</button>
-  </div>
-
-  <div id="fwsb-athlete-drawer" class="fwsb-drawer" role="dialog" aria-hidden="true">
-    <h4>Athlete Menu</h4>
-    <button class="fwsb-menu-item" data-action="messages">Team Messages</button>
-    <button class="fwsb-menu-item" data-action="notifications">Notifications</button>
-    <button class="fwsb-menu-item" data-action="garmin">Garmin (test)</button>
-    <button class="fwsb-menu-item" data-action="apple">Apple Health (test)</button>
-    <button class="fwsb-menu-item" data-action="checkin">Check-In / Today</button>
-    <button class="fwsb-menu-item" data-action="history">Training History</button>
-    <button class="fwsb-menu-item" data-action="weeks">Weeks Ahead</button>
-    <button class="fwsb-menu-item" data-action="carnivals">Carnivals</button>
-  </div>
-
-  <div id="fwsb-admin-modal" class="fwsb-drawer" role="dialog" aria-hidden="true" style="max-height:80vh;">
-    <h4>Admin: Crews & Divisions</h4>
-    <div id="fwsb-admin-body"></div>
-  </div>
-
-  <script>
-    // Overlay behavior + demo admin (localStorage-backed) — runs in parent page, iframe isolated
-    (function(){
-      const STORE_KEY = 'fwsb_demo_store_v1';
-      function uid(prefix='id'){ return prefix + Math.random().toString(36).slice(2,9); }
-      function loadStore(){
-        try{ const s = localStorage.getItem(STORE_KEY); if(s) return JSON.parse(s); }catch(e){}
-        const seed = {
-          divisions:[
-            {id:'div-open-men',name:'Open Men',crews:[{id:'crew-open-a',name:'Freshwater A',coachId:'coach-1'},{id:'crew-open-b',name:'Freshwater B',coachId:null}]},
-            {id:'div-open-women',name:'Open Women',crews:[{id:'crew-openw-a',name:'Freshwater Women',coachId:null}]}
-          ],
-          coaches:[{id:'coach-1',name:'Rob Coach',token:null}],
-          athletes:[], links:{}
-        };
-        localStorage.setItem(STORE_KEY, JSON.stringify(seed));
-        return seed;
+})();
+(function(){
+  function getCrews(){
+    try{ return JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}').crews||{}; }catch(e){ return {}; }
+  }
+  function populateSelect(selectEl, crews){
+    if(!selectEl || !crews.length) return;
+    var prev = selectEl.value;
+    selectEl.innerHTML = crews.map(function(c){ return '<option value="'+c.id+'">'+c.name+'</option>'; }).join('');
+    if(crews.some(function(c){return c.id===prev})) selectEl.value = prev;
+  }
+  function refresh(divId, teamId){
+    var divSel=document.getElementById(divId), teamSel=document.getElementById(teamId);
+    if(!divSel||!teamSel) return;
+    var crews=(getCrews()[divSel.value])||[];
+    populateSelect(teamSel, crews);
+  }
+  function wireUp(divId, teamId){
+    var divSel=document.getElementById(divId);
+    if(divSel && !divSel.dataset.fwWired){
+      divSel.addEventListener('change', function(){ refresh(divId, teamId); });
+      divSel.dataset.fwWired='1';
+    }
+  }
+  function apply(){
+    try{
+      wireUp('masterDivisionSelect','masterTeamSelect');
+      wireUp('coachLinkDivision','coachLinkTeam');
+      var panel=document.getElementById('masterControlPanel');
+      if(panel && getComputedStyle(panel).display!=='none'){
+        refresh('masterDivisionSelect','masterTeamSelect');
+        refresh('coachLinkDivision','coachLinkTeam');
       }
-      function saveStore(s){ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }
-      let store = loadStore();
+    }catch(e){}
+  }
+ // setInterval(apply,1000);
 
-      // local guard token to avoid stale renders
-      let latestRenderToken = 0;
+})();
+(function(){
+  function getCrews(){
+    try{ return JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}').crews||{}; }catch(e){ return {}; }
+  }
+  function esc(s){ return String(s).replace(/[&<>\"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]; }); }
 
-      // session (simulated via ?role=coach&token=... on the overlay url)
-      const params = new URLSearchParams(location.search);
-      const role = params.get('role');
-      const token = params.get('token');
-      let session = { role:null, coachId:null, crewId:null, athleteId:null };
-      if(role==='coach' && token){
-        const mapping = store.links && store.links.coachTokens || {};
-        const crewId = mapping[token];
-        if(crewId){ session.role='coach'; session.coachToken = token; /* use setCrewSafe so we only update header when crew exists */ setCrewSafe(crewId); const coach = store.coaches.find(c=>c.token===token); if(coach) session.coachId = coach.id; }
-      }
-      if(role==='athlete'){ session.role='athlete'; session.athleteId = params.get('athleteId') || null; }
+  function correctOpenTeamPicker(name){
+    var token=new URLSearchParams(location.search).get("athlete");
+    if(token && typeof athleteInviteDivision!=='undefined' && athleteInviteDivision && divisionSlug(name)!==athleteInviteDivision){
+      var assigned=FRESHWATER_DIVISIONS.find(function(x){return divisionSlug(x)===athleteInviteDivision})||"your assigned division";
+      alert('Your athlete link is for '+assigned+'. Tap '+assigned+' to open your training.');
+      return;
+    }
+    pendingAccessDivision=name;
+    document.getElementById("teamAccessDivision").textContent=name;
+    var assignedTeam=(token && typeof athleteInviteTeam!=='undefined' && athleteInviteTeam)?athleteInviteTeam:"";
+    var crews=(getCrews()[name])||[];
+    var box=document.getElementById("teamAccessChoices");
+    if(crews.length){
+      box.innerHTML = crews.map(function(c){
+        var disabled = assignedTeam && c.id!==assignedTeam;
+        return '<button class="teamChoice" onclick="chooseAccessTeam(\''+c.id.replace(/'/g,"\\'")+'\')" '+(disabled?'style="opacity:.42"':'')+'><b>'+esc(c.name)+'</b><small>'+(disabled?'Your athl[...]
+      }).join('');
+    } else {
+      box.innerHTML = FRESHWATER_TEAMS.map(function(t){
+        var disabled = assignedTeam && t!==assignedTeam;
+        return '<button class="teamChoice" onclick="chooseAccessTeam(\''+t+'\')" '+(disabled?'style="opacity:.42"':'')+'><b>'+esc(t)+'</b><small>'+(disabled?'Your athlete link is assigned to '+es[...]
+      }).join('');
+    }
+    document.getElementById("teamAccessNotice").innerHTML = token && assignedTeam ? 'Your personal athlete link is assigned to <b>'+esc(name)+' — '+esc(assignedTeam)+'</b>.' : 'TEST MODE: Choos[...]
+    showLayer("teamAccessPicker");
+  }
 
-      // DOM refs
-      const overlayDim = document.getElementById('fwsb-overlay-dim');
-      const toolsDrawer = document.getElementById('fwsb-tools-drawer');
-      const athleteDrawer = document.getElementById('fwsb-athlete-drawer');
-      const adminModal = document.getElementById('fwsb-admin-modal');
-      const moreBtn = document.getElementById('fwsb-more-btn');
-      const menuBtn = document.getElementById('fwsb-athlete-menu-btn');
-      const adminBtn = document.getElementById('fwsb-admin-btn');
+  function enforce(){
+    if(window.openTeamPicker !== correctOpenTeamPicker){
+      window.openTeamPicker = correctOpenTeamPicker;
+    }
+  }
+  enforce();
+  setInterval(enforce, 300);
+})();
 
-      function updateHeader(){
-        const primary = document.getElementById('fwsb-primary');
-        const secondary = document.getElementById('fwsb-secondary');
-        if(session.role==='coach' && session.crewId){
-          const crew = findCrewById(session.crewId);
-          if (crew) {
-            primary.textContent = 'OPEN MEN • ' + (crew.name || '[CREW]') + ' PROGRAM';
-          } else {
-            // If crew not yet available, don't change the header to avoid placeholder flicker
-            return;
-          }
-        } else {
-          primary.textContent = 'OPEN MEN • [CREW NAME] PROGRAM';
+
+(function(){
+  // REPLACED: safer dashboard title updater to avoid placeholder flicker
+  (function(){
+    var latestRenderToken = 0;
+
+    function safeApply(){
+      try{
+        var di = document.getElementById('dashboardDivisionIdentity');
+        if(!di) return;
+
+        function setLabel(name){
+          di.textContent = String(currentDivision).toUpperCase() + ' • ' + String(name).toUpperCase() + ' PROGRAM';
+          di.style.fontSize = '15px';
         }
-        secondary.textContent = '2026/27 • Block 1 • Week 2 • Pre-Season / Base Building';
-      }
 
-      function findDivisionById(id){ return store.divisions.find(d=>d.id===id); }
-      function findCrewById(id){ for(const d of store.divisions){ const c = d.crews.find(x=>x.id===id); if(c) return Object.assign({}, c, {divisionId:d.id, divisionName:d.name}); } return null; }
-      function findCoachById(id){ return store.coaches.find(c=>c.id===id); }
+        var cfg = JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}');
+        var crews = (cfg.crews && cfg.crews[currentDivision]) || [];
+        var crew = crews.find(function(c){ return c.id === currentTeam; });
 
-      // Safely set a crew id and update the header only when the crew exists.
-      // Uses latestRenderToken to avoid stale updates from rapid interactions.
-      function setCrewSafe(crewId){
-        const token = ++latestRenderToken;
-        // try immediate sync lookup
-        const crew = findCrewById(crewId);
-        if(crew){
-          session.crewId = crewId;
-          // update header in next frame to batch paints
-          window.requestAnimationFrame(()=>{
-            if(token !== latestRenderToken) return; // stale
-            updateHeader();
-          });
+        if (crew && crew.name) {
+          setLabel(crew.name);
           return;
         }
-        // If not found immediately (edge cases), poll briefly for the crew to appear
-        const start = Date.now();
+
+        // Name not available synchronously — poll briefly, but DO NOT overwrite existing label with a placeholder
+        var token = ++latestRenderToken;
+        var start = Date.now();
         (function poll(){
-          if(token !== latestRenderToken) return; // newer change happened
-          const c = findCrewById(crewId);
-          if(c){ session.crewId = crewId; window.requestAnimationFrame(()=>{ if(token !== latestRenderToken) return; updateHeader(); }); return; }
-          if(Date.now() - start < 800){ setTimeout(poll, 50); }
-          // otherwise give up (do not set placeholder)
+          if (token !== latestRenderToken) return; // a newer render happened
+          var cfg2 = JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}');
+          var crews2 = (cfg2.crews && cfg2.crews[currentDivision]) || [];
+          var crew2 = crews2.find(function(c){ return c.id === currentTeam; });
+          if (crew2 && crew2.name) {
+            window.requestAnimationFrame(function(){
+              if (token !== latestRenderToken) return;
+              setLabel(crew2.name);
+            });
+            return;
+          }
+          if (Date.now() - start < 800) {
+            setTimeout(poll, 50);
+          }
+          // otherwise give up silently — do not set a placeholder
         })();
-      }
 
-      function open(ele){ if(!ele) return; ele.style.display='block'; ele.setAttribute('aria-hidden','false'); overlayDim.style.display='block'; }
-      function close(ele){ if(!ele) return; ele.style.display='none'; ele.setAttribute('aria-hidden','true'); overlayDim.style.display='none'; }
+      }catch(e){}
+    }
 
-      moreBtn.addEventListener('click', ()=>{ if(toolsDrawer.style.display==='block'){ close(toolsDrawer); } else open(toolsDrawer); });
-      menuBtn.addEventListener('click', ()=>{ if(athleteDrawer.style.display==='block'){ close(athleteDrawer); } else open(athleteDrawer); });
-      adminBtn.addEventListener('click', ()=> open(adminModal));
-      overlayDim.addEventListener('click', ()=> { close(toolsDrawer); close(athleteDrawer); close(adminModal); });
+    var oldRenderDashboard = window.renderDashboard;
+    if (typeof oldRenderDashboard === 'function' && !oldRenderDashboard.__fwWrapped) {
+      window.renderDashboard = function(){
+        var r = oldRenderDashboard.apply(this, arguments);
+        safeApply();
+        return r;
+      };
+      window.renderDashboard.__fwWrapped = true;
+    }
+    safeApply();
+  })();
+})();
 
-      document.querySelectorAll('.fwsb-nav-btn').forEach(b=> b.addEventListener('click', ()=>{
-        document.querySelectorAll('.fwsb-nav-btn').forEach(x=>x.classList.remove('active'));
-        b.classList.add('active');
-      }));
 
-      // Tools/actions placeholder handler
-      document.addEventListener('click', function(e){
-        const it = e.target.closest('.fwsb-menu-item');
-        if(!it) return;
-        const action = it.dataset.action || it.dataset.tool;
-        close(toolsDrawer); close(athleteDrawer);
-        if(action==='messages') return alert('Team Messages — placeholder');
-        if(action==='notifications') return alert('Notifications — placeholder');
-        if(action==='garmin' || action==='apple') return alert(action.toUpperCase() + ' — integration/test area');
-        return alert((action||'Action') + ' — placeholder');
-      }, false);
+})();
+</script>
 
-      // Admin UI render
-      function renderAdminBody(){
-        const body = document.getElementById('fwsb-admin-body'); body.innerHTML = '';
 
-        const reg = document.createElement('div'); reg.className = 'fwsb-card';
-        const headerRow = document.createElement('div');
-        headerRow.style.display='flex';
-        headerRow.style.justifyContent='space-between';
-        headerRow.style.alignItems='center';
-        headerRow.innerHTML = "<strong>Division | Crew Name | Coach</strong><button id='fwsb-add-division' class='fwsb-primary-btn'>Add Division</button>";
-        reg.appendChild(headerRow);
 
-        const table = document.createElement('div'); table.style.marginTop='12px';
-        store.divisions.forEach(div=>{
-          div.crews.forEach(crew=>{
-            const row = document.createElement('div'); row.style.display='flex'; row.style.justifyContent='space-between'; row.style.alignItems='center'; row.style.gap='8px'; row.style.padding='6px 0';
-            const left = document.createElement('div'); left.innerHTML = "<div style='font-weight:700'>" + div.name + " • " + crew.name + "</div><div class='fwsb-small'>ID: " + crew.id + "</div>";
-            const coachName = findCoachById(crew.coachId)?.name || '<em>Unassigned</em>';
-            const right = document.createElement('div'); right.innerHTML = "<span class='fwsb-small'>Coach: " + coachName + "</span> <button class='fwsb-edit-crew' data-id='" + crew.id + "'>Edit</button> <button class='fwsb-del-crew' data-id='" + crew.id + "'>Delete</button>";
-            row.appendChild(left); row.appendChild(right); table.appendChild(row);
-          });
-        });
-        reg.appendChild(table); body.appendChild(reg);
-
-        const coachCard = document.createElement('div'); coachCard.className='fwsb-card';
-        coachCard.innerHTML = "<strong>Coaches</strong><div id='fwsb-coach-list'></div><div style='margin-top:8px'><input id='fwsb-new-coach' class='fwsb-input' placeholder='Coach name'/> <button id='fwsb-add-coach' class='fwsb-primary-btn'>Add Coach</button></div>";
-        body.appendChild(coachCard);
-
-        const createCard = document.createElement('div'); createCard.className='fwsb-card';
-        createCard.innerHTML = "<strong>Create Crew</strong><div style='margin-top:8px' class='fwsb-form-row'><select id='fwsb-select-division' class='fwsb-select'></select><input id='fwsb-crew-name' class='fwsb-input' placeholder='Crew name' /><button id='fwsb-create-crew' class='fwsb-primary-btn'>Create</button></div>";
-        body.appendChild(createCard);
-
-        document.getElementById('fwsb-add-division').onclick = ()=>{ const n = prompt('Division name'); if(n){ store.divisions.push({id:uid('div-'), name:n, crews:[]}); saveStore(store); renderAdminBody(); }};
-
-        const coachListElem = document.getElementById('fwsb-coach-list'); coachListElem.innerHTML = '';
-        store.coaches.forEach(c=>{ const el = document.createElement('div'); el.innerHTML = c.name + " <button class='fwsb-gen-link' data-id='" + c.id + "'>Generate link</button>"; coachListElem.appendChild(el); });
-
-        document.getElementById('fwsb-add-coach').onclick = ()=>{ const name = document.getElementById('fwsb-new-coach').value.trim(); if(!name) return alert('Enter coach name'); const id = uid('coach-'); store.coaches.push({id:id, name:name, token:null}); saveStore(store); renderAdminBody(); }
-
-        const sel = document.getElementById('fwsb-select-division'); sel.innerHTML = '';
-        store.divisions.forEach(d=>{ const op = document.createElement('option'); op.value = d.id; op.textContent = d.name; sel.appendChild(op); });
-        document.getElementById('fwsb-create-crew').onclick = ()=>{ const divId = sel.value; const name = document.getElementById('fwsb-crew-name').value.trim(); if(!name) return alert('Enter crew name'); const div = findDivisionById(divId); const crewId = uid('crew-'); div.crews.push({id:crewId, name:name, coachId:null}); saveStore(store); renderAdminBody(); }
-
-        Array.from(document.querySelectorAll('.fwsb-edit-crew')).forEach(btn=>btn.onclick = ()=>{ const id = btn.dataset.id; const crew = findCrewById(id); const newName = prompt('Crew name', crew.name); if(newName){ const div = findDivisionById(crew.divisionId); const target = div.crews.find(c=>c.id===id); target.name = newName; saveStore(store); renderAdminBody(); }});
-        Array.from(document.querySelectorAll('.fwsb-del-crew')).forEach(btn=>btn.onclick = ()=>{ const id = btn.dataset.id; if(!confirm('Delete crew?')) return; for(const d of store.divisions){ const idx = d.crews.findIndex(c=>c.id===id); if(idx>=0){ d.crews.splice(idx,1); saveStore(store); renderAdminBody(); return; } } });
-
-        Array.from(document.querySelectorAll('.fwsb-gen-link')).forEach(btn=>btn.onclick = ()=>{ const id = btn.dataset.id; const coach = store.coaches.find(c=>c.id===id); if(!coach) return; if(!coach.token) coach.token = uid('t-'); const crewId = prompt('Enter crew id to assign coach to (or leave blank to copy token):'); if(crewId){ store.links = store.links||{}; store.links.coachTokens = store.links.coachTokens || {}; store.links.coachTokens[coach.token] = crewId; const c = findCrewById(crewId); if(c){ const div = findDivisionById(c.divisionId); const cr = div.crews.find(x=>x.id===crewId); cr.coachId = coach.id; } } saveStore(store); alert('Coach token: '+coach.token + "\nUse link: " + location.origin + location.pathname + "?role=coach&token=" + coach.token); });
-      }
-
-      // show division->crew selector on load if not coach
-      function showDivisionCrewSelector(){
-        const modal = document.createElement('div'); modal.className = 'fwsb-drawer'; modal.style.maxHeight='60vh'; modal.id='fwsb-select-modal';
-        modal.innerHTML = "<h4>Select Division → Crew</h4><div class='fwsb-card'><div class='fwsb-form-row'><select id='fwsb-select-division-sel' class='fwsb-select'></select><select id='fwsb-select-crew-sel' class='fwsb-select'></select></div><div style='margin-top:10px'><button id='fwsb-select-crew-enter' class='fwsb-primary-btn'>Enter Crew</button> <button id='fwsb-select-crew-skip' class='fwsb-menu-item'>Skip</button></div></div>";
-        document.body.appendChild(modal);
-        const selD = document.getElementById('fwsb-select-division-sel'); const selC = document.getElementById('fwsb-select-crew-sel');
-        store.divisions.forEach(d=>{ const op = document.createElement('option'); op.value = d.id; op.textContent = d.name; selD.appendChild(op); });
-        function populateCrews(){ const d = findDivisionById(selD.value); selC.innerHTML=''; d.crews.forEach(c=>{ const op=document.createElement('option'); op.value=c.id; op.textContent=c.name; selC.appendChild(op); }); }
-        selD.addEventListener('change', populateCrews); populateCrews();
-        document.getElementById('fwsb-select-crew-enter').onclick = ()=>{ const crewId = selC.value; /* use safe setter to avoid placeholder flicker */ setCrewSafe(crewId); modal.remove(); }
-        document.getElementById('fwsb-select-crew-skip').onclick = ()=>{ modal.remove(); }
-      }
-
-      // initial render
-      // call updateHeader normally only if a crew is already set synchronously
-      if(session.crewId){ setCrewSafe(session.crewId); } else { updateHeader(); }
-      if(!session.crewId && session.role !== 'coach'){ setTimeout(showDivisionCrewSelector, 400); }
-      renderAdminBody();
-      window.FWSB_DEMO = {store: store, save: ()=>{ saveStore(store); renderAdminBody(); }, session: session};
-
-      // expose setCrewSafe for debugging / console use
-      window.FWSB_DEMO.setCrewSafe = setCrewSafe;
-    })();
-  </script>
-</body>
-</html>
+</script></body></html>
