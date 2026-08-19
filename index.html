@@ -147,6 +147,29 @@ if(di){
   }
   setInterval(apply,1000);
 })();
+(function(){
+  function getCrews(){
+    try{ return JSON.parse(localStorage.getItem('fw_live_crew_config_v1')||'{}').crews||{}; }catch(e){ return {}; }
+  }
+  function esc(s){ return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+  function fixTeamChoices(){
+    var box=document.getElementById('teamAccessChoices');
+    var divEl=document.getElementById('teamAccessDivision');
+    if(!box||!divEl) return;
+    var div=divEl.textContent;
+    var crews=(getCrews()[div])||[];
+    if(!crews.length) return;
+    var html = crews.map(function(c){
+      return '<button class="teamChoice" onclick="chooseAccessTeam(\''+c.id.replace(/'/g,"\\'")+'\')"><b>'+esc(c.name)+'</b></button>';
+    }).join('');
+    if(box.innerHTML !== html) box.innerHTML = html;
+  }
+  setInterval(function(){
+    var picker=document.getElementById('teamAccessPicker');
+    if(picker && getComputedStyle(picker).display!=='none'){ fixTeamChoices(); }
+  }, 500);
+})();
+
 
 </script>
 
